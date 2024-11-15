@@ -60,6 +60,7 @@ const App = () => {
       <div>
         <span>Game Over</span>
         <div>${gameResult}</div>
+        <button onClick=${() => setScreen("menu")}>Play Again</button>
       </div>
       `}
   </div>
