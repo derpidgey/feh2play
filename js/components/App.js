@@ -40,7 +40,7 @@ const App = () => {
     setTimeout(() => {
       setScreen("gameOver");
       setGameResult(result);
-    }, 2000);
+    }, 1000);
   }
 
   return html`
