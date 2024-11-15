@@ -14,6 +14,8 @@ const ActionTracker = ({ tileSize, gameState }) => {
   const activeDiamondWidth = diamondWidth * 1.75;
   const activeDiamondOffset = -diamondWidth * 3 / 8;
 
+  const greyscaleStyle = duelState.map(ds => ds.endedTurn ? { filter: "grayscale(1)" } : {});
+
   return html`
   <img src="assets/maps/common/SummonerDuels_Corner1.webp" style="width:100%" alt="corner 2" />
   <img src="assets/maps/common/blueTurn.webp" style=${{
@@ -32,14 +34,16 @@ const ActionTracker = ({ tileSize, gameState }) => {
       return html`<img src="assets/maps/common/blueDiamond.webp" style=${{
         width: `${diamondWidth}px`,
         top: `${2 * tileSize - middleDiamondY - diamondWidth - (i % 2) * offsetFromMiddle}px`,
-        left: `${middleDiamondX + (i - 2) * offsetFromMiddle}px`
+        left: `${middleDiamondX + (i - 2) * offsetFromMiddle}px`,
+        ...greyscaleStyle[0]
       }} />`
     })}
   ${Array(actionsRemaining[1]).fill().map((_, i) => {
       return html`<img src="assets/maps/common/redDiamond.webp" style=${{
         width: `${diamondWidth}px`,
         top: `${middleDiamondY + (i % 2) * offsetFromMiddle}px`,
-        left: `${middleDiamondX - (i - 2) * offsetFromMiddle}px`
+        left: `${middleDiamondX - (i - 2) * offsetFromMiddle}px`,
+        ...greyscaleStyle[1]
       }} />`
     })}
     <img src="assets/maps/common/blueDiamondActive.webp" style=${{
