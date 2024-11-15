@@ -916,7 +916,20 @@ function Engine() {
         gameState.duelState[unit.team].koScore += koScore;
       }
     }
-    // todo death hash
+    for (const unit of gameState.teams[0].concat(gameState.teams[1])) {
+      if (unit.stats.hp <= 0) {
+        hashPos(gameState, unit);
+        hashHp(gameState, unit);
+        hashSpecial(gameState, unit);
+        if (unit.hasAction) {
+          hashHasAction(gameState, unit);
+        }
+        for (const stat of [STATS.ATK, STATS.SPD, STATS.DEF, STATS.RES]) {
+          hashBuff(gameState, unit, stat);
+          hashDebuff(gameState, unit, stat);
+        }
+      }
+    }
     gameState.teams[0] = gameState.teams[0].filter(u => u.stats.hp > 0);
     gameState.teams[1] = gameState.teams[1].filter(u => u.stats.hp > 0);
   }
@@ -1175,7 +1188,7 @@ function Engine() {
       const onSpecialEffects = getEligibleEffects(EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER, results.units[0], aoeContext);
       processEffects(onSpecialEffects, aoeContext);
       getUnitsInAoe(gameState, results.units[1].team, results.units[1].pos, initiatorSpecial.aoe.shape).forEach(unit => {
-        let damage = calculateAoeDamage(results.units[0], unit, initiatorSpecial.aoe.multiplier) + specialFlags.situationalFixedDamage;
+        let damage = calculateAoeDamage(results.units[0], unit, initiatorSpecial.aoe.multiplier, gameState.mode) + specialFlags.situationalFixedDamage;
         if (unit.id === results.units[1].id) {
           results.units[1].stats.hp = Math.max(1, results.units[1].stats.hp - damage);
           results.units[1].startOfCombatHp = results.units[1].stats.hp;
@@ -1269,6 +1282,10 @@ function Engine() {
             .forEach(stat => results.units[i].tempStats[stat] += results.units[i].buffs[stat]);
         }
       }
+      if (gameState.mode === "duel" && foeWeaponType.range === 2 && unitWeaponType.range === 1) {
+        unit.tempStats.def += 7;
+        unit.tempStats.res += 7;
+      }
     });
   }
 
@@ -1316,10 +1333,16 @@ function Engine() {
     return affectedUnits;
   }
 
-  function calculateAoeDamage(attacker, target, multiplier) {
+  function calculateAoeDamage(attacker, target, multiplier, mode) {
     // todo adaptive damage, def terrain
-    const defStat = getWeaponType(attacker).defStat;
-    return Math.floor(multiplier * (getVisibleStats(attacker).atk - getVisibleStats(target)[defStat]));
+    const attackerWeapon = getWeaponType(attacker);
+    const defenderWeapon = getWeaponInfo(target);
+    const defStat = attackerWeapon.defStat;
+    let defStatBonus = 0;
+    if (mode === "duel" && attackerWeapon.range === 2 && defenderWeapon.range === 1) {
+      defStatBonus += 7;
+    }
+    return Math.floor(multiplier * (getVisibleStats(attacker).atk - getVisibleStats(target)[defStat] - defStatBonus));
   }
 
   function resolveDuringCombatEffects(results, gameState) {
@@ -2308,7 +2331,7 @@ function Engine() {
       searchInfo.stop = true;
     }
     ++searchInfo.nodes;
-
+    let bestScore = -INFINITY;
     let score = -INFINITY;
     const hashEntry = getHashEntry(searchInfo.hashTable, gameState.hash, alpha, beta, depth);
     if (hashEntry && hashEntry.score !== null) {
@@ -2317,11 +2340,10 @@ function Engine() {
     let moves = gameState.teams[gameState.currentTurn].flatMap(unit => generateActions(gameState, unit));
     moves.push({ type: "end turn" });
     moves = orderMoves(gameState, moves, searchInfo);
-    // todo get pv move
     let movesChecked = 0;
     let oldAlpha = alpha;
     let bestMove = null;
-    for (const move of moves) { // manual end turn is also an option
+    for (const move of moves) {
       const newGameState = minClone(gameState);
       executeAction(newGameState, move);
       ++movesChecked;
@@ -2335,24 +2357,27 @@ function Engine() {
       if (searchInfo.stop) {
         return DRAW;
       }
-      if (score > alpha) {
-        if (score >= beta) {
-          if (movesChecked === 1) {
-            ++searchInfo.fhf;
-          }
-          ++searchInfo.fh; // use fhf / fh to get beta cutoff on first move percentage
-          if (move.type !== "attack") {
-            searchInfo.killerMoves[1][searchInfo.ply] = searchInfo.killerMoves[0][searchInfo.ply];
-            searchInfo.killerMoves[0][searchInfo.ply] = move;
-          }
-          storeHashEntry(searchInfo, gameState.hash, move, beta, HASH_BETA, depth); // causing ordering to go down
-          return beta;
-        }
-        if (move.type !== "attack" && move.type !== "end turn") {
-          searchInfo.historyMoves[encodeMove(move)] += depth * depth;
-        }
-        alpha = score;
+      if (score > bestScore) {
+        bestScore = score;
         bestMove = move;
+        if (score > alpha) {
+          if (score >= beta) {
+            if (movesChecked === 1) {
+              ++searchInfo.fhf;
+            }
+            ++searchInfo.fh; // use fhf / fh to get beta cutoff on first move percentage
+            if (move.type !== "attack") {
+              searchInfo.killerMoves[1][searchInfo.ply] = searchInfo.killerMoves[0][searchInfo.ply];
+              searchInfo.killerMoves[0][searchInfo.ply] = move;
+            }
+            storeHashEntry(searchInfo, gameState.hash, move, beta, HASH_BETA, depth); // causing ordering to go down
+            return beta;
+          }
+          if (move.type !== "attack" && move.type !== "end turn") {
+            searchInfo.historyMoves[encodeMove(move)] += depth * depth;
+          }
+          alpha = score;
+        }
       }
     }
     if (alpha !== oldAlpha) {
@@ -2383,6 +2408,7 @@ function Engine() {
       alpha = score;
     }
     let moves = gameState.teams[gameState.currentTurn].flatMap(unit => generateKoActions(gameState, unit));
+    // could allow end turn in quiescence
     moves = orderMoves(gameState, moves, searchInfo);
     let movesChecked = 0;
     let oldAlpha = alpha;
@@ -2414,7 +2440,9 @@ function Engine() {
       }
     }
     if (alpha !== oldAlpha) {
-      storeHashEntry(searchInfo, gameState.hash, bestMove);
+      storeHashEntry(searchInfo, gameState.hash, bestMove, score, HASH_EXACT, 0);
+    } else {
+      storeHashEntry(searchInfo, gameState.hash, bestMove, alpha, HASH_ALPHA, 0);
     }
 
     return alpha;
@@ -2516,16 +2544,14 @@ function Engine() {
   }
 
   function storeHashEntry(searchInfo, hash, move, score, flag, depth) {
-    const { hashTable: table, ply } = searchInfo;
+    const { hashTable } = searchInfo;
     const index = hash & (TABLE_SIZE - 1);
-    // todo WIN - ply or LOSE + ply
-
-    if (table[index].hash === 0 || table[index].depth <= depth) {
-      table[index].hash = hash;
-      table[index].move = move;
-      table[index].score = score;
-      table[index].flag = flag;
-      table[index].depth = depth;
+    if (hashTable[index].hash === 0 || hashTable[index].depth <= depth) {
+      hashTable[index].hash = hash;
+      hashTable[index].move = move;
+      hashTable[index].score = score;
+      hashTable[index].flag = flag;
+      hashTable[index].depth = depth;
     }
   }
 
