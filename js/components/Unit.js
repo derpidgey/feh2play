@@ -19,12 +19,10 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
 
   const hpPercentage = (unit.stats.hp / unit.stats.maxHp) * 100;
   const hpBarWidth = `${hpPercentage}%`;
-
   const hpColour = unit.team === 0 ? "deepskyblue" : "red";
-
   const indicatorWidth = tileSize / 4;
   const indicatorBorderStyle = "3px solid aliceblue";
-
+  const fontSize = `${tileSize * 0.3}px`;
   const greyscaleStyle = unit.hasAction ? {} : { filter: "grayscale(1)" };
 
   return html`
@@ -96,13 +94,14 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
     ${specialCharge != null && html`<span style=${{
       position: "absolute",
       color: "DarkMagenta",
+      fontSize,
       fontWeight: "bold",
       backgroundColor: "grey",
       top: `${tileSize / 3}px`,
       left: `${tileSize / 12}px`
     }}>${specialCharge}</span>`}
     <div class="unit-hp">
-      <span style=${{ color: hpColour, backgroundColor: "darkslategrey" }}>${unit.stats.hp}</span>
+      <span style=${{ color: hpColour, fontSize, backgroundColor: "darkslategrey" }}>${unit.stats.hp}</span>
       <div class="hp-bar">
         <div class="hp-fill" style=${{ width: hpBarWidth, backgroundColor: hpColour }} />
       </div>
