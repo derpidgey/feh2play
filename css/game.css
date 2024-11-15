@@ -1,7 +1,12 @@
 .board {
   position: relative;
-  cursor: pointer;
   user-select: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .board {
+    cursor: pointer;
+  }
 }
 
 .board>* {
