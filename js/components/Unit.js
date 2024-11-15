@@ -26,7 +26,7 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
     if (status === "debuff") {
       return "assets/status/Status_Effect_Penalty.webp";
     }
-    return STATUS[status].img;
+    return STATUS[status]?.img;
   }
 
   const unitInfo = UNIT[unit.unitId];
