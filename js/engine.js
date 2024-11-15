@@ -544,13 +544,20 @@ function Engine() {
     });
   }
 
-  function generateKoActions(gameState, unit) { // todo make sure capture
+  function generateKoActions(gameState, unit) {
     if (!unit.hasAction) return [];
     const actions = [];
     calculateMovementRange(gameState, unit).forEach(tile => {
       generateAttackActions(gameState, unit, tile, actions);
     });
-    return actions;
+    return actions.filter(action => {
+      const targetUnit = gameState.teams[unit.team ^ 1].find(u => u.pos.x === action.target.x && u.pos.y === action.target.y);
+      const unitPos = unit.pos;
+      unit.pos = action.to;
+      const results = calculateCombatResult(gameState, unit, targetUnit);
+      unit.pos = unitPos;
+      return results.units[1].stats.hp <= 0;
+    });
   }
 
   function calculateMovementTypeDestinations(gameState, unitpos, targetUnit, movementType) {
