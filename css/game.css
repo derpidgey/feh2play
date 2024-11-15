@@ -1,0 +1,25 @@
+.board {
+  position: relative;
+  cursor: pointer;
+  user-select: none;
+}
+
+.board>* {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+}
+
+.tile-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.info-panel {
+  display: flex;
+}
+
+.corner>* {
+  position: absolute;
+}

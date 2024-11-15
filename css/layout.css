@@ -1,0 +1,98 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.app-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 100vh;
+  /* background-color: #333; */
+}
+
+.menu {
+  display: flex;
+  flex-direction: column;
+}
+
+.screen {
+  display: flex;
+  flex-direction: column;
+  width: min(100%, calc(100vh * (1 / 2)));
+  height: min(100%, calc(100vw * (2 / 1)));
+  background-color: #eee;
+}
+
+.info-panel {
+  height: 16.67%; /* 2/12ths of the screen height */
+  background-color: #f4f4f4;
+}
+
+.board-regular {
+  height: 66.67%; /* 8/12ths of the screen height */
+  background-color: #e0e0e0;
+}
+
+.board-duel {
+  height: calc((15 / 24) * 100%);
+  background-color: #e0e0e0;
+}
+
+.score-bar {
+  height: calc((1 / 24) * 100%);
+  background: linear-gradient(65deg, darkcyan 50%, firebrick 50%);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 3%;
+}
+
+.score-bar img {
+  height: 60%;
+}
+
+.score {
+  width: 15%;
+  aspect-ratio: 2.5 / 1;
+  border-radius: 30px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.score.blue {
+  background-color: mediumblue;
+  color: lightskyblue;
+}
+
+.score.red {
+  background-color: maroon;
+  color: crimson;
+}
+
+.captain-skill {
+  width: 7%;
+  aspect-ratio: 1;
+  background-color: grey;
+  border-radius: 50%;
+}
+
+.side-panel {
+  height: 100%;
+  max-width: 33.33vw;
+  flex-grow: 1;
+  background-color: #000;
+}
+
+.action-panel {
+  height: 8.33%; /* 1/12th of the screen height */
+  background-color: #ccc;
+}
+
+.status-bar {
+  height: 8.33%; /* 1/12th of the screen height */
+  background-color: #bbb;
+}
