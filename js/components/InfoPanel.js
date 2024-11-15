@@ -102,7 +102,7 @@ const UnitInfo = ({ unit, playingAs }) => {
 
   const getStatStyle = (visible, base) => {
     if (visible > base) return { color: "dodgerblue" }; // deepskyblue/dodgerblue
-    if (visible < base) return { color: "darkred" };
+    if (visible < base) return { color: "red" };
     return { color: "black" }; // gold?
   };
 
