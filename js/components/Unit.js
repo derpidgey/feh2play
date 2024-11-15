@@ -130,7 +130,7 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
         backgroundColor: "grey",
         ...specialChargePosition
       }}>${specialCharge}</span>`}
-    ${totalStatuses.length > 0 && html`
+    ${totalStatuses.length > 0 && statusIndex < totalStatuses.length && html`
       <img src=${getStatusImage(totalStatuses[statusIndex])} style=${{
         position: "absolute",
         width: `${tileSize / 3}px`,
