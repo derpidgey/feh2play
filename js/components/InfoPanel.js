@@ -40,7 +40,7 @@ const ActionPreview = ({ gameState, potentialAction }) => {
   let formulas;
 
   if (actionType === "assist") {
-    assist = getAssistInfo(unit).name;
+    assist = getAssistInfo(unit).name; // todo implement calculateAssistResult
   } else {
     const unitPos = unit.pos;
     unit.pos = { ...potentialAction.to }

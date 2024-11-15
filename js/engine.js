@@ -781,7 +781,7 @@ function Engine() {
     }
     for (const stat of [STATS.ATK, STATS.SPD, STATS.DEF, STATS.RES]) {
       hashDebuff(gameState, unit, stat);
-      unit.buffs[stat] = 0;
+      unit.debuffs[stat] = 0;
       hashDebuff(gameState, unit, stat);
     }
     unit.penalties.forEach(penalty => hashPenalty(gameState, unit, penalty));
@@ -998,16 +998,27 @@ function Engine() {
   }
 
   function endTurn(gameState) {
+    gameState.teams[gameState.currentTurn].forEach(unit => {
+      if (unit.hasAction) {
+        for (const stat of [STATS.ATK, STATS.SPD, STATS.DEF, STATS.RES]) {
+          hashDebuff(gameState, unit, stat);
+          unit.debuffs[stat] = 0;
+          hashDebuff(gameState, unit, stat);
+        }
+        unit.penalties.forEach(penalty => hashPenalty(gameState, unit, penalty));
+        unit.penalties = [];
+        hashHasAction(gameState, unit);
+        unit.hasAction = false;
+      }
+      if (gameState.mode === "regular") {
+        hashHasAction(gameState, unit);
+        unit.hasAction = true;
+      }
+    });
     if (gameState.mode === "duel") {
       gameState.history.push(`${gameState.currentTurn} end turn`);
       gameState.duelState[gameState.currentTurn].endedTurn = true;
       hashEndedTurn(gameState, gameState.currentTurn);
-      gameState.teams[gameState.currentTurn].forEach(unit => {
-        if (unit.hasAction) {
-          hashHasAction(gameState, unit);
-          unit.hasAction = false;
-        }
-      });
       if (gameState.duelState.every(x => x.endedTurn)) {
         const team1UnitsInArea = gameState.teams[0].filter(unit => distanceFromCaptureArea(gameState, unit.pos) === 0).length;
         const team2UnitsInArea = gameState.teams[1].filter(unit => distanceFromCaptureArea(gameState, unit.pos) === 0).length;
@@ -1043,12 +1054,6 @@ function Engine() {
       return;
     }
     gameState.history.push("end turn");
-    gameState.teams[gameState.currentTurn].forEach(unit => {
-      if (!unit.hasAction) {
-        hashHasAction(gameState, unit);
-        unit.hasAction = true;
-      }
-    });
     gameState.currentTurn ^= 1;
     if (gameState.currentTurn === 0) {
       gameState.turnCount += 1;
