@@ -9,9 +9,7 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
   const totalStatuses = [...unit.bonuses, ...unit.penalties];
   if (Object.values(unit.buffs).some(buff => buff > 0)) totalStatuses.push("buff");
   if (Object.values(unit.debuffs).some(debuff => debuff > 0)) totalStatuses.push("debuff");
-  if (statusIndex > totalStatuses.length) {
-    setStatusIndex(0);
-  }
+
   useEffect(() => {
     if (totalStatuses.length === 0) return;
     const interval = setInterval(() => {
@@ -131,7 +129,7 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
         backgroundColor: "grey",
         ...specialChargePosition
       }}>${specialCharge}</span>`}
-    ${totalStatuses.length > 0 && html`
+    ${totalStatuses.length > 0 && statusIndex <= totalStatuses.length && html`
       <img src=${getStatusImage(totalStatuses[statusIndex])} style=${{
         position: "absolute",
         width: `${tileSize / 3}px`,
