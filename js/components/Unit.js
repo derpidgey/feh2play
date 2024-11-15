@@ -12,6 +12,7 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
 
   useEffect(() => {
     if (totalStatuses.length === 0) return;
+    setStatusIndex(0);
     const interval = setInterval(() => {
       setStatusIndex(prev => (prev + 1) % totalStatuses.length);
     }, 1000);
@@ -129,7 +130,7 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
         backgroundColor: "grey",
         ...specialChargePosition
       }}>${specialCharge}</span>`}
-    ${totalStatuses.length > 0 && statusIndex <= totalStatuses.length && html`
+    ${totalStatuses.length > 0 && html`
       <img src=${getStatusImage(totalStatuses[statusIndex])} style=${{
         position: "absolute",
         width: `${tileSize / 3}px`,
