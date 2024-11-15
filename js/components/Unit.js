@@ -12,7 +12,6 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
 
   useEffect(() => {
     if (totalStatuses.length === 0) return;
-    setStatusIndex(0);
     const interval = setInterval(() => {
       setStatusIndex(prev => (prev + 1) % totalStatuses.length);
     }, 1000);
