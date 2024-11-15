@@ -9,7 +9,7 @@ import Engine from "../engine.js";
 
 const engine = Engine();
 
-const Game = ({ initialGameState, playingAs = 0 }) => {
+const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
   const [newGameState, setGameState] = useState(initialGameState);
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [potentialAction, setPotentialAction] = useState({});
@@ -18,6 +18,10 @@ const Game = ({ initialGameState, playingAs = 0 }) => {
   const [showDangerArea, setShowDangerArea] = useState(true);
 
   const gameState = deepClone(newGameState);
+
+  if (gameState.gameOver) {
+    onGameOver(gameState.duelState[playingAs].result);
+  }
 
   useEffect(() => {
     const handleResize = () => {

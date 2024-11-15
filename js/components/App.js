@@ -18,6 +18,7 @@ const engine = Engine();
 const App = () => {
   const [screen, setScreen] = useState("menu");
   const [playingAs, setPlayingAs] = useState(0);
+  const [gameResult, setGameResult] = useState("suck");
 
   const team1 = [
     createBuild(UNIT.FAE.id, [SKILLS.ETERNAL_BREATH.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.GLIMMER.id, SKILLS.DISTANT_COUNTER.id, SKILLS.GUARD_3.id, SKILLS.PANIC_PLOY_3.id, SKILLS.QUICK_RIPOSTE_3.id]),
@@ -35,6 +36,13 @@ const App = () => {
   ];
   const gameState = engine.newGame(MAPS.SD15, team1, team2, "duel");
 
+  const onGameOver = result => {
+    setTimeout(() => {
+      setScreen("gameOver");
+      setGameResult(result);
+    }, 2000);
+  }
+
   return html`
   <div class="app-container">
     ${screen === "menu" && html`
@@ -47,7 +55,13 @@ const App = () => {
         <button onClick=${() => setScreen("game")}>Play</button>
       </div>
       `}
-    ${screen === "game" && html`<${Game} initialGameState=${gameState} playingAs=${playingAs} />`}
+    ${screen === "game" && html`<${Game} initialGameState=${gameState} playingAs=${playingAs} onGameOver=${onGameOver} />`}
+    ${screen === "gameOver" && html`
+      <div>
+        <span>Game Over</span>
+        <div>${gameResult}</div>
+      </div>
+      `}
   </div>
   `;
 }
