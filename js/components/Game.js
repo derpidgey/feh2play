@@ -1,4 +1,4 @@
-import { html, useState, useEffect } from "https://esm.sh/htm/preact/standalone";
+import { html, useState, useEffect, useCallback } from "https://esm.sh/htm/preact/standalone";
 import SidePanel from "./SidePanel.js";
 import Board from "./Board.js";
 import InfoPanel from "./InfoPanel.js";
@@ -13,7 +13,7 @@ const DOUBLE_CLICK_THRESHOLD_MS = 200;
 const WIDE_SCREEN_THRESHOLD = 768;
 
 const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
-  const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions } = useGameLogic(initialGameState, playingAs);
+  const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState);
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [potentialAction, setPotentialAction] = useState({});
   const [activeUnit, setActiveUnit] = useState(null);
@@ -21,15 +21,33 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [showDangerArea, setShowDangerArea] = useState(true);
   const [lastClick, setLastClick] = useState({ tile: { x: 0, y: 0 }, time: 0 });
+  const [animationSequence, setAnimationSequence] = useState([]);
+  const [onAnimationComplete, setOnAnimationComplete] = useState(() => () => { });
 
   const boardWidth = gameState.map.terrain[0].length;
   const boardHeight = gameState.map.terrain.length;
+  const isAnimating = animationSequence.length > 0;
 
   if (gameState.gameOver) {
     onGameOver(gameState.duelState[playingAs].result);
   }
 
   useResizeListener(() => setIsWideScreen(window.innerWidth > WIDE_SCREEN_THRESHOLD));
+
+  if (gameState.mode === "duel") {
+    useEffect(() => {
+      if (gameState.currentTurn !== playingAs && !gameState.isSwapPhase && !gameState.gameOver) {
+        handleAction(getAiMove());
+      }
+    }, [
+      gameState.currentTurn,
+      gameState.turnCount,
+      gameState.isSwapPhase,
+      gameState.duelState[0].actionsRemaining,
+      gameState.duelState[1].actionsRemaining,
+      playingAs,
+    ]);
+  }
 
   const onEndTurn = () => {
     endTurn();
@@ -51,7 +69,25 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
     setValidActions([]);
   }
 
+  const handleAction = action => {
+    const { sequence, onComplete } = executeAction(action);
+    deselectUnit();
+    if (sequence.length === 0) {
+      onComplete();
+    } else {
+      if (gameState.currentTurn === playingAs) {
+        sequence[0][0].type = "tp";
+      }
+      setAnimationSequence(sequence);
+      setOnAnimationComplete(() => () => {
+        setAnimationSequence([]);
+        onComplete();
+      });
+    }
+  }
+
   const handleTileClick = (x, y) => {
+    if (isAnimating) return;
     if (x < 0 || y < 0 || x >= boardWidth || y >= boardHeight) return;
     const currentTime = Date.now();
     const timeSinceLastClick = currentTime - lastClick.time;
@@ -61,9 +97,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
       const doubleTapActiveUnit = activeUnit && activeUnit.hasAction && activeUnit.pos.x === x && activeUnit.pos.y === y;
       const doubleTapAllyUnit = !activeUnit && gameState.teams[playingAs].some(unit => unit.hasAction && unit.pos.x === x && unit.pos.y === y);
       if (doubleTapActiveUnit || doubleTapAllyUnit) {
-        const { sequence, onComplete } = executeAction({ from: { x, y }, to: { x, y } });
-        onComplete();
-        deselectUnit();
+        handleAction({ from: { x, y }, to: { x, y } });
         return;
       }
     }
@@ -139,10 +173,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
     const newPotentialAction = getPotentialAction(x, y);
     if (newPotentialAction) {
       if (engine.actionEquals(potentialAction, newPotentialAction)) {
-        const { sequence, onComplete } = executeAction(potentialAction);
-        console.log(sequence)
-        onComplete();
-        deselectUnit();
+        handleAction(potentialAction);
         return;
       }
       setPotentialAction(newPotentialAction);
@@ -195,6 +226,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
       </div>
       `}
     <${Board} gameState=${gameState} activeUnit=${activeUnit} validActions=${validActions} potentialAction=${potentialAction}
+      animationSequence=${animationSequence} onAnimationComplete=${onAnimationComplete}
       handleTileClick=${handleTileClick} lastClick=${lastClick} showDangerArea=${showDangerArea} playingAs=${playingAs} />
     <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} />
     <${StatusBar} turn=${gameState.turnCount} currentTurn=${gameState.currentTurn} playingAs=${playingAs} />

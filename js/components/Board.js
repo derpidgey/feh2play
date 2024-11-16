@@ -8,8 +8,15 @@ import ActionTracker from "./ActionTracker.js";
 
 const engine = Engine();
 
-const Board = ({ gameState, activeUnit, validActions, potentialAction, handleTileClick, lastClick, showDangerArea, playingAs }) => {
+const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs }) => {
   const [tileSize, setTileSize] = useState(50);
+  const unitPositionsRef = useRef(gameState.teams[0]
+    .concat(gameState.teams[1])
+    .reduce((acc, unit) => {
+      acc[unit.id] = { x: unit.pos.x, y: unit.pos.y };
+      return acc;
+    }, {}));
+  const [unitPositions, setUnitPositions] = useState(unitPositionsRef.current);
 
   const boardRef = useRef(null);
   const canvasRef = useRef(null);
@@ -17,6 +24,7 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, handleTil
   const isDuel = gameState.mode === "duel";
   const boardWidth = gameState.map.terrain[0].length;
   const boardHeight = gameState.map.terrain.length;
+  const isAnimating = animationSequence.length > 0;
 
   useResizeListener(() => {
     if (boardRef.current) {
@@ -25,6 +33,67 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, handleTil
       setTileSize(newTileSize);
     }
   }, 10);
+
+  useEffect(() => {
+    if (!animationSequence || animationSequence.length === 0) return;
+    unitPositionsRef.current = gameState.teams[0]
+      .concat(gameState.teams[1])
+      .reduce((acc, unit) => {
+        acc[unit.id] = { x: unit.pos.x, y: unit.pos.y };
+        return acc;
+      }, {});
+    setUnitPositions({ ...unitPositionsRef.current });
+    const FPS = 1000 / 30;
+    const animate = async () => {
+      for (const animationBatch of animationSequence) {
+        const animations = animationBatch.map(animation => {
+          return new Promise(resolve => {
+            if (animation.type === "move") {
+              const { id, to } = animation;
+              const frames = 8;
+              let frame = 0;
+              const from = unitPositionsRef.current[id];
+              const dx = (to.x - from.x) / frames;
+              const dy = (to.y - from.y) / frames;
+              const interval = setInterval(() => {
+                if (frame >= frames) {
+                  clearInterval(interval);
+                  unitPositionsRef.current[id] = { ...to };
+                  setUnitPositions({ ...unitPositionsRef.current });
+                  resolve();
+                } else {
+                  unitPositionsRef.current[id] = {
+                    x: unitPositionsRef.current[id].x + dx,
+                    y: unitPositionsRef.current[id].y + dy
+                  };
+                  setUnitPositions({ ...unitPositionsRef.current });
+                  frame++;
+                }
+              }, FPS);
+            } else if (animation.type === "attack") {
+              const frames = 6; // todo
+              resolve();
+            } else if (animation.type === "tp") {
+              const { id, to } = animation;
+              unitPositionsRef.current[id] = {
+                x: to.x,
+                y: to.y
+              };
+              setUnitPositions({ ...unitPositionsRef.current });
+              resolve();
+            } else {
+              console.warn(`Unhandled animation type ${animation.type}`);
+              resolve();
+            }
+          });
+        });
+        await Promise.all(animations);
+      }
+      onAnimationComplete();
+    };
+
+    animate();
+  }, [animationSequence]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -138,6 +207,14 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, handleTil
     <div class="units">${[...gameState.teams[1], ...gameState.teams[0]]
       .filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)
       .map(unit => {
+        let position = unit.pos;
+        if (isAnimating) {
+          if (unitPositions) {
+            position = unitPositions[unit.id];
+          }
+        } else if (activeUnit?.id === unit.id && potentialAction.to) {
+          position = potentialAction.to;
+        }
         const showActionIndicator = !gameState.isSwapPhase
           && unit.team === playingAs
           && unit.hasAction
@@ -147,9 +224,8 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, handleTil
         <${Unit}
           unit=${unit}
           isCaptain=${gameState.duelState[unit.team]?.captain === unit.id}
-          isActive=${activeUnit?.id === unit.id}
           tileSize=${tileSize}
-          potentialAction=${potentialAction}
+          position=${position}
           showActionIndicator=${showActionIndicator} />`;
       })}</div>
     ${isDuel && html`<div class="corner" style=${getCornerStyle(0, 0)}>

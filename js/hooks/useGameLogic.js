@@ -1,10 +1,10 @@
-import { useState, useEffect } from "https://esm.sh/htm/preact/standalone";
+import { useState } from "https://esm.sh/htm/preact/standalone";
 import Engine from "../engine.js";
 import { deepClone } from "../utils.js";
 
 const engine = Engine();
 
-const useGameLogic = (initialGameState, playingAs) => {
+const useGameLogic = (initialGameState) => {
   const [gameState, setGameState] = useState(initialGameState);
 
   const executeAction = action => {
@@ -13,7 +13,7 @@ const useGameLogic = (initialGameState, playingAs) => {
       return;
     }
     const newGameState = deepClone(gameState);
-    const sequence = engine.executeAction(newGameState, action);
+    const sequence = engine.executeAction(newGameState, action) ?? [];
     const onComplete = () => {
       setGameState(newGameState);
     }
@@ -38,27 +38,9 @@ const useGameLogic = (initialGameState, playingAs) => {
     setGameState(newGameState);
   }
 
-  if (gameState.mode === "duel") {
-    useEffect(() => {
-      const MIN_DELAY = 500;
-      if (gameState.currentTurn !== playingAs && !gameState.isSwapPhase && !gameState.gameOver) {
-        const startTime = Date.now();
-        const info = engine.search(gameState, 3);
-        const newGameState = deepClone(gameState);
-        engine.executeAction(newGameState, info.best);
-        const timeTaken = Date.now() - startTime;
-        const delay = Math.max(MIN_DELAY - timeTaken, 0);
-        const timeout = setTimeout(() => setGameState(newGameState), delay);
-        return () => clearTimeout(timeout);
-      }
-    }, [
-      gameState.currentTurn,
-      gameState.turnCount,
-      gameState.isSwapPhase,
-      gameState.duelState[0].actionsRemaining,
-      gameState.duelState[1].actionsRemaining,
-      playingAs,
-    ]);
+  const getAiMove = () => {
+    const info = engine.search(gameState, 3);
+    return info.best;
   }
 
   return {
@@ -66,7 +48,8 @@ const useGameLogic = (initialGameState, playingAs) => {
     executeAction,
     endTurn,
     endSwapPhase,
-    swapStartingPositions
+    swapStartingPositions,
+    getAiMove
   }
 }
 

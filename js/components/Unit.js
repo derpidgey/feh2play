@@ -3,7 +3,7 @@ import UNIT from "../data/units.js";
 import { WEAPON_TYPE } from "../data/definitions.js";
 import STATUS from "../data/status.js";
 
-const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showActionIndicator }) => {
+const Unit = ({ unit, isCaptain, tileSize, position, showActionIndicator }) => {
   const [statusIndex, setStatusIndex] = useState(0);
 
   const totalStatuses = [...unit.bonuses, ...unit.penalties];
@@ -31,8 +31,6 @@ const Unit = ({ unit, isCaptain, isActive, tileSize, potentialAction, showAction
   const unitInfo = UNIT[unit.unitId];
   const weaponInfo = WEAPON_TYPE[unitInfo.weaponType];
   const specialCharge = unit.special.current;
-  const temporaryPosition = potentialAction.to;
-  const position = isActive && temporaryPosition ? temporaryPosition : unit.pos;
 
   const weaponIconPosition = unit.team === 0
     ? { top: "0", left: "0" }

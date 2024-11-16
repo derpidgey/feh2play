@@ -700,9 +700,9 @@ function Engine() {
     }
     gameState.history.push(action);
     const sequence = [];
-    sequence.push([{ type: "move", from: { ...action.from }, to: { ...action.to } }]);
     const unit = gameState.teams[0].concat(gameState.teams[1])
       .find(u => u.pos.x === action.from.x && u.pos.y === action.from.y);
+    sequence.push([{ type: "move", id: unit.id, to: { ...action.to } }]);
     // const unitInfo = UNIT[unit.unitId];
     hashPos(gameState, unit);
     unit.pos = { ...action.to };
@@ -738,7 +738,7 @@ function Engine() {
           targetUnit.special.current = results.units[1].special.current;
           hashSpecial(gameState, targetUnit);
           const aoeSequence = []
-          // sequence.push({ type: "damage", target: { } });
+          // sequence.push([{ type: "damage", target: { } }]);
           // todo add result sequence to action sequence
           results.sequence.filter(seq => seq.aoe).forEach(seq => {
             if (seq.defender === targetUnit.id) return;
@@ -806,8 +806,8 @@ function Engine() {
       hashPos(gameState, targetUnit);
       const { unitDestination, targetDestination } = calculateMovementTypeDestinations(gameState, unit.pos, targetUnit, assist.movementAssist);
       sequence.push([
-        { type: "move", from: { ...unit.pos }, to: { ...unitDestination } },
-        { type: "move", from: { ...targetUnit.pos }, to: { ...targetDestination } },
+        { type: "move", id: unit.id, to: { ...unitDestination } },
+        { type: "move", id: targetUnit.id, to: { ...targetDestination } },
       ]);
       unit.pos = unitDestination;
       targetUnit.pos = targetDestination;
