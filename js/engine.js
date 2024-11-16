@@ -693,12 +693,14 @@ function Engine() {
       && a.target?.x === b.target?.x && a.target?.y === b.target?.y
   }
 
-  function executeAction(gameState, action) {
+  function executeAction(gameState, action) { // can add options parameter to check stuff like checkAutoEndTurn
     if (action.type === "end turn") {
       endTurn(gameState);
       return;
     }
     gameState.history.push(action);
+    const sequence = [];
+    sequence.push([{ type: "move", from: { ...action.from }, to: { ...action.to } }]);
     const unit = gameState.teams[0].concat(gameState.teams[1])
       .find(u => u.pos.x === action.from.x && u.pos.y === action.from.y);
     // const unitInfo = UNIT[unit.unitId];
@@ -710,6 +712,7 @@ function Engine() {
     if (action.target) {
       const block = gameState.map.blocks.find(b => b.x === action.target.x && b.y === action.target.y);
       if (block) {
+        sequence.push([{ type: "attack", from: { ...action.to }, target: { ...action.target } }]);
         block.hp -= 1;
       } else {
         const targetUnit = gameState.teams[0].concat(gameState.teams[1])
@@ -717,7 +720,7 @@ function Engine() {
         // const targetInfo = UNIT[targetUnit.unitId];
         // console.log(`${unitInfo.name} targeted ${targetInfo.name} at (${action.target.x}, ${action.target.y})`);
         if (unit.team === targetUnit.team) {
-          performAssist(gameState, unit, targetUnit);
+          performAssist(gameState, unit, targetUnit, sequence);
         } else {
           const results = calculateCombatResult(gameState, unit, targetUnit);
           unit.combatsInPhase += 1;
@@ -734,6 +737,9 @@ function Engine() {
           hashSpecial(gameState, targetUnit);
           targetUnit.special.current = results.units[1].special.current;
           hashSpecial(gameState, targetUnit);
+          const aoeSequence = []
+          // sequence.push({ type: "damage", target: { } });
+          // todo add result sequence to action sequence
           results.sequence.filter(seq => seq.aoe).forEach(seq => {
             if (seq.defender === targetUnit.id) return;
             const aoeVictim = gameState.teams[targetUnit.team].find(victim => victim.id === seq.defender);
@@ -789,15 +795,20 @@ function Engine() {
     hashPos(gameState, unit);
     checkAutoEndTurn(gameState);
     checkGameOver(gameState);
+    return sequence;
   }
 
-  function performAssist(gameState, unit, targetUnit) {
+  function performAssist(gameState, unit, targetUnit, sequence) {
     const assist = getAssistInfo(unit);
     const unitContext = { gameState, assistTarget: targetUnit };
     const targetContext = { gameState, assistUser: unit };
     if (assist.assistType === ASSIST_TYPE.MOVEMENT) {
       hashPos(gameState, targetUnit);
       const { unitDestination, targetDestination } = calculateMovementTypeDestinations(gameState, unit.pos, targetUnit, assist.movementAssist);
+      sequence.push([
+        { type: "move", from: { ...unit.pos }, to: { ...unitDestination } },
+        { type: "move", from: { ...targetUnit.pos }, to: { ...targetDestination } },
+      ]);
       unit.pos = unitDestination;
       targetUnit.pos = targetDestination;
       hashPos(gameState, targetUnit);

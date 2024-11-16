@@ -4,69 +4,168 @@ import Board from "./Board.js";
 import InfoPanel from "./InfoPanel.js";
 import ActionPanel from "./ActionPanel.js";
 import StatusBar from "./StatusBar.js";
-import { deepClone } from "../utils.js";
 import Engine from "../engine.js";
+import useResizeListener from "../hooks/useResizeListener.js";
+import useGameLogic from "../hooks/useGameLogic.js";
 
 const engine = Engine();
+const DOUBLE_CLICK_THRESHOLD_MS = 200;
+const WIDE_SCREEN_THRESHOLD = 768;
 
 const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
-  const [newGameState, setGameState] = useState(initialGameState);
+  const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions } = useGameLogic(initialGameState, playingAs);
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [potentialAction, setPotentialAction] = useState({});
   const [activeUnit, setActiveUnit] = useState(null);
+  const [validActions, setValidActions] = useState([]);
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [showDangerArea, setShowDangerArea] = useState(true);
+  const [lastClick, setLastClick] = useState({ tile: { x: 0, y: 0 }, time: 0 });
 
-  const gameState = deepClone(newGameState);
+  const boardWidth = gameState.map.terrain[0].length;
+  const boardHeight = gameState.map.terrain.length;
 
   if (gameState.gameOver) {
     onGameOver(gameState.duelState[playingAs].result);
   }
 
-  useEffect(() => {
-    const handleResize = () => {
-      setIsWideScreen(window.innerWidth > 768);
-    };
-    window.addEventListener('resize', handleResize);
-    handleResize();
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  useResizeListener(() => setIsWideScreen(window.innerWidth > WIDE_SCREEN_THRESHOLD));
 
-  if (gameState.mode === "duel") {
-    useEffect(() => {
-      const MIN_DELAY = 500;
-      if (gameState.currentTurn !== playingAs && !gameState.isSwapPhase && !gameState.gameOver) {
-        const startTime = Date.now();
-        const info = engine.search(gameState, 3);
-        engine.executeAction(gameState, info.best);
-        const timeTaken = Date.now() - startTime;
-        const delay = Math.max(MIN_DELAY - timeTaken, 0);
-        const timeout = setTimeout(() => setGameState(gameState), delay);
-        return () => clearTimeout(timeout);
-      }
-    }, [
-      gameState.currentTurn,
-      gameState.turnCount,
-      gameState.isSwapPhase,
-      gameState.duelState[0].actionsRemaining,
-      gameState.duelState[1].actionsRemaining,
-      playingAs,
-    ]);
-  }
-
-  const endTurn = () => {
-    engine.endTurn(gameState);
-    setGameState(gameState);
+  const onEndTurn = () => {
+    endTurn();
     setActiveUnit(null);
   }
 
-  const endSwapPhase = () => {
+  const onEndSwapPhase = () => {
     // temp code
     if (playingAs === 1) {
       engine.swapStartingPositions(gameState, gameState.teams[0][0].pos, gameState.teams[0][2].pos);
     }
-    engine.endSwapPhase(gameState);
-    setGameState(gameState);
+    endSwapPhase();
+  }
+
+  const deselectUnit = () => {
+    // setHighlightedTiles([]);
+    setActiveUnit(null);
+    setPotentialAction({});
+    setValidActions([]);
+  }
+
+  const handleTileClick = (x, y) => {
+    if (x < 0 || y < 0 || x >= boardWidth || y >= boardHeight) return;
+    const currentTime = Date.now();
+    const timeSinceLastClick = currentTime - lastClick.time;
+    const prevTile = lastClick.tile;
+    setLastClick({ tile: { x, y }, time: currentTime });
+    if (!gameState.isSwapPhase && timeSinceLastClick <= DOUBLE_CLICK_THRESHOLD_MS && prevTile.x === x && prevTile.y === y) {
+      const doubleTapActiveUnit = activeUnit && activeUnit.hasAction && activeUnit.pos.x === x && activeUnit.pos.y === y;
+      const doubleTapAllyUnit = !activeUnit && gameState.teams[playingAs].some(unit => unit.hasAction && unit.pos.x === x && unit.pos.y === y);
+      if (doubleTapActiveUnit || doubleTapAllyUnit) {
+        const { sequence, onComplete } = executeAction({ from: { x, y }, to: { x, y } });
+        onComplete();
+        deselectUnit();
+        return;
+      }
+    }
+    if (!activeUnit) {
+      queryTile(x, y);
+      return;
+    }
+    handlePotentialActions(x, y);
+  }
+
+  const queryTile = (x, y) => {
+    // setHighlightedTiles([]);
+    const clickedUnit = [...gameState.teams[0], ...gameState.teams[1]].find(unit => unit.pos.x === x && unit.pos.y === y);
+    if (!clickedUnit) {
+      // console.log(`Empty tile clicked at (${x}, ${y})`);
+      return;
+    }
+    // console.log(`Unit ${UNIT[clickedUnit.unitId].name} clicked at (${x}, ${y})`);
+    setSelectedUnit(clickedUnit);
+    const isAlly = gameState.teams[playingAs].includes(clickedUnit);
+    const eligibleToMove = isAlly && (gameState.isSwapPhase || (gameState.currentTurn === playingAs && clickedUnit.hasAction));
+
+    if (eligibleToMove) {
+      setActiveUnit(clickedUnit);
+      setValidActions(engine.generateActions(gameState, clickedUnit));
+    }
+  }
+
+  const getPotentialActionForTarget = target => {
+    const validActionsWithTarget = validActions.filter(action => action.target?.x === target.pos.x && action.target?.y === target.pos.y);
+    if (validActionsWithTarget.length === 0) {
+      return null;
+    }
+    const source = potentialAction.to ?? activeUnit.pos;
+    const closestAction = validActionsWithTarget.reduce((closest, current) => {
+      const distanceToCurrent = Math.abs(current.to.x - source.x) + Math.abs(current.to.y - source.y);
+      const distanceToClosest = Math.abs(closest.to.x - source.x) + Math.abs(closest.to.y - source.y);
+      return distanceToCurrent < distanceToClosest ? current : closest;
+    });
+    return closestAction;
+  }
+
+  const getPotentialAction = (x, y) => {
+    const clickedUnit = gameState.teams[0].concat(gameState.teams[1]).find(unit => unit.pos.x === x && unit.pos.y === y);
+    if (clickedUnit) {
+      return getPotentialActionForTarget(clickedUnit);
+    }
+    const validActionWithSameTarget = validActions.find(action =>
+      action.target && potentialAction.target
+      && action.target.x === potentialAction.target.x && action.target.y === potentialAction.target.y
+      && action.to.x === x && action.to.y === y
+      && (potentialAction.to.x !== x || potentialAction.to.y !== y)
+    );
+    if (validActionWithSameTarget) return validActionWithSameTarget;
+    const validMoveAction = validActions.find(action => action.to.x === x && action.to.y === y);
+    if (validMoveAction) return validMoveAction;
+    return null;
+  }
+
+  const handlePotentialActions = (x, y) => {
+    if (activeUnit.pos.x === x && activeUnit.pos.y === y) {
+      deselectUnit();
+      return;
+    }
+    if (gameState.isSwapPhase) {
+      const clickedAlly = [...gameState.teams[playingAs]].find(unit => unit.pos.x === x && unit.pos.y === y);
+      if (clickedAlly) {
+        swapStartingPositions(activeUnit.pos, clickedAlly.pos);
+        deselectUnit();
+      }
+      return;
+    }
+    const newPotentialAction = getPotentialAction(x, y);
+    if (newPotentialAction) {
+      if (engine.actionEquals(potentialAction, newPotentialAction)) {
+        const { sequence, onComplete } = executeAction(potentialAction);
+        console.log(sequence)
+        onComplete();
+        deselectUnit();
+        return;
+      }
+      setPotentialAction(newPotentialAction);
+      // console.log(`Set potential action: move from (${newPotentialAction.from.x}, ${newPotentialAction.from.y}) to (${newPotentialAction.to.x}, ${newPotentialAction.to.y})` +
+      //   (newPotentialAction.target ? ` and target (${newPotentialAction.target.x}, ${newPotentialAction.target.y}).` : '.'));
+      return;
+    }
+    const clickedUnit = [...gameState.teams[0], ...gameState.teams[1]].find(unit => unit.pos.x === x && unit.pos.y === y);
+    if (clickedUnit) {
+      setSelectedUnit(clickedUnit);
+      // console.log(`Selected unit at (${x}, ${y}) but no valid actions available.`);
+      return;
+    }
+    let outerRange = engine.calculateThreatRange(gameState, activeUnit, false);
+    if (outerRange.length === 0) {
+      outerRange = engine.calculateMovementRange(gameState, activeUnit, false);
+    }
+    if (!outerRange.some(tile => tile.x === x && tile.y === y)) {
+      // console.log(`(${x}, ${y}) is outside of range. Deselecting.`);
+      deselectUnit();
+    } else {
+      // console.log(`(${x}, ${y}) is within attack range but no valid move action found.`);
+    }
   }
 
   return html`
@@ -95,14 +194,9 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
         </div>
       </div>
       `}
-    <${Board}
-      gameState=${gameState} setGameState=${setGameState}
-      potentialAction=${potentialAction} setPotentialAction=${setPotentialAction}
-      activeUnit=${activeUnit} setActiveUnit=${setActiveUnit}
-      selectedUnit=${selectedUnit} setSelectedUnit=${setSelectedUnit}
-      showDangerArea=${showDangerArea}
-      playingAs=${playingAs} />
-    <${ActionPanel} gameState=${gameState} endTurn=${endTurn} setShowDangerArea=${setShowDangerArea} endSwapPhase=${endSwapPhase} playingAs=${playingAs} />
+    <${Board} gameState=${gameState} activeUnit=${activeUnit} validActions=${validActions} potentialAction=${potentialAction}
+      handleTileClick=${handleTileClick} lastClick=${lastClick} showDangerArea=${showDangerArea} playingAs=${playingAs} />
+    <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} />
     <${StatusBar} turn=${gameState.turnCount} currentTurn=${gameState.currentTurn} playingAs=${playingAs} />
   </div>
   ${isWideScreen && html`<${SidePanel} />`}
