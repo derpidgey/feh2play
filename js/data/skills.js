@@ -2220,7 +2220,7 @@ const C_SKILLS = {
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
         condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
-        actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, value: 7, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }]
+        actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, value: 7, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }]
       }
     ]
   },

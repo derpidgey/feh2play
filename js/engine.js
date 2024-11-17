@@ -702,17 +702,17 @@ function Engine() {
     const sequence = [];
     const unit = gameState.teams[0].concat(gameState.teams[1])
       .find(u => u.pos.x === action.from.x && u.pos.y === action.from.y);
-    sequence.push([{ type: "move", id: unit.id, to: { ...action.to } }]);
+    sequence.push([{ type: "move", id: unit.id, to: { x: action.to.x, y: action.to.y } }]);
     // const unitInfo = UNIT[unit.unitId];
     hashPos(gameState, unit);
-    unit.pos = { ...action.to };
+    unit.pos = { x: action.to.x, y: action.to.y };
     unit.hasAction = false;
     hashHasAction(gameState, unit);
     // console.log(`${unitInfo.name} moved from (${action.from.x}, ${action.from.y}) to (${action.to.x}, ${action.to.y})`);
     if (action.target) {
       const block = gameState.map.blocks.find(b => b.x === action.target.x && b.y === action.target.y);
       if (block) {
-        sequence.push([{ type: "attack", from: { ...action.to }, target: { ...action.target } }]);
+        sequence.push([{ type: "attack", id: unit.id, target: { ...action.target } }]);
         block.hp -= 1;
       } else {
         const targetUnit = gameState.teams[0].concat(gameState.teams[1])
@@ -738,15 +738,31 @@ function Engine() {
           targetUnit.special.current = results.units[1].special.current;
           hashSpecial(gameState, targetUnit);
           const aoeSequence = []
-          // sequence.push([{ type: "damage", target: { } }]);
           // todo add result sequence to action sequence
           results.sequence.filter(seq => seq.aoe).forEach(seq => {
-            if (seq.defender === targetUnit.id) return;
-            const aoeVictim = gameState.teams[targetUnit.team].find(victim => victim.id === seq.defender);
+            const { defender, damage } = seq;
+            if (defender === targetUnit.id) return;
+            const aoeVictim = gameState.teams[targetUnit.team].find(victim => victim.id === defender);
             hashHp(gameState, aoeVictim);
-            aoeVictim.stats.hp = Math.max(1, aoeVictim.stats.hp - seq.damage);
+            aoeVictim.stats.hp = Math.max(1, aoeVictim.stats.hp - damage);
             hashHp(gameState, aoeVictim);
+            sequence.push([{ type: "damage", id: aoeVictim.id, amount: damage }]);
           });
+          sequence.push(aoeSequence);
+          results.sequence.filter(seq => !seq.aoe).forEach(seq => {
+            const { attacker, defender, damage, healing } = seq;
+            sequence.push([{
+              type: "attack",
+              id: attacker,
+              target: [unit, targetUnit].find(u => u.id === defender).pos
+            }]);
+            const damageSequence = [{ type: "damage", id: defender, amount: damage }];
+            if (healing) {
+              damageSequence.push({ type: "healing", id: attacker, amount: healing })
+            }
+            sequence.push(damageSequence);
+          });
+
           const context = { results, gameState };
 
           const afterCombatBeforeDeathEffects = [];
@@ -771,6 +787,7 @@ function Engine() {
             .forEach(u => afterCombatEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_ALLY_COMBAT, u, context)));
           processEffects(afterCombatEffects, context);
 
+          context.sequence = sequence;
           const afterCombatDisplacementEffects = [];
           afterCombatDisplacementEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_COMBAT_DISPLACEMENT, unit, context));
           afterCombatDisplacementEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_COMBAT_DISPLACEMENT, targetUnit, context));
@@ -2254,9 +2271,11 @@ function Engine() {
     const { unitDestination, targetDestination } = calculateMovementTypeDestinations(gameState, unit.pos, target, movementType);
     if (validateMovementTypeDestinations(gameState, unit, unitDestination, target, targetDestination, movementType)) {
       unit.pos = unitDestination;
+      context.sequence.push([{ type: "move", id: unit.id, to: { ...unitDestination } }]);
       if (target.stats.hp > 0) {
         hashPos(gameState, target);
         target.pos = targetDestination;
+        context.sequence.push([{ type: "move", id: target.id, to: { ...targetDestination } }]);
         hashPos(gameState, target);
       }
     }

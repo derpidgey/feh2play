@@ -7,6 +7,7 @@ import Timer from "./Timer.js";
 import ActionTracker from "./ActionTracker.js";
 
 const engine = Engine();
+const FPS = 1000 / 30;
 
 const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs }) => {
   const [tileSize, setTileSize] = useState(50);
@@ -34,6 +35,63 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
     }
   }, 10);
 
+  const handleMoveAnimation = (animation, resolve) => {
+    const { id, to } = animation;
+    const frames = 8;
+    const from = unitPositionsRef.current[id];
+    const dx = (to.x - from.x) / frames;
+    const dy = (to.y - from.y) / frames;
+    let frame = 0;
+    const interval = setInterval(() => {
+      if (frame >= frames) {
+        clearInterval(interval);
+        unitPositionsRef.current[id] = { ...to };
+        setUnitPositions({ ...unitPositionsRef.current });
+        resolve();
+      } else {
+        unitPositionsRef.current[id] = {
+          x: unitPositionsRef.current[id].x + dx,
+          y: unitPositionsRef.current[id].y + dy
+        };
+        setUnitPositions({ ...unitPositionsRef.current });
+        frame++;
+      }
+    }, FPS);
+  }
+
+  const handleAttackAnimation = (animation, resolve) => {
+    const { id, target } = animation;
+    const frames = 6;
+    const from = unitPositionsRef.current[id];
+    const dx = (target.x - from.x) / 10;
+    const dy = (target.y - from.y) / 10;
+    let frame = 0;
+    const originalPosition = { ...from };
+    const interval = setInterval(() => {
+      if (frame < 3) {
+        // Advance phase
+        unitPositionsRef.current[id] = {
+          x: unitPositionsRef.current[id].x + dx,
+          y: unitPositionsRef.current[id].y + dy,
+        };
+      } else if (frame < frames) {
+        // Retreat phase
+        unitPositionsRef.current[id] = {
+          x: unitPositionsRef.current[id].x - dx,
+          y: unitPositionsRef.current[id].y - dy,
+        };
+      } else {
+        clearInterval(interval);
+        unitPositionsRef.current[id] = originalPosition;
+        setUnitPositions({ ...unitPositionsRef.current });
+        resolve();
+        return;
+      }
+      setUnitPositions({ ...unitPositionsRef.current });
+      frame++;
+    }, FPS);
+  }
+
   useEffect(() => {
     if (!animationSequence || animationSequence.length === 0) return;
     unitPositionsRef.current = gameState.teams[0]
@@ -43,36 +101,14 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
         return acc;
       }, {});
     setUnitPositions({ ...unitPositionsRef.current });
-    const FPS = 1000 / 30;
     const animate = async () => {
       for (const animationBatch of animationSequence) {
         const animations = animationBatch.map(animation => {
           return new Promise(resolve => {
             if (animation.type === "move") {
-              const { id, to } = animation;
-              const frames = 8;
-              let frame = 0;
-              const from = unitPositionsRef.current[id];
-              const dx = (to.x - from.x) / frames;
-              const dy = (to.y - from.y) / frames;
-              const interval = setInterval(() => {
-                if (frame >= frames) {
-                  clearInterval(interval);
-                  unitPositionsRef.current[id] = { ...to };
-                  setUnitPositions({ ...unitPositionsRef.current });
-                  resolve();
-                } else {
-                  unitPositionsRef.current[id] = {
-                    x: unitPositionsRef.current[id].x + dx,
-                    y: unitPositionsRef.current[id].y + dy
-                  };
-                  setUnitPositions({ ...unitPositionsRef.current });
-                  frame++;
-                }
-              }, FPS);
+              handleMoveAnimation(animation, resolve);
             } else if (animation.type === "attack") {
-              const frames = 6; // todo
-              resolve();
+              handleAttackAnimation(animation, resolve);
             } else if (animation.type === "tp") {
               const { id, to } = animation;
               unitPositionsRef.current[id] = {
