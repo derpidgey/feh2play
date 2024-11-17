@@ -10,7 +10,6 @@ import useGameLogic from "../hooks/useGameLogic.js";
 
 const engine = Engine();
 const DOUBLE_CLICK_THRESHOLD_MS = 200;
-const WIDE_SCREEN_THRESHOLD = 768;
 
 const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
   const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState);
@@ -27,12 +26,13 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
   const boardWidth = gameState.map.terrain[0].length;
   const boardHeight = gameState.map.terrain.length;
   const isAnimating = animationSequence.length > 0;
+  const backgroundType = gameState.mode === "duel" ? "absolute" : "relative";
 
   if (gameState.gameOver) {
     onGameOver(gameState.duelState[playingAs].result);
   }
 
-  useResizeListener(() => setIsWideScreen(window.innerWidth > WIDE_SCREEN_THRESHOLD));
+  useResizeListener(() => setIsWideScreen(window.innerWidth >= window.innerHeight * 3 / 2));
 
   if (gameState.mode === "duel") {
     useEffect(() => {
@@ -200,7 +200,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
   }
 
   return html`
-  ${isWideScreen && html`<${SidePanel} />`}
+  ${isWideScreen && html`<${SidePanel} team=${gameState.teams[0]} backgroundType=${backgroundType} playingAs=${playingAs} />`}
   <div class="screen">
     <${InfoPanel} gameState=${gameState} unit=${selectedUnit} potentialAction=${potentialAction} playingAs=${playingAs} />
     ${gameState.mode === "duel" && html`
@@ -231,7 +231,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
     <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} />
     <${StatusBar} turn=${gameState.turnCount} currentTurn=${gameState.currentTurn} playingAs=${playingAs} />
   </div>
-  ${isWideScreen && html`<${SidePanel} />`}
+  ${isWideScreen && html`<${SidePanel} team=${gameState.teams[1]} backgroundType=${backgroundType} playingAs=${playingAs} />`}
   `;
 }
 

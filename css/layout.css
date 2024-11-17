@@ -82,7 +82,7 @@
 
 .side-panel {
   height: 100%;
-  max-width: 33.33vw;
+  max-width: calc(100vh * (1 / 2));
   flex-grow: 1;
   background-color: #000;
 }

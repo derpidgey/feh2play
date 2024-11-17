@@ -1,9 +1,9 @@
 import { html } from "https://esm.sh/htm/preact/standalone";
 import UNIT from "../data/units.js";
 import SKILLS from "../data/skills.js";
-import STATUS from "../data/status.js";
 import { COMBAT_FLAG, SKILL_TYPE, WEAPON_TYPE } from "../data/definitions.js";
 import Engine from "../engine.js";
+import UnitInfo from "./UnitInfo.js";
 
 const engine = Engine();
 
@@ -18,7 +18,8 @@ const InfoPanel = ({ gameState, unit, potentialAction, playingAs }) => {
     return html`<${ActionPreview} gameState=${gameState} potentialAction=${potentialAction} />`;
   }
   if (unit) {
-    return html`<${UnitInfo} unit=${unit} playingAs=${playingAs} />`
+    const backgroundType = gameState.mode === "duel" ? "absolute" : "relative";
+    return html`<${UnitInfo} unit=${unit} backgroundType=${backgroundType} playingAs=${playingAs} />`
   }
   return html`<div class="info-panel"></div>`;
 }
@@ -31,7 +32,17 @@ const ActionPreview = ({ gameState, potentialAction }) => {
     .find(unit => unit.pos.x === potentialAction.target.x && unit.pos.y === potentialAction.target.y)
   const targetInfo = UNIT[target.unitId];
   const actionType = unit.team === target.team ? "assist" : "attack";
-  const rightBackground = actionType === "assist" ? "mediumturquoise" : "darkred";
+  const backgroundType = gameState.mode === "duel" ? "absolute" : "relative";
+  const backgrounds = ["mediumturquoise", "darkred"];
+  let leftBackground;
+  let rightBackground;
+  if (backgroundType === "relative") {
+    leftBackground = 0;
+    rightBackground = actionType === "assist" ? 0 : 1;
+  } else {
+    leftBackground = unit.team === 0 ? 0 : 1;
+    rightBackground = actionType === "assist" ? leftBackground : leftBackground ^ 1;
+  }
 
   let unitRemainingHp = unit.stats.hp;
   let targetRemainingHp = target.stats.hp;
@@ -70,62 +81,26 @@ const ActionPreview = ({ gameState, potentialAction }) => {
   };
 
   return html`<div class="info-panel">
-    <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center; background: mediumturquoise;">
+    <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center; background: ${backgrounds[leftBackground]};">
       <img src=${unitInfo.imgFace} alt=${unitInfo.name} style="width: 100%; max-width: 80px; object-fit: contain;" />
     </div>
-    <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: mediumturquoise;">
+    <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[leftBackground]};">
       <h2>${unitInfo.name}</h2>
       <p>${unit.stats.hp} → ${unitRemainingHp}</p>
       ${actionType === "assist" && html`<p>${assist}</p>`}
       ${actionType === "attack" && html`<p>${formulas[0]}</p>`}
       ${actionType === "attack" && html`<p>${renderTempStats(result.units[0].tempStats)}</p>`}
     </div>
-    <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${rightBackground};">
+    <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[rightBackground]};">
       <h2>${targetInfo.name}</h2>
       <p>${target.stats.hp} → ${targetRemainingHp}</p>
       ${actionType === "attack" && html`<p>${formulas[1]}</p>`}
       ${actionType === "attack" && html`<p>${renderTempStats(result.units[1].tempStats)}</p>`}
     </div>
-    <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center; background: ${rightBackground};">
+    <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center; background: ${backgrounds[rightBackground]};">
       <img src=${targetInfo.imgFace} alt=${targetInfo.name} style="width: 100%; max-width: 80px; object-fit: contain;" />
     </div>
   </div>`;
-}
-
-const UnitInfo = ({ unit, playingAs }) => {
-  const unitInfo = UNIT[unit.unitId];
-  const isPanicked = unit.penalties.includes(STATUS.PANIC.id);
-  const visibleAtk = unit.stats.atk + (isPanicked ? -unit.buffs.atk : unit.buffs.atk) - unit.debuffs.atk;
-  const visibleSpd = unit.stats.spd + (isPanicked ? -unit.buffs.spd : unit.buffs.spd) - unit.debuffs.spd;
-  const visibleDef = unit.stats.def + (isPanicked ? -unit.buffs.def : unit.buffs.def) - unit.debuffs.def;
-  const visibleRes = unit.stats.res + (isPanicked ? -unit.buffs.res : unit.buffs.res) - unit.debuffs.res;
-
-  const getStatStyle = (visible, base) => {
-    if (visible > base) return { color: "dodgerblue" }; // deepskyblue/dodgerblue
-    if (visible < base) return { color: "red" };
-    return { color: "black" }; // gold?
-  };
-
-  return html`
-  <div class="info-panel" style="background: ${unit.team === playingAs ? "mediumturquoise" : "darkred"};">
-    <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center;">
-      <img src=${unitInfo.imgFace} alt=${unitInfo.name} style="width: 100%; max-width: 80px; object-fit: contain;" />
-    </div>
-    <div style="flex: 1 1 40%; display: flex; flex-direction: column;">
-      <h2>${unitInfo.name}</h2>
-      <p>HP: ${unit.stats.hp} / ${unit.stats.maxHp}</p>
-      <p>
-        ATK: <span style=${getStatStyle(visibleAtk, unit.stats.atk)}>${visibleAtk}</span> SPD: <span style=${getStatStyle(visibleSpd, unit.stats.spd)}>${visibleSpd}</span>
-      </p>
-      <p>
-        DEF: <span style=${getStatStyle(visibleDef, unit.stats.def)}>${visibleDef}</span> RES: <span style=${getStatStyle(visibleRes, unit.stats.res)}>${visibleRes}</span>
-      </p>
-    </div>
-    <div style="flex: 1 1 40%; display: flex; flex-direction: column;">
-      ${unit.skills.map(skill => html`<p>${SKILLS[skill].name}</p>`)}
-    </div>
-  </div>
-  `;
 }
 
 export default InfoPanel;
