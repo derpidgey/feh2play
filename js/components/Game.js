@@ -26,7 +26,8 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
   const boardWidth = gameState.map.terrain[0].length;
   const boardHeight = gameState.map.terrain.length;
   const isAnimating = animationSequence.length > 0;
-  const backgroundType = gameState.mode === "duel" ? "absolute" : "relative";
+  const isDuel = gameState.mode === "duel";
+  const backgroundType = isDuel ? "absolute" : "relative";
 
   if (gameState.gameOver) {
     onGameOver(gameState.duelState[playingAs].result);
@@ -200,7 +201,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
   }
 
   return html`
-  ${isWideScreen && html`<${SidePanel} team=${gameState.teams[0]} backgroundType=${backgroundType} playingAs=${playingAs} />`}
+  ${isWideScreen && html`<${SidePanel} team=${gameState.teams[0].filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)} backgroundType=${backgroundType} playingAs=${playingAs} />`}
   <div class="screen">
     <${InfoPanel} gameState=${gameState} unit=${selectedUnit} potentialAction=${potentialAction} playingAs=${playingAs} />
     ${gameState.mode === "duel" && html`
@@ -231,7 +232,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver }) => {
     <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} />
     <${StatusBar} turn=${gameState.turnCount} currentTurn=${gameState.currentTurn} playingAs=${playingAs} />
   </div>
-  ${isWideScreen && html`<${SidePanel} team=${gameState.teams[1]} backgroundType=${backgroundType} playingAs=${playingAs} />`}
+  ${isWideScreen && html`<${SidePanel} team=${gameState.teams[1].filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)} backgroundType=${backgroundType} playingAs=${playingAs} />`}
   `;
 }
 
