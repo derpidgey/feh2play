@@ -789,15 +789,21 @@ function Engine() {
 
           context.sequence = sequence;
           const afterCombatDisplacementEffects = [];
-          afterCombatDisplacementEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_COMBAT_DISPLACEMENT, unit, context));
-          afterCombatDisplacementEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_COMBAT_DISPLACEMENT, targetUnit, context));
+          if (unit.stats.hp > 0) {
+            afterCombatDisplacementEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_COMBAT_DISPLACEMENT, unit, context));
+          }
+          if (targetUnit.stats.hp > 0) {
+            afterCombatDisplacementEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_COMBAT_DISPLACEMENT, targetUnit, context));
+          }
           processEffects(afterCombatDisplacementEffects, context);
 
-          const unitSpecial = getSpecialInfo(unit);
-          const unitSpecialTriggered = unitSpecial?.specialType === SPECIAL_TYPE.GALEFORCE && unit.special.current === 0 && !unit.hasAction;
-          if (unitSpecialTriggered) {
-            unit.hasAction = true;
-            hashHasAction(gameState, unit);
+          if (unit.stats.hp > 0) {
+            const unitSpecial = getSpecialInfo(unit);
+            const unitSpecialTriggered = unitSpecial?.specialType === SPECIAL_TYPE.GALEFORCE && unit.special.current === 0 && !unit.hasAction;
+            if (unitSpecialTriggered) {
+              unit.hasAction = true;
+              hashHasAction(gameState, unit);
+            }
           }
         }
       }
