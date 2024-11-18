@@ -96,3 +96,36 @@
   height: 8.33%; /* 1/12th of the screen height */
   background-color: #bbb;
 }
+
+.skill-line {
+  height: 25%;
+  padding-top: 5%;
+  display: flex;
+  align-items: center;
+}
+
+.skill-line > img {
+  width: 15%;
+  margin-right: 5%;
+}
+
+.skill-icons {
+  display: flex;
+}
+
+.skill-icons > * {
+  width: 15%;
+  margin-top: 2%;
+  margin-bottom: 2%;
+  margin-left: -3%;
+}
+
+.skill-icons > *:first-child {
+  margin-left: 0;
+}
+
+.skill-icons > .no-skill {
+  background-color: darkslategrey;
+  border-radius: 100%;
+  aspect-ratio: 1;
+}

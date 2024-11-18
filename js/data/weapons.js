@@ -1,5 +1,5 @@
 import { CONDITION } from "./conditions.js";
-import { ASSIST_TYPE, COMBAT_FLAG, CONDITION_OPERATOR, EFFECT_ACTION, EFFECT_CALCULATION, EFFECT_CONDITION, EFFECT_PHASE, EFFECT_TARGET, MOVE_TYPE, MOVEMENT_TYPE, SKILL_TYPE, SPECIAL_TYPE, STAT_CHECK_TYPE, STATS, WEAPON_TYPE } from "./definitions.js";
+import { COMBAT_FLAG, CONDITION_OPERATOR, EFFECT_ACTION, EFFECT_CALCULATION, EFFECT_CONDITION, EFFECT_PHASE, EFFECT_TARGET, MOVE_TYPE, MOVEMENT_TYPE, SKILL_TYPE, SPECIAL_TYPE, STAT_CHECK_TYPE, STATS, WEAPON_TYPE } from "./definitions.js";
 import { EFFECT } from "./effects.js";
 import STATUS from "./status.js";
 
@@ -31,6 +31,15 @@ const STAFF_REFINE_EFFECTS = {
   }
 };
 
+const REFINE_IMAGE_MAP = {
+  ATK: "assets/icons/Attack_Plus_W.webp",
+  SPD: "assets/icons/Speed_Plus_W.webp",
+  DEF: "assets/icons/Defense_Plus_W.webp",
+  RES: "assets/icons/Resistance_Plus_W.webp",
+  WRATHFUL: "assets/icons/Wrathful_Staff_W.webp",
+  DAZZLE: "assets/icons/Dazzling_Staff_W.webp"
+}
+
 function createRefinedWeapon(baseWeapon, refineType) {
   const refineStats = baseWeapon.range === 1 ? MELEE_REFINE_OPTIONS[refineType] : RANGED_REFINE_OPTIONS[refineType];
   const id = `${baseWeapon.id}_REFINE_${refineType.toUpperCase()}`;
@@ -47,9 +56,10 @@ function createRefinedWeapon(baseWeapon, refineType) {
   return {
     ...baseWeapon,
     id,
-    name: `${baseWeapon.name} (+${refineType})`,
     description,
-    effects
+    effects,
+    refined: true,
+    img: REFINE_IMAGE_MAP[refineType] ?? baseWeapon.refineImg
   };
 }
 
@@ -61,12 +71,18 @@ function createRefinedStaffWeapon(baseWeapon, refineType) {
   description += `\n${STAFF_REFINE_EFFECTS[refineType].description}`;
   effects.push(STAFF_REFINE_EFFECTS[refineType].effect);
 
+  if (refineType === "EFF") {
+    description += `\n${baseWeapon.effectRefine.description}`;
+    effects.push(...baseWeapon.effectRefine.effects);
+  }
+
   return {
     ...baseWeapon,
     id,
-    name: `${baseWeapon.name} (+${refineType})`,
     description,
-    effects
+    effects,
+    refined: true,
+    img: REFINE_IMAGE_MAP[refineType] ?? baseWeapon.refineImg
   };
 }
 
@@ -964,7 +980,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "Grants Atk/Spd/Def/Res+3. After combat, deals 6 damage to unit.",
       effects: [EFFECT.visibleStats({ atk: 3, spd: 3, def: 3, res: 3 }), EFFECT.postCombatSelfDamage(6)]
-    }
+    },
+    refineImg: "assets/refines/Fury_W.webp"
   },
   ARTHURS_AXE: {
     name: "Arthur's Axe",
@@ -1004,7 +1021,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Arthurs_Axe_W.webp"
   },
   BERUKAS_AXE: {
     name: "Beruka's Axe",
@@ -1030,7 +1048,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Berukas_Axe_W.webp"
   },
   BULL_BLADE: {
     name: "Bull Blade",
@@ -1073,7 +1092,8 @@ const EXCLUSIVE_WEAPONS = {
           actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.ATTACKS_TWICE, target: { type: EFFECT_TARGET.SELF } }]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Consecutive_Attack_RG_W.webp"
   },
   CAMILLAS_AXE: {
     name: "Camilla's Axe",
@@ -1112,7 +1132,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Camillas_Axe_W.webp"
   },
   CORDELIAS_LANCE: {
     name: "Cordelia's Lance",
@@ -1135,7 +1156,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Cordelias_Lance_W.webp"
   },
   CORVUS_TOME: {
     name: "Corvus Tome",
@@ -1159,7 +1181,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Corvus_Tome_W.webp"
   },
   DEVIL_AXE: {
     name: "Devil Axe",
@@ -1200,7 +1223,8 @@ const EXCLUSIVE_WEAPONS = {
           actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, value: 10 }]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Wrath_W.webp"
   },
   DURANDAL: {
     name: "Durandal",
@@ -1218,7 +1242,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "If unit initiates combat, grants Atk/Spd+4 during combat.",
       effects: [EFFECT.playerPhaseStats({ atk: 4, spd: 4 })]
-    }
+    },
+    refineImg: "assets/refines/Swift_Sparrow_W.webp"
   },
   EFFIES_LANCE: {
     name: "Effie's Lance",
@@ -1250,7 +1275,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Effies_Lance_W.webp"
   },
   ETERNAL_BREATH: {
     name: "Eternal Breath",
@@ -1290,7 +1316,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Eternal_Breath_W.webp"
   },
   FALCHION_AWAKENING: {
     name: "Falchion",
@@ -1341,7 +1368,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Falchion_Awakening_W.webp"
   },
   FELICIAS_PLATE: {
     name: "Felicia's Plate",
@@ -1373,7 +1401,8 @@ const EXCLUSIVE_WEAPONS = {
           actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK, target: { type: EFFECT_TARGET.SELF } }]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Felicias_Plate_W.webp"
   },
   FLORINAS_LANCE: {
     name: "Florina's Lance",
@@ -1401,7 +1430,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Florinas_Lance_W.webp"
   },
   FOLKVANGR: {
     name: "Fólkvangr",
@@ -1436,7 +1466,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "If unit has weapon-triangle advantage, boosts Atk by 20%. If unit has weapon-triangle disadvantage, reduces Atk by 20%.",
       effects: [EFFECT.triangleAdept()]
-    }
+    },
+    refineImg: "assets/refines/Triangle_Adept_W.webp"
   },
   FREDERICKS_AXE: {
     name: "Frederick's Axe",
@@ -1452,7 +1483,8 @@ const EXCLUSIVE_WEAPONS = {
       effects: [
         EFFECT.playerPhaseStats({ atk: 6 })
       ]
-    }
+    },
+    refineImg: "assets/refines/Death_Blow_W.webp"
   },
   HANAS_KATANA: {
     name: "Hana's Katana",
@@ -1466,7 +1498,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "If unit initiates combat, grants Atk/Spd+4 during combat.",
       effects: [EFFECT.playerPhaseStats({ atk: 4, spd: 4 })]
-    }
+    },
+    refineImg: "assets/refines/Swift_Sparrow_W.webp"
   },
   HEWN_LANCE: {
     name: "Hewn Lance",
@@ -1480,7 +1513,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "If unit initiates combat, grants Atk/Def+4 during combat and foe cannot make a follow-up attack.",
       effects: [EFFECT.playerPhaseStats({ atk: 4, def: 4 }), EFFECT.impact()]
-    }
+    },
+    refineImg: "assets/refines/Hewn_Lance_W.webp"
   },
   HINOKAS_SPEAR: {
     name: "Hinoka's Spear",
@@ -1513,9 +1547,10 @@ const EXCLUSIVE_WEAPONS = {
           actions: [{ type: EFFECT_ACTION.ENABLE_WARP, target: { type: EFFECT_TARGET.SPACES_WITHIN_UNIT, spaces: 1 } }]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Hinokas_Spear_W.webp"
   },
-  Inveterate_AXE: {
+  INVETERATE_AXE: {
     name: "Inveterate Axe",
     description: "At start of turn, if unit's HP ≥ 50%, inflicts Atk/Def-5 on foe on the enemy team with the lowest Spd through its next action.",
     type: SKILL_TYPE.WEAPON,
@@ -1560,7 +1595,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Inveterate_Axe_W.webp"
   },
   IRISS_TOME: {
     name: "Iris's Tome",
@@ -1583,7 +1619,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Even_Atk_Wave_W.webp"
   },
   NAMELESS_BLADE: {
     name: "Nameless Blade",
@@ -1600,7 +1637,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "Deals +10 damage when Special triggers.",
       effects: [EFFECT.damageOnSpecialTrigger(10)]
-    }
+    },
+    refineImg: "assets/refines/Special_Damage_W.webp"
   },
   NOATUN: {
     name: "Nóatún",
@@ -1638,7 +1676,8 @@ const EXCLUSIVE_WEAPONS = {
           actions: [{ type: EFFECT_ACTION.ENABLE_WARP, target: { type: EFFECT_TARGET.SPACES_WITHIN_ALLIES, allyRange: 2, warpRange: 1 } }]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Follow_W.webp"
   },
   PANTHER_LANCE: {
     name: "Panther Lance",
@@ -1681,7 +1720,8 @@ const EXCLUSIVE_WEAPONS = {
           actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.ATTACKS_TWICE, target: { type: EFFECT_TARGET.SELF } }]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Consecutive_Attack_RG_W.webp"
   },
   PURIFYING_BREATH: {
     name: "Purifying Breath",
@@ -1708,7 +1748,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Purifying_Breath_W.webp"
   },
   STALWART_SWORD: {
     name: "Stalwart Sword",
@@ -1740,7 +1781,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Stalwart_Sword_W.webp"
   },
   TOME_OF_ORDER: {
     name: "Tome of Order",
@@ -1754,7 +1796,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "If unit has weapon-triangle advantage, boosts Atk by 20%. If unit has weapon-triangle disadvantage, reduces Atk by 20%.",
       effects: [EFFECT.triangleAdept()]
-    }
+    },
+    refineImg: "assets/refines/Triangle_Adept_W.webp"
   },
   WEIGHTED_LANCE: {
     name: "Weighted Lance",
@@ -1778,7 +1821,8 @@ const EXCLUSIVE_WEAPONS = {
           ]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Weighted_Lance_W.webp"
   },
   WHITEWING_BLADE: {
     name: "Whitewing Blade",
@@ -1792,7 +1836,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "If the number of flying allies within 2 spaces ≥ 2, grants Atk/Spd/Def/Res+3 during combat, and if unit initiates combat, unit attacks twice.",
       effects: [EFFECT.whitewingStats(), EFFECT.whitewingBrave()]
-    }
+    },
+    refineImg: "assets/refines/Triangle_W.webp"
   },
   WHITEWING_LANCE: {
     name: "Whitewing Lance",
@@ -1806,7 +1851,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "If the number of flying allies within 2 spaces ≥ 2, grants Atk/Spd/Def/Res+3 during combat, and if unit initiates combat, unit attacks twice.",
       effects: [EFFECT.whitewingStats(), EFFECT.whitewingBrave()]
-    }
+    },
+    refineImg: "assets/refines/Triangle_W.webp"
   },
   WHITEWING_SPEAR: {
     name: "Whitewing Spear",
@@ -1820,7 +1866,8 @@ const EXCLUSIVE_WEAPONS = {
     effectRefine: {
       description: "If the number of flying allies within 2 spaces ≥ 2, grants Atk/Spd/Def/Res+3 during combat, and if unit initiates combat, unit attacks twice.",
       effects: [EFFECT.whitewingStats(), EFFECT.whitewingBrave()]
-    }
+    },
+    refineImg: "assets/refines/Triangle_W.webp"
   },
   WING_SWORD: {
     name: "Wing Sword",
@@ -1840,7 +1887,8 @@ const EXCLUSIVE_WEAPONS = {
           actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_UNIT_ATTACK, target: { type: EFFECT_TARGET.SELF } }]
         }
       ]
-    }
+    },
+    refineImg: "assets/refines/Flashing_Blade_W.webp"
   }
 };
 

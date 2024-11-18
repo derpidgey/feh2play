@@ -746,88 +746,135 @@ const A_SKILLS = {
     description: "Grants Atk/Spd/Def/Res+3. After combat, deals 6 damage to unit.",
     img: "assets/skills/Fury_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.visibleStats({ atk: 3, spd: 3, def: 3, res: 3 }), EFFECT.postCombatSelfDamage(6)]
   },
   HP_PLUS_5: {
     name: "HP +5",
     description: "Grants HP+5.",
-    img: "assets/skills/HP_Plus_5.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ hp: 5 })]
+    img: "assets/skills/HP_Plus_5.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ hp: 5 })]
   },
   ATTACK_PLUS_3: {
     name: "Attack +3",
     description: "Grants Atk+3.",
-    img: "assets/skills/Attack_Plus_3.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ atk: 3 })]
+    img: "assets/skills/Attack_Plus_3.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ atk: 3 })]
   },
   SPEED_PLUS_3: {
     name: "Speed +3",
     description: "Grants Spd+3.",
-    img: "assets/skills/Speed_Plus_3.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ spd: 3 })]
+    img: "assets/skills/Speed_Plus_3.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ spd: 3 })]
   },
   DEFENSE_PLUS_3: {
     name: "Defense +3",
     description: "Grants Def+3.",
-    img: "assets/skills/Defense_Plus_3.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ def: 3 })]
+    img: "assets/skills/Defense_Plus_3.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ def: 3 })]
   },
   RESISTANCE_PLUS_3: {
     name: "Resistance +3",
     description: "Grants Res+3.",
-    img: "assets/skills/Resistance_Plus_3.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ res: 3 })]
+    img: "assets/skills/Resistance_Plus_3.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ res: 3 })]
   },
   HP_ATK_2: {
     name: "HP/Atk 2",
     description: "Grants HP+4, Atk+2.",
-    img: "assets/skills/HP_Atk_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ hp: 5, atk: 2 })]
+    img: "assets/skills/HP_Atk_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ hp: 5, atk: 2 })]
   },
   HP_SPD_2: {
     name: "HP/Spd 2",
     description: "Grants HP+4, Spd+2.",
-    img: "assets/skills/HP_Spd_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ hp: 5, spd: 2 })]
+    img: "assets/skills/HP_Spd_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ hp: 5, spd: 2 })]
   },
   HP_DEF_2: {
     name: "HP/Def 2",
     description: "Grants HP+4, Def+2.",
-    img: "assets/skills/HP_Def_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ hp: 5, def: 2 })]
+    img: "assets/skills/HP_Def_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ hp: 5, def: 2 })]
   },
   HP_RES_2: {
     name: "HP/Res 2",
     description: "Grants HP+4, Res+2.",
-    img: "assets/skills/HP_Res_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ hp: 5, res: 2 })]
+    img: "assets/skills/HP_Res_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ hp: 5, res: 2 })]
   },
   ATK_SPD_2: {
     name: "Atk/Spd 2",
     description: "Grants Atk/Spd+2.",
-    img: "assets/skills/Atk_Spd_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ atk: 2, spd: 2 })]
+    img: "assets/skills/Atk_Spd_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ atk: 2, spd: 2 })]
   },
   ATK_DEF_2: {
     name: "Atk/Def 2",
     description: "Grants Atk/Def+2.",
-    img: "assets/skills/Atk_Def_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ atk: 2, def: 2 })]
+    img: "assets/skills/Atk_Def_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ atk: 2, def: 2 })]
   },
   ATK_RES_2: {
     name: "Atk/Res 2",
     description: "Grants Atk/Res+2.",
-    img: "assets/skills/Atk_Res_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ atk: 2, res: 2 })]
+    img: "assets/skills/Atk_Res_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ atk: 2, res: 2 })]
   },
   SPD_DEF_2: {
     name: "Spd/Def 2",
     description: "Grants Spd/Def+2.",
-    img: "assets/skills/Spd_Def_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ spd: 2, def: 2 })]
+    img: "assets/skills/Spd_Def_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ spd: 2, def: 2 })]
   },
   SPD_RES_2: {
     name: "Spd/Res 2",
     description: "Grants Spd/Res+2.",
-    img: "assets/skills/Spd_Res_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ spd: 2, res: 2 })]
+    img: "assets/skills/Spd_Res_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ spd: 2, res: 2 })]
   },
   DEF_RES_2: {
     name: "Def/Res 2",
     description: "Grants Def/Res+2.",
-    img: "assets/skills/Def_Res_2.webp", type: SKILL_TYPE.A, effects: [EFFECT.visibleStats({ def: 2, res: 2 })]
+    img: "assets/skills/Def_Res_2.webp",
+    type: SKILL_TYPE.A,
+    availableAsSeal: true,
+    effects: [EFFECT.visibleStats({ def: 2, res: 2 })]
   },
   FORTRESS_DEF_3: {
     name: "Fortress Def 3",
     description: "Grants Def+5. Inflicts Atk-3.",
     img: "assets/skills/Fortress_Def_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.visibleStats({ def: 5, atk: -3 })]
   },
   FORTRESS_RES_3: {
@@ -835,6 +882,7 @@ const A_SKILLS = {
     description: "Grants Res+5. Inflicts Atk-3.",
     img: "assets/skills/Fortress_Res_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.visibleStats({ res: 5, atk: -3 })]
   },
   LIFE_AND_DEATH_3: {
@@ -842,6 +890,7 @@ const A_SKILLS = {
     description: "Grants Atk/Spd+5. Inflicts Def/Res-5.",
     img: "assets/skills/Life_and_Death_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.visibleStats({ atk: 5, spd: 5, def: -5, res: -5 })]
   },
   DEATH_BLOW_3: {
@@ -849,6 +898,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Atk+6 during combat.",
     img: "assets/skills/Death_Blow_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ atk: 6 })]
   },
   DARTING_BLOW_3: {
@@ -856,6 +906,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Spd+6 during combat.",
     img: "assets/skills/Darting_Blow_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ spd: 6 })]
   },
   ARMOURED_BLOW_3: {
@@ -863,6 +914,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Def+6 during combat.",
     img: "assets/skills/Armoured_Blow_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ def: 6 })]
   },
   WARDING_BLOW_3: {
@@ -870,6 +922,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Res+6 during combat.",
     img: "assets/skills/Warding_Blow_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ res: 6 })]
   },
   SWIFT_SPARROW_2: {
@@ -877,6 +930,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Atk/Spd+4 during combat.",
     img: "assets/skills/Swift_Sparrow_2.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ atk: 4, spd: 4 })]
   },
   STURDY_BLOW_2: {
@@ -884,6 +938,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Atk/Def+4 during combat.",
     img: "assets/skills/Sturdy_Blow_2.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ atk: 4, def: 4 })]
   },
   MIRROR_STRIKE_2: {
@@ -891,6 +946,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Atk/Res+4 during combat.",
     img: "assets/skills/Mirror_Strike_2.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ atk: 4, res: 4 })]
   },
   STEADY_BLOW_2: {
@@ -898,6 +954,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Spd/Def+4 during combat.",
     img: "assets/skills/Steady_Blow_2.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ spd: 4, def: 4 })]
   },
   SWIFT_STRIKE_2: {
@@ -905,6 +962,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Spd/Res+4 during combat.",
     img: "assets/skills/Swift_Strike_2.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ spd: 4, res: 4 })]
   },
   BRACING_BLOW_2: {
@@ -912,6 +970,7 @@ const A_SKILLS = {
     description: "If unit initiates combat, grants Def/Res+4 during combat.",
     img: "assets/skills/Bracing_Blow_2.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.playerPhaseStats({ def: 4, res: 4 })]
   },
   FIERCE_STANCE_3: {
@@ -919,6 +978,7 @@ const A_SKILLS = {
     description: "If foe initiates combat, grants Atk+6 during combat.",
     img: "assets/skills/Fierce_Stance_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.enemyPhaseStats({ atk: 6 })]
   },
   DARTING_STANCE_3: {
@@ -926,6 +986,7 @@ const A_SKILLS = {
     description: "If foe initiates combat, grants Spd+6 during combat.",
     img: "assets/skills/Darting_Stance_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.enemyPhaseStats({ spd: 6 })]
   },
   STEADY_STANCE_3: {
@@ -933,6 +994,7 @@ const A_SKILLS = {
     description: "If foe initiates combat, grants Def+6 during combat.",
     img: "assets/skills/Steady_Stance_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.enemyPhaseStats({ def: 6 })]
   },
   WARDING_STANCE_3: {
@@ -940,6 +1002,7 @@ const A_SKILLS = {
     description: "If foe initiates combat, grants Res+6 during combat.",
     img: "assets/skills/Warding_Stance_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.enemyPhaseStats({ res: 6 })]
   },
   FIERCE_BREATH: {
@@ -947,6 +1010,7 @@ const A_SKILLS = {
     description: "If foe initiates combat, grants Atk+4 during combat and Special cooldown charge +1 per attack. (Only highest value applied. Does not stack.)",
     img: "assets/skills/Fierce_Breath.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -963,6 +1027,7 @@ const A_SKILLS = {
     description: "If foe initiates combat, grants Spd+4 during combat and Special cooldown charge +1 per attack. (Only highest value applied. Does not stack.)",
     img: "assets/skills/Darting_Breath.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -979,6 +1044,7 @@ const A_SKILLS = {
     description: "If foe initiates combat, grants Def+4 during combat and Special cooldown charge +1 per attack. (Only highest value applied. Does not stack.)",
     img: "assets/skills/Fierce_Breath.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -995,6 +1061,7 @@ const A_SKILLS = {
     description: "If foe initiates combat, grants Res+4 during combat and Special cooldown charge +1 per attack. (Only highest value applied. Does not stack.)",
     img: "assets/skills/Warding_Breath.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1011,6 +1078,7 @@ const A_SKILLS = {
     description: "At start of turn, if unit's HP ≤ 50%, grants Atk+7 for 1 turn.",
     img: "assets/skills/Defiant_Atk_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -1024,6 +1092,7 @@ const A_SKILLS = {
     description: "At start of turn, if unit's HP ≤ 50%, grants Spd+7 for 1 turn.",
     img: "assets/skills/Defiant_Spd_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -1037,6 +1106,7 @@ const A_SKILLS = {
     description: "At start of turn, if unit's HP ≤ 50%, grants Def+7 for 1 turn.",
     img: "assets/skills/Defiant_Def_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -1050,6 +1120,7 @@ const A_SKILLS = {
     description: "At start of turn, if unit's HP ≤ 50%, grants Res+7 for 1 turn.",
     img: "assets/skills/Defiant_Res_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -1084,6 +1155,7 @@ const A_SKILLS = {
     description: "If foe initiates combat and uses sword, lance, axe, dragonstone, or beast damage, grants Def/Res+6 during combat.",
     img: "assets/skills/Close_Def_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1103,6 +1175,7 @@ const A_SKILLS = {
     description: "If foe initiates combat and uses bow, dagger, magic, or staff, grants Def/Res+6 during combat.",
     img: "assets/skills/Distant_Def_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1136,6 +1209,7 @@ const A_SKILLS = {
     description: "Neutralizes \"effective against flying\" bonuses.",
     img: "assets/skills/Iote's_Shield.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [EFFECT.neutralizeEffectiveAgainstMoveType(MOVE_TYPE.FLIER.id)]
   },
   HEAVY_BLADE_3: {
@@ -1143,6 +1217,7 @@ const A_SKILLS = {
     description: "If unit's Atk > foe's Atk, grants Special cooldown charge +1 per unit's attack. (Only highest value applied. Does not stack.)",
     img: "assets/skills/Heavy_Blade_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.DURING_COMBAT,
@@ -1156,6 +1231,7 @@ const A_SKILLS = {
     description: "If unit's Spd > foe's Spd, grants Special cooldown charge +1 per unit's attack. (Only highest value applied. Does not stack.)",
     img: "assets/skills/Flashing_Blade_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.DURING_COMBAT,
@@ -1169,6 +1245,7 @@ const A_SKILLS = {
     description: "At start of combat, if unit's HP ≥ foe's HP+3, grants Atk+6 during combat.",
     img: "assets/skills/Fire_Boost_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1188,6 +1265,7 @@ const A_SKILLS = {
     description: "At start of combat, if unit's HP ≥ foe's HP+3, grants Spd+6 during combat.",
     img: "assets/skills/Wind_Boost_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1207,6 +1285,7 @@ const A_SKILLS = {
     description: "At start of combat, if unit's HP ≥ foe's HP+3, grants Def+6 during combat.",
     img: "assets/skills/Earth_Boost_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1226,6 +1305,7 @@ const A_SKILLS = {
     description: "At start of combat, if unit's HP ≥ foe's HP+3, grants Res+6 during combat.",
     img: "assets/skills/Water_Boost_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1245,6 +1325,7 @@ const A_SKILLS = {
     description: "If unit is adjacent to an ally, grants Atk/Spd+5 during combat.",
     img: "assets/skills/Atk_Spd_Bond_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1261,6 +1342,7 @@ const A_SKILLS = {
     description: "If unit is adjacent to an ally, grants Atk/Def+5 during combat.",
     img: "assets/skills/Atk_Def_Bond_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1277,6 +1359,7 @@ const A_SKILLS = {
     description: "If unit is adjacent to an ally, grants Atk/Res+5 during combat.",
     img: "assets/skills/Atk_Res_Bond_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1293,6 +1376,7 @@ const A_SKILLS = {
     description: "If unit is adjacent to an ally, grants Spd/Def+5 during combat.",
     img: "assets/skills/Spd_Def_Bond_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1309,6 +1393,7 @@ const A_SKILLS = {
     description: "If unit is adjacent to an ally, grants Spd/Res+5 during combat.",
     img: "assets/skills/Spd_Res_Bond_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1325,6 +1410,7 @@ const A_SKILLS = {
     description: "If unit is adjacent to an ally, grants Def/Res+5 during combat.",
     img: "assets/skills/Def_Res_Bond_3.webp",
     type: SKILL_TYPE.A,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1594,6 +1680,7 @@ const B_SKILLS = {
     description: "If unit initiates combat against a foe that can counter and unit's HP ≤ 50%, unit makes a guaranteed follow-up attack.",
     img: "assets/skills/Brash_Assault_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.DURING_COMBAT_2,
@@ -1613,6 +1700,7 @@ const B_SKILLS = {
     description: "Unit can move to a space adjacent to a flying ally within 2 spaces.",
     img: "assets/skills/Flier_Formation_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.CALCULATE_OWN_MOVEMENT,
@@ -1633,6 +1721,7 @@ const B_SKILLS = {
     description: "If Sing or Dance is used, grants Atk+4 to target.",
     img: "assets/skills/Blaze_Dance_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.USED_DANCE,
@@ -1645,6 +1734,7 @@ const B_SKILLS = {
     description: "If Sing or Dance is used, grants Spd+4 to target.",
     img: "assets/skills/Gale_Dance_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.USED_DANCE,
@@ -1657,6 +1747,7 @@ const B_SKILLS = {
     description: "If Sing or Dance is used, grants Def+4 to target.",
     img: "assets/skills/Earth_Dance_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.USED_DANCE,
@@ -1669,6 +1760,7 @@ const B_SKILLS = {
     description: "If Sing or Dance is used, grants Res+4 to target.",
     img: "assets/skills/Torrent_Dance_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.USED_DANCE,
@@ -1746,6 +1838,7 @@ const B_SKILLS = {
     description: "If unit's HP ≥ 50%, foes cannot move through spaces adjacent to unit. (Does not affect foes with Pass skills.)",
     img: "assets/skills/Obstruct_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.CALCULATE_ENEMY_MOVEMENT,
@@ -1810,6 +1903,7 @@ const B_SKILLS = {
     description: "If unit’s HP ≤ 75% and unit initiates combat, unit can make a follow-up attack before foe can counterattack.",
     img: "assets/skills/Desperation_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1842,6 +1936,7 @@ const B_SKILLS = {
     description: "At start of combat, if unit's HP ≥ 80%, inflicts Special cooldown charge -1 on foe per attack. (Only highest value applied. Does not stack.)",
     img: "assets/skills/Guard_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1855,6 +1950,7 @@ const B_SKILLS = {
     description: "If unit's HP ≥ 70% and foe initiates combat, unit makes a guaranteed follow-up attack.",
     img: "assets/skills/Quick_Riposte_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -1871,6 +1967,7 @@ const B_SKILLS = {
     description: "When healing an ally with a staff, restores HP to unit = HP restored to target.",
     img: "assets/skills/Live_to_Serve_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.USED_HEAL,
@@ -1883,6 +1980,7 @@ const B_SKILLS = {
     description: "If unit initiates combat, deals 10 damage to foe after combat.",
     img: "assets/skills/Poison_Strike_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -1896,6 +1994,7 @@ const B_SKILLS = {
     description: "Inflicts Atk-7 on foe through its next action after combat.",
     img: "assets/skills/Seal_Atk_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -1908,6 +2007,7 @@ const B_SKILLS = {
     description: "Inflicts Spd-7 on foe through its next action after combat.",
     img: "assets/skills/Seal_Spd_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -1920,6 +2020,7 @@ const B_SKILLS = {
     description: "Inflicts Def-7 on foe through its next action after combat.",
     img: "assets/skills/Seal_Def_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -1932,6 +2033,7 @@ const B_SKILLS = {
     description: "Inflicts Res-7 on foe through its next action after combat.",
     img: "assets/skills/Seal_Res_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -1964,6 +2066,7 @@ const B_SKILLS = {
     description: "At start of odd-numbered turns, restores 10 HP.",
     img: "assets/skills/Renewal_3.webp",
     type: SKILL_TYPE.B,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2010,6 +2113,7 @@ const C_SKILLS = {
     description: "Grants Atk+4 to adjacent allies during combat.",
     img: "assets/skills/Spur_Atk_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2023,6 +2127,7 @@ const C_SKILLS = {
     description: "Grants Spd+4 to adjacent allies during combat.",
     img: "assets/skills/Spur_Spd_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2036,6 +2141,7 @@ const C_SKILLS = {
     description: "Grants Def+4 to adjacent allies during combat.",
     img: "assets/skills/Spur_Def_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2049,6 +2155,7 @@ const C_SKILLS = {
     description: "Grants Res+4 to adjacent allies during combat.",
     img: "assets/skills/Spur_Res_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2062,6 +2169,7 @@ const C_SKILLS = {
     description: "Grants Atk/Spd+3 to adjacent allies during combat.",
     img: "assets/skills/Spur_Atk_Spd_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2078,6 +2186,7 @@ const C_SKILLS = {
     description: "Grants Atk/Def+3 to adjacent allies during combat.",
     img: "assets/skills/Spur_Atk_Def_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2094,6 +2203,7 @@ const C_SKILLS = {
     description: "Grants Atk/Res+3 to adjacent allies during combat.",
     img: "assets/skills/Spur_Atk_Res_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2110,6 +2220,7 @@ const C_SKILLS = {
     description: "Grants Spd/Def+3 to adjacent allies during combat.",
     img: "assets/skills/Spur_Spd_Def_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2126,6 +2237,7 @@ const C_SKILLS = {
     description: "Grants Spd/Res+3 to adjacent allies during combat.",
     img: "assets/skills/Spur_Spd_Res_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2142,6 +2254,7 @@ const C_SKILLS = {
     description: "Grants Def/Res+3 to adjacent allies during combat.",
     img: "assets/skills/Spur_Def_Res_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2158,6 +2271,7 @@ const C_SKILLS = {
     description: "Grants Atk+3 to allies within 2 spaces during combat.",
     img: "assets/skills/Drive_Atk_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2171,6 +2285,7 @@ const C_SKILLS = {
     description: "Grants Spd+3 to allies within 2 spaces during combat.",
     img: "assets/skills/Drive_Spd_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2184,6 +2299,7 @@ const C_SKILLS = {
     description: "Grants Def+3 to allies within 2 spaces during combat.",
     img: "assets/skills/Drive_Def_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2197,6 +2313,7 @@ const C_SKILLS = {
     description: "Grants Res+3 to allies within 2 spaces during combat.",
     img: "assets/skills/Drive_Res_2.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2306,6 +2423,7 @@ const C_SKILLS = {
     description: "Grants Atk/Spd+4 to dragon allies within 2 spaces during combat.",
     img: "assets/skills/Goad_Dragons.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2327,6 +2445,7 @@ const C_SKILLS = {
     description: "Grants Def/Res+4 to dragon allies within 2 spaces during combat.",
     img: "assets/skills/Ward_Dragons.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2348,6 +2467,7 @@ const C_SKILLS = {
     description: "Grants Atk/Spd+4 to beast allies within 2 spaces during combat.",
     img: "assets/skills/Goad_Beasts.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2369,6 +2489,7 @@ const C_SKILLS = {
     description: "Grants Def/Res+4 to beast allies within 2 spaces during combat.",
     img: "assets/skills/Ward_Beasts.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
@@ -2390,6 +2511,7 @@ const C_SKILLS = {
     description: "If unit initiates combat, deals 7 damage to foes within 2 spaces of target after combat.",
     img: "assets/skills/Savage_Blow_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -2403,6 +2525,7 @@ const C_SKILLS = {
     description: "If unit initiates combat, restores 7 HP to adjacent allies after combat.",
     img: "assets/skills/Breath_of_Life_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -2416,6 +2539,7 @@ const C_SKILLS = {
     description: "At start of turn, grants Atk+4 to adjacent allies for 1 turn.",
     img: "assets/skills/Hone_Atk_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2428,6 +2552,7 @@ const C_SKILLS = {
     description: "At start of turn, grants Spd+4 to adjacent allies for 1 turn.",
     img: "assets/skills/Hone_Spd_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2440,6 +2565,7 @@ const C_SKILLS = {
     description: "At start of turn, grants Def+4 to adjacent allies for 1 turn.",
     img: "assets/skills/Fortify_Def_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2452,6 +2578,7 @@ const C_SKILLS = {
     description: "At start of turn, grants Res+4 to adjacent allies for 1 turn.",
     img: "assets/skills/Fortify_Res_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2554,6 +2681,7 @@ const C_SKILLS = {
     description: "At start of turn, grants Atk/Spd+6 to adjacent dragon allies for 1 turn.",
     img: "assets/skills/Hone_Dragons.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2575,6 +2703,7 @@ const C_SKILLS = {
     description: "At start of turn, grants Def/Res+6 to adjacent dragon allies for 1 turn.",
     img: "assets/skills/Fortify_Dragons.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2596,6 +2725,7 @@ const C_SKILLS = {
     description: "At start of turn, grants Atk/Spd+6 to adjacent beast allies for 1 turn.",
     img: "assets/skills/Hone_Beasts.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2617,6 +2747,7 @@ const C_SKILLS = {
     description: "At start of turn, grants Def/Res+6 to adjacent beast allies for 1 turn.",
     img: "assets/skills/Fortify_Beasts.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2638,6 +2769,7 @@ const C_SKILLS = {
     description: "At start of turn, inflicts Atk-5 on foes within 2 spaces through their next actions.",
     img: "assets/skills/Threaten_Atk_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2650,6 +2782,7 @@ const C_SKILLS = {
     description: "At start of turn, inflicts Spd-5 on foes within 2 spaces through their next actions.",
     img: "assets/skills/Threaten_Spd_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2662,6 +2795,7 @@ const C_SKILLS = {
     description: "At start of turn, inflicts Def-5 on foes within 2 spaces through their next actions.",
     img: "assets/skills/Threaten_Def_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2674,6 +2808,7 @@ const C_SKILLS = {
     description: "At start of turn, inflicts Res-5 on foes within 2 spaces through their next actions.",
     img: "assets/skills/Threaten_Res_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2686,6 +2821,7 @@ const C_SKILLS = {
     description: "Infantry and armoured allies within 2 spaces can move to a space adjacent to unit.",
     img: "assets/skills/Guidance_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.CALCULATE_ALLY_MOVEMENT,
@@ -2702,6 +2838,7 @@ const C_SKILLS = {
     description: "At start of turn, inflicts Atk-5 on foes in cardinal directions with Res < unit's Res through their next actions.",
     img: "assets/skills/Atk_Ploy_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2723,6 +2860,7 @@ const C_SKILLS = {
     description: "At start of turn, inflicts Spd-5 on foes in cardinal directions with Res < unit's Res through their next actions.",
     img: "assets/skills/Spd_Ploy_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2744,6 +2882,7 @@ const C_SKILLS = {
     description: "At start of turn, inflicts Def-5 on foes in cardinal directions with Res < unit's Res through their next actions.",
     img: "assets/skills/Def_Ploy_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2765,6 +2904,7 @@ const C_SKILLS = {
     description: "At start of turn, inflicts Res-5 on foes in cardinal directions with Res < unit's Res through their next actions.",
     img: "assets/skills/Res_Ploy_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2786,6 +2926,7 @@ const C_SKILLS = {
     description: "At start of turn, converts bonuses on foes in cardinal directions with HP < unit's HP into penalties through their next actions.",
     img: "assets/skills/Panic_Ploy_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
@@ -2807,6 +2948,7 @@ const C_SKILLS = {
     description: "Inflicts Atk-7 on foes within 2 spaces of target through their next actions after combat.",
     img: "assets/skills/Atk_Smoke_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -2819,6 +2961,7 @@ const C_SKILLS = {
     description: "Inflicts Spd-7 on foes within 2 spaces of target through their next actions after combat.",
     img: "assets/skills/Spd_Smoke_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -2831,6 +2974,7 @@ const C_SKILLS = {
     description: "Inflicts Def-7 on foes within 2 spaces of target through their next actions after combat.",
     img: "assets/skills/Def_Smoke_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -2843,6 +2987,7 @@ const C_SKILLS = {
     description: "Inflicts Res-7 on foes within 2 spaces of target through their next actions after combat.",
     img: "assets/skills/Res_Smoke_3.webp",
     type: SKILL_TYPE.C,
+    availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.AFTER_COMBAT,
@@ -2997,6 +3142,15 @@ ${Object.keys(B_SKILLS).length} b skills
 ${Object.keys(C_SKILLS).length} c skills
 ${Object.keys(S_SKILLS).length} s skills`);
 
-Object.entries(SKILLS).forEach(([key, value]) => SKILLS[key] = { id: key, ...value });
+Object.entries(SKILLS).forEach(([key, value]) => {
+  SKILLS[key] = { id: key, ...value };
+  if (value.availableAsSeal) {
+    const sealId = key + "_SEAL";
+    const seal = { ...value };
+    seal.id = sealId;
+    seal.type = SKILL_TYPE.S;
+    SKILLS[sealId] = seal;
+  }
+});
 
 export default SKILLS;
