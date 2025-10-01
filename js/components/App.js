@@ -46,21 +46,25 @@ const App = () => {
   return html`
   <div class="app-container">
     ${screen === "menu" && html`
-      <div>
-        <h1>Demo</h1>
-        <span>(No captain skills)</span><br/>
-        <span>Playing as: Team ${playingAs + 1}</span><br/>
-        <button onClick=${() => setPlayingAs(0)}>Team 1</button><br/>
-        <button onClick=${() => setPlayingAs(1)}>Team 2</button><br/>
-        <button onClick=${() => setScreen("game")}>Play</button>
+      <div class="screen menu">
+        <div>
+          <h1>Demo</h1>
+          <span>(No captain skills)</span><br/>
+          <span>Playing as: Team ${playingAs + 1}</span><br/>
+          <button onClick=${() => setPlayingAs(0)}>Team 1</button><br/>
+          <button onClick=${() => setPlayingAs(1)}>Team 2</button><br/>
+          <button onClick=${() => setScreen("game")}>Play</button>
+        </div>
       </div>
       `}
     ${screen === "game" && html`<${Game} initialGameState=${gameState} playingAs=${playingAs} onGameOver=${onGameOver} />`}
     ${screen === "gameOver" && html`
-      <div>
-        <span>Game Over</span>
-        <div>${gameResult}</div>
-        <button onClick=${() => setScreen("menu")}>Play Again</button>
+      <div class="screen menu">
+        <div>
+          <span>Game Over</span>
+          <div>${gameResult}</div>
+          <button onClick=${() => setScreen("menu")}>Play Again</button>
+        </div>
       </div>
       `}
   </div>
