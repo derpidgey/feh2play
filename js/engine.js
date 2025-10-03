@@ -29,31 +29,32 @@ function Engine() {
     });
     if (Array.from(counts.values()).some(count => count > 1)) return false;
 
-    for (const [type, skillInfo] of skillMap.entries()) {
-      if (!skillInfo.canUse) {
-        if (type === SKILL_TYPE.WEAPON) {
-          if (skillInfo.weaponType !== unitInfo.weaponType) return false;
-        }
-        continue;
-      }
-      if (skillInfo.canUse.unit?.length > 0) {
-        if (!skillInfo.canUse.unit.includes(unitInfo.id)) {
-          return false;
-        }
-      }
-      if (skillInfo.canUse.weaponType?.length > 0) {
-        if (!skillInfo.canUse.weaponType.includes(unitInfo.weaponType)) {
-          return false;
-        }
-      }
-      if (skillInfo.canUse.moveType?.length > 0) {
-        if (!skillInfo.canUse.moveType.includes(unitInfo.moveType)) {
-          return false;
-        }
-      }
+    for (const skillInfo of skillMap.values()) {
+      if (!canLearn(unitInfo, skillInfo)) return false;
     }
 
     // in the future: rearmed and x
+    return true;
+  }
+
+  function canLearn(unitInfo, skillInfo) {
+    if (!skillInfo.canUse) {
+      if (skillInfo.type === SKILL_TYPE.WEAPON) {
+        if (skillInfo.weaponType !== unitInfo.weaponType) return false;
+      }
+    } else if (skillInfo.canUse.unit) {
+      if (!skillInfo.canUse.unit.includes(unitInfo.id)) {
+        return false;
+      }
+    }else if (skillInfo.canUse.weaponType) {
+      if (!skillInfo.canUse.weaponType.includes(unitInfo.weaponType)) {
+        return false;
+      }
+    } else if (skillInfo.canUse.moveType) {
+      if (!skillInfo.canUse.moveType.includes(unitInfo.moveType)) {
+        return false;
+      }
+    }
     return true;
   }
 
@@ -2706,6 +2707,7 @@ function Engine() {
   return {
     validateBuild,
     validateTeam,
+    canLearn,
     newGame,
     debug,
     calculateMovementRange,

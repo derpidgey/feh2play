@@ -591,7 +591,7 @@ const UNIT = {
   },
   EFFIE: {
     name: "Efffie",
-    subtitle: "Army_of_One",
+    subtitle: "Army of One",
     imgFace: "assets/face/Efffie_Army_of_One_Face_FC.webp",
     imgSprite: "assets/sprites/Efffie_Army_of_One_Mini_Unit_Idle.webp",
     rarity: RARITY.THREE_STAR,
