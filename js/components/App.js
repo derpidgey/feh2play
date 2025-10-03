@@ -4,6 +4,8 @@ import UNIT from "../data/units.js";
 import SKILLS from "../data/skills.js";
 import Engine from "../engine.js";
 import MAPS from "../data/maps.js";
+import TeamBuilder from "./TeamBuilder.js";
+import SDAssault from "./SDAssault.js";
 
 function createBuild(unitId, skills = []) {
   return {
@@ -44,30 +46,58 @@ const App = () => {
   }
 
   return html`
-  <div class="app-container">
-    ${screen === "menu" && html`
-      <div class="screen menu">
-        <div>
-          <h1>Demo</h1>
-          <span>(No captain skills)</span><br/>
-          <span>Playing as: Team ${playingAs + 1}</span><br/>
-          <button onClick=${() => setPlayingAs(0)}>Team 1</button><br/>
-          <button onClick=${() => setPlayingAs(1)}>Team 2</button><br/>
-          <button onClick=${() => setScreen("game")}>Play</button>
+    <div class="app-container">
+      ${screen === "menu" && html`
+        <div class="screen menu">
+          <div>
+            <h1>FEH2PLAY</h1>
+            <button onClick=${() => setScreen("demo")}>Summoner Duels (Demo)</button><br/>
+            <button onClick=${() => setScreen("teamBuilder")}>Team Builder</button><br/>
+            <button onClick=${() => setScreen("sdAssault")}>SD Assault</button><br/>
+          </div>
         </div>
-      </div>
       `}
-    ${screen === "game" && html`<${Game} initialGameState=${gameState} playingAs=${playingAs} onGameOver=${onGameOver} />`}
-    ${screen === "gameOver" && html`
-      <div class="screen menu">
-        <div>
-          <span>Game Over</span>
-          <div>${gameResult}</div>
-          <button onClick=${() => setScreen("menu")}>Play Again</button>
+
+      ${screen === "demo" && html`
+        <div class="screen menu">
+          <div>
+            <h2>Summoner Duels Demo</h2>
+            <span>(No captain skills)</span><br/>
+            <span>Playing as: Team ${playingAs + 1}</span><br/>
+            <button onClick=${() => setPlayingAs(0)}>Team 1</button><br/>
+            <button onClick=${() => setPlayingAs(1)}>Team 2</button><br/>
+            <button onClick=${() => setScreen("game")}>Play</button><br/>
+            <button onClick=${() => setScreen("menu")}>Back</button>
+          </div>
         </div>
-      </div>
       `}
-  </div>
+
+      ${screen === "game" && html`
+        <${Game} 
+          initialGameState=${gameState} 
+          playingAs=${playingAs} 
+          onGameOver=${onGameOver} 
+        />
+      `}
+
+      ${screen === "gameOver" && html`
+        <div class="screen menu">
+          <div>
+            <h2>Game Over</h2>
+            <div>${gameResult}</div>
+            <button onClick=${() => setScreen("menu")}>Main Menu</button>
+          </div>
+        </div>
+      `}
+
+      ${screen === "teamBuilder" && html`
+        <${TeamBuilder} onExit=${() => setScreen("menu")} />
+      `}
+
+      ${screen === "sdAssault" && html`
+        <${SDAssault} onExit=${() => setScreen("menu")} />
+      `}
+    </div>
   `;
 }
 

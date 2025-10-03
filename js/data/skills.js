@@ -1,7 +1,8 @@
 import { CONDITION } from "./conditions.js";
-import { ASSIST_TYPE, COMBAT_FLAG, CONDITION_OPERATOR, EFFECT_ACTION, EFFECT_CALCULATION, EFFECT_CONDITION, EFFECT_PHASE, EFFECT_TARGET, MOVE_TYPE, MOVEMENT_TYPE, MOVEMENT_FLAG, SKILL_TYPE, SPECIAL_TYPE, STATS, WEAPON_TYPE, STAT_CHECK_TYPE } from "./definitions.js";
+import { ASSIST_TYPE, COMBAT_FLAG, CONDITION_OPERATOR, EFFECT_ACTION, EFFECT_CALCULATION, EFFECT_CONDITION, EFFECT_PHASE, EFFECT_TARGET, MOVE_TYPE, MOVEMENT_TYPE, MOVEMENT_FLAG, SKILL_TYPE, SPECIAL_TYPE, STATS, WEAPON_TYPE, STAT_CHECK_TYPE, NON_STAVES, MELEE, RANGED, DRAGONS, BEASTS } from "./definitions.js";
 import { EFFECT } from "./effects.js";
 import STATUS from "./status.js";
+import UNIT from "./units.js";
 import WEAPON_SKILLS from "./weapons.js";
 
 const ASSIST_SKILLS = {
@@ -14,6 +15,9 @@ const ASSIST_SKILLS = {
     heal: {
       calculations: [{ type: EFFECT_CALCULATION.PERCENT_OF_STAT, stat: STATS.ATK, percent: 50 }],
       min: 8
+    },
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
     }
   },
   RECOVER_PLUS: {
@@ -28,6 +32,9 @@ const ASSIST_SKILLS = {
         { type: EFFECT_CALCULATION.VALUE, value: 10 }
       ],
       min: 15
+    },
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
     }
   },
   MARTYR_PLUS: {
@@ -42,6 +49,9 @@ const ASSIST_SKILLS = {
     },
     selfHeal: {
       calculations: [{ type: EFFECT_CALCULATION.MISSING_HP, percent: 50 }]
+    },
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
     }
   },
   REHABILITATE_PLUS: {
@@ -57,6 +67,9 @@ const ASSIST_SKILLS = {
         { type: EFFECT_CALCULATION.LOW_HP_BOOST }
       ],
       min: 7
+    },
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
     }
   },
   SWAP: {
@@ -65,7 +78,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.MOVEMENT,
     movementAssist: MOVEMENT_TYPE.SWAP,
-    range: 1
+    range: 1,
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SHOVE: {
     name: "Shove",
@@ -73,7 +89,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.MOVEMENT,
     movementAssist: MOVEMENT_TYPE.SHOVE,
-    range: 1
+    range: 1,
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SMITE: {
     name: "Smite",
@@ -81,7 +100,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.MOVEMENT,
     movementAssist: MOVEMENT_TYPE.SMITE,
-    range: 1
+    range: 1,
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   DRAW_BACK: {
     name: "Draw Back",
@@ -89,7 +111,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.MOVEMENT,
     movementAssist: MOVEMENT_TYPE.DRAW_BACK,
-    range: 1
+    range: 1,
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   REPOSITION: {
     name: "Reposition",
@@ -97,7 +122,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.MOVEMENT,
     movementAssist: MOVEMENT_TYPE.REPOSITION,
-    range: 1
+    range: 1,
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   PIVOT: {
     name: "Pivot",
@@ -105,21 +133,30 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.MOVEMENT,
     movementAssist: MOVEMENT_TYPE.PIVOT,
-    range: 1
+    range: 1,
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SING: {
     name: "Sing",
     description: "Grants another action to target ally.(Cannot target an ally with Sing or Dance.)",
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.REFRESH,
-    range: 1
+    range: 1,
+    canUse: {
+      unit: [UNIT.AZURA.id]
+    }
   },
   DANCE: {
     name: "Dance",
     description: "Grants another action to target ally.(Cannot target an ally with Sing or Dance.)",
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.REFRESH,
-    range: 1
+    range: 1,
+    canUse: {
+      unit: [UNIT.OLIVIA.id]
+    }
   },
   RALLY_ATTACK: {
     name: "Rally Attack",
@@ -127,7 +164,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.ATK, value: 4 }]
+    rallyBuffs: [{ stat: STATS.ATK, value: 4 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RALLY_SPEED: {
     name: "Rally Speed",
@@ -135,7 +175,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.SPD, value: 4 }]
+    rallyBuffs: [{ stat: STATS.SPD, value: 4 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RALLY_RES: {
     name: "Rally Defense",
@@ -143,7 +186,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.DEF, value: 4 }]
+    rallyBuffs: [{ stat: STATS.DEF, value: 4 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RALLY_RESISTANCE: {
     name: "Rally Resistance",
@@ -151,7 +197,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.RES, value: 4 }]
+    rallyBuffs: [{ stat: STATS.RES, value: 4 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RALLY_ATK_SPD: {
     name: "Rally Atk/Spd",
@@ -159,7 +208,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.ATK, value: 3 }, { stat: STATS.SPD, value: 3 }]
+    rallyBuffs: [{ stat: STATS.ATK, value: 3 }, { stat: STATS.SPD, value: 3 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RALLY_ATK_DEF: {
     name: "Rally Atk/Def",
@@ -167,7 +219,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.ATK, value: 3 }, { stat: STATS.DEF, value: 3 }]
+    rallyBuffs: [{ stat: STATS.ATK, value: 3 }, { stat: STATS.DEF, value: 3 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RALLY_ATK_RES: {
     name: "Rally Atk/Res",
@@ -175,7 +230,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.ATK, value: 3 }, { stat: STATS.RES, value: 3 }]
+    rallyBuffs: [{ stat: STATS.ATK, value: 3 }, { stat: STATS.RES, value: 3 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RALLY_SPD_DEF: {
     name: "Rally Spd/Def",
@@ -183,7 +241,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.SPD, value: 3 }, { stat: STATS.DEF, value: 3 }]
+    rallyBuffs: [{ stat: STATS.SPD, value: 3 }, { stat: STATS.DEF, value: 3 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RALLY_SPD_RES: {
     name: "Rally Spd/Res",
@@ -191,7 +252,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.SPD, value: 3 }, { stat: STATS.RES, value: 3 }]
+    rallyBuffs: [{ stat: STATS.SPD, value: 3 }, { stat: STATS.RES, value: 3 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RALLY_DEF_RES: {
     name: "Rally Def/Res",
@@ -199,7 +263,10 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RALLY,
     range: 1,
-    rallyBuffs: [{ stat: STATS.DEF, value: 3 }, { stat: STATS.RES, value: 3 }]
+    rallyBuffs: [{ stat: STATS.DEF, value: 3 }, { stat: STATS.RES, value: 3 }],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   ARDENT_SACRIFICE: {
     name: "Ardent Sacrifice",
@@ -208,6 +275,9 @@ const ASSIST_SKILLS = {
     assistType: ASSIST_TYPE.SACRIFICE,
     range: 1,
     amount: 10,
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RECIPROCAL_AID: {
     name: "Reciprocal Aid",
@@ -215,6 +285,9 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.RECIPROCAL_AID,
     range: 1,
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   HARSH_COMMAND: {
     name: "Harsh Command",
@@ -222,6 +295,9 @@ const ASSIST_SKILLS = {
     type: SKILL_TYPE.ASSIST,
     assistType: ASSIST_TYPE.HARSH_COMMAND,
     range: 1,
+    canUse: {
+      weaponType: NON_STAVES
+    }
   }
 };
 
@@ -237,7 +313,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.RESTORE_HP, calculation: { type: EFFECT_CALCULATION.PERCENT_DAMAGE_DEALT, percent: 30 } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SOL: {
     name: "Sol",
@@ -250,7 +329,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.RESTORE_HP, calculation: { type: EFFECT_CALCULATION.PERCENT_DAMAGE_DEALT, percent: 50 } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   MOONBOW: {
     name: "Moonbow",
@@ -263,7 +345,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.REDUCE_DEF_RES_BY, percent: 30 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   LUNA: {
     name: "Luna",
@@ -276,7 +361,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.REDUCE_DEF_RES_BY, percent: 50 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   BLACK_LUNA: {
     name: "Black Luna",
@@ -289,7 +377,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.REDUCE_DEF_RES_BY, percent: 80 }]
       }
-    ]
+    ],
+    canUse: {
+      unit: [] // bk, zelgius
+    }
   },
   AETHER: {
     name: "Aether",
@@ -305,7 +396,10 @@ const SPECIAL_SKILLS = {
           { type: EFFECT_ACTION.RESTORE_HP, calculation: { type: EFFECT_CALCULATION.PERCENT_DAMAGE_DEALT, percent: 50 } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   GLIMMER: {
     name: "Glimmer",
@@ -318,7 +412,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.BASE_DAMAGE_INCREASE, percent: 50 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   ASTRA: {
     name: "Astra",
@@ -331,7 +428,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.BASE_DAMAGE_INCREASE, percent: 150 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   REGNAL_ASTRA: {
     name: "Regnal Astra",
@@ -344,7 +444,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 40, stat: STATS.SPD } }]
       }
-    ]
+    ],
+    canUse: {
+      unit: [] // ayra
+    }
   },
   REPRISAL: {
     name: "Reprisal",
@@ -357,7 +460,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, calculation: { type: EFFECT_CALCULATION.MISSING_HP, percent: 30 } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   VENGEANCE: {
     name: "Vengeance",
@@ -370,7 +476,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, calculation: { type: EFFECT_CALCULATION.MISSING_HP, percent: 50 } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   DRACONIC_AURA: {
     name: "Draconic Aura",
@@ -383,7 +492,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 30, stat: STATS.ATK } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   DRACON_FANG: {
     name: "Dragon Fang",
@@ -396,7 +508,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 50, stat: STATS.ATK } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   BONFIRE: {
     name: "Bonfire",
@@ -409,7 +524,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 50, stat: STATS.DEF } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   IGNIS: {
     name: "Ignis",
@@ -422,7 +540,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 80, stat: STATS.DEF } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   ICEBERG: {
     name: "Iceberg",
@@ -435,7 +556,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 50, stat: STATS.RES } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   GLACIES: {
     name: "Glacies",
@@ -448,7 +572,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 80, stat: STATS.RES } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   ESCUTCHEON: {
     name: "Escutcheon",
@@ -463,7 +590,10 @@ const SPECIAL_SKILLS = {
         condition: { type: EFFECT_CONDITION.FOE_HAS_X_RANGE, range: 1 },
         actions: [{ type: EFFECT_ACTION.DAMAGE_REDUCTION, percent: 30 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   PAVISE: {
     name: "Pavise",
@@ -477,7 +607,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_DEFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DAMAGE_REDUCTION, percent: 50 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   SACRED_COWL: {
     name: "Sacred Cowl",
@@ -491,7 +624,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_DEFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DAMAGE_REDUCTION, percent: 30 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   AEGIS: {
     name: "Aegis",
@@ -505,7 +641,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_DEFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DAMAGE_REDUCTION, percent: 50 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   MIRACLE: {
     name: "Miracle",
@@ -519,7 +658,13 @@ const SPECIAL_SKILLS = {
     description: "If unit initiates combat, grants unit another action after combat. (Once per turn.)",
     type: SKILL_TYPE.SPECIAL,
     specialType: SPECIAL_TYPE.GALEFORCE,
-    cooldown: 5
+    cooldown: 5,
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
+        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id, WEAPON_TYPE.C_BEAST.id
+      ]
+    }
   },
   BLAZING_FLAME: {
     name: "Blazing Flame",
@@ -536,6 +681,9 @@ const SPECIAL_SKILLS = {
         { x: 2, y: 0 }
       ],
       multiplier: 1.5
+    },
+    canUse: {
+      weaponType: NON_STAVES
     }
   },
   GROWING_FLAME: {
@@ -557,6 +705,9 @@ const SPECIAL_SKILLS = {
         { x: 1, y: 1 }
       ],
       multiplier: 1
+    },
+    canUse: {
+      weaponType: NON_STAVES
     }
   },
   BLAZING_LIGHT: {
@@ -574,6 +725,9 @@ const SPECIAL_SKILLS = {
         { x: 1, y: 1 }
       ],
       multiplier: 1.5
+    },
+    canUse: {
+      weaponType: NON_STAVES
     }
   },
   GROWING_Light: {
@@ -595,6 +749,9 @@ const SPECIAL_SKILLS = {
         { x: 0, y: 2 }
       ],
       multiplier: 1
+    },
+    canUse: {
+      weaponType: NON_STAVES
     }
   },
   BLAZING_THUNDER: {
@@ -612,6 +769,9 @@ const SPECIAL_SKILLS = {
         { x: 2, y: 2 }
       ],
       multiplier: 1.5
+    },
+    canUse: {
+      weaponType: NON_STAVES
     }
   },
   GROWING_THUNDER: {
@@ -633,6 +793,9 @@ const SPECIAL_SKILLS = {
         { x: 1, y: 0 }
       ],
       multiplier: 1
+    },
+    canUse: {
+      weaponType: NON_STAVES
     }
   },
   BLAZING_WIND: {
@@ -650,6 +813,9 @@ const SPECIAL_SKILLS = {
         { x: 1, y: 0 }
       ],
       multiplier: 1.5
+    },
+    canUse: {
+      weaponType: NON_STAVES
     }
   },
   GROWING_WIND: {
@@ -671,6 +837,9 @@ const SPECIAL_SKILLS = {
         { x: 1, y: 1 }
       ],
       multiplier: 1
+    },
+    canUse: {
+      weaponType: NON_STAVES
     }
   },
   HEAVENLY_LIGHT: {
@@ -684,7 +853,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_HEALING_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.RESTORE_HP, value: 10, target: { type: EFFECT_TARGET.ALL_ALLIES } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
+    }
   },
   KINDLED_FIRE_BALM: {
     name: "Kindled-Fire Balm",
@@ -697,7 +869,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_HEALING_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.ALL_ALLIES } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
+    }
   },
   SWIFT_WINDS_BALM: {
     name: "Swift-Winds Balm",
@@ -710,7 +885,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_HEALING_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.ALL_ALLIES } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
+    }
   },
   SOLID_EARTH_BALM: {
     name: "Solid-Earth Balm",
@@ -723,7 +901,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_HEALING_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.ALL_ALLIES } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
+    }
   },
   STILL_WATER_BALM: {
     name: "Still-Water Balm",
@@ -736,7 +917,10 @@ const SPECIAL_SKILLS = {
         phase: EFFECT_PHASE.ON_HEALING_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ALL_ALLIES } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
+    }
   }
 };
 
@@ -747,7 +931,10 @@ const A_SKILLS = {
     img: "assets/skills/Fury_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.visibleStats({ atk: 3, spd: 3, def: 3, res: 3 }), EFFECT.postCombatSelfDamage(6)]
+    effects: [EFFECT.visibleStats({ atk: 3, spd: 3, def: 3, res: 3 }), EFFECT.postCombatSelfDamage(6)],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   HP_PLUS_5: {
     name: "HP +5",
@@ -891,7 +1078,10 @@ const A_SKILLS = {
     img: "assets/skills/Life_and_Death_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.visibleStats({ atk: 5, spd: 5, def: -5, res: -5 })]
+    effects: [EFFECT.visibleStats({ atk: 5, spd: 5, def: -5, res: -5 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   DEATH_BLOW_3: {
     name: "Death Blow 3",
@@ -899,7 +1089,10 @@ const A_SKILLS = {
     img: "assets/skills/Death_Blow_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ atk: 6 })]
+    effects: [EFFECT.playerPhaseStats({ atk: 6 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   DARTING_BLOW_3: {
     name: "Darting Blow 3",
@@ -907,7 +1100,10 @@ const A_SKILLS = {
     img: "assets/skills/Darting_Blow_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ spd: 6 })]
+    effects: [EFFECT.playerPhaseStats({ spd: 6 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   ARMOURED_BLOW_3: {
     name: "Armoured Blow 3",
@@ -915,7 +1111,10 @@ const A_SKILLS = {
     img: "assets/skills/Armoured_Blow_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ def: 6 })]
+    effects: [EFFECT.playerPhaseStats({ def: 6 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   WARDING_BLOW_3: {
     name: "Warding Blow 3",
@@ -923,7 +1122,10 @@ const A_SKILLS = {
     img: "assets/skills/Warding_Blow_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ res: 6 })]
+    effects: [EFFECT.playerPhaseStats({ res: 6 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SWIFT_SPARROW_2: {
     name: "Swift Sparrow 2",
@@ -931,7 +1133,10 @@ const A_SKILLS = {
     img: "assets/skills/Swift_Sparrow_2.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ atk: 4, spd: 4 })]
+    effects: [EFFECT.playerPhaseStats({ atk: 4, spd: 4 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   STURDY_BLOW_2: {
     name: "Sturdy Blow 2",
@@ -939,7 +1144,10 @@ const A_SKILLS = {
     img: "assets/skills/Sturdy_Blow_2.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ atk: 4, def: 4 })]
+    effects: [EFFECT.playerPhaseStats({ atk: 4, def: 4 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   MIRROR_STRIKE_2: {
     name: "Mirror Strike 2",
@@ -947,7 +1155,10 @@ const A_SKILLS = {
     img: "assets/skills/Mirror_Strike_2.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ atk: 4, res: 4 })]
+    effects: [EFFECT.playerPhaseStats({ atk: 4, res: 4 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   STEADY_BLOW_2: {
     name: "Steady Blow 2",
@@ -955,7 +1166,10 @@ const A_SKILLS = {
     img: "assets/skills/Steady_Blow_2.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ spd: 4, def: 4 })]
+    effects: [EFFECT.playerPhaseStats({ spd: 4, def: 4 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SWIFT_STRIKE_2: {
     name: "Swift Strike 2",
@@ -963,7 +1177,10 @@ const A_SKILLS = {
     img: "assets/skills/Swift_Strike_2.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ spd: 4, res: 4 })]
+    effects: [EFFECT.playerPhaseStats({ spd: 4, res: 4 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   BRACING_BLOW_2: {
     name: "Bracing Blow 2",
@@ -971,7 +1188,10 @@ const A_SKILLS = {
     img: "assets/skills/Bracing_Blow_2.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.playerPhaseStats({ def: 4, res: 4 })]
+    effects: [EFFECT.playerPhaseStats({ def: 4, res: 4 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   FIERCE_STANCE_3: {
     name: "Fierce Stance 3",
@@ -979,7 +1199,10 @@ const A_SKILLS = {
     img: "assets/skills/Fierce_Stance_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.enemyPhaseStats({ atk: 6 })]
+    effects: [EFFECT.enemyPhaseStats({ atk: 6 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   DARTING_STANCE_3: {
     name: "Darting Stance 3",
@@ -987,7 +1210,10 @@ const A_SKILLS = {
     img: "assets/skills/Darting_Stance_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.enemyPhaseStats({ spd: 6 })]
+    effects: [EFFECT.enemyPhaseStats({ spd: 6 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   STEADY_STANCE_3: {
     name: "Steady Stance 3",
@@ -995,7 +1221,10 @@ const A_SKILLS = {
     img: "assets/skills/Steady_Stance_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.enemyPhaseStats({ def: 6 })]
+    effects: [EFFECT.enemyPhaseStats({ def: 6 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   WARDING_STANCE_3: {
     name: "Warding Stance 3",
@@ -1003,7 +1232,10 @@ const A_SKILLS = {
     img: "assets/skills/Warding_Stance_3.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.enemyPhaseStats({ res: 6 })]
+    effects: [EFFECT.enemyPhaseStats({ res: 6 })],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   FIERCE_BREATH: {
     name: "Fierce Breath",
@@ -1020,7 +1252,15 @@ const A_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK, target: { type: EFFECT_TARGET.SELF } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
+        WEAPON_TYPE.RED_BREATH.id, WEAPON_TYPE.BLUE_BREATH.id, WEAPON_TYPE.GREEN_BREATH.id, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id, WEAPON_TYPE.C_BEAST.id
+      ],
+      moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
+    }
   },
   DARTING_BREATH: {
     name: "Darting Breath",
@@ -1037,7 +1277,15 @@ const A_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK, target: { type: EFFECT_TARGET.SELF } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
+        WEAPON_TYPE.RED_BREATH.id, WEAPON_TYPE.BLUE_BREATH.id, WEAPON_TYPE.GREEN_BREATH.id, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id, WEAPON_TYPE.C_BEAST.id
+      ],
+      moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
+    }
   },
   STEADY_BREATH: {
     name: "Fierce Breath",
@@ -1054,7 +1302,15 @@ const A_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK, target: { type: EFFECT_TARGET.SELF } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
+        WEAPON_TYPE.RED_BREATH.id, WEAPON_TYPE.BLUE_BREATH.id, WEAPON_TYPE.GREEN_BREATH.id, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id, WEAPON_TYPE.C_BEAST.id
+      ],
+      moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
+    }
   },
   WARDING_BREATH: {
     name: "Warding Breath",
@@ -1071,7 +1327,15 @@ const A_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK, target: { type: EFFECT_TARGET.SELF } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
+        WEAPON_TYPE.RED_BREATH.id, WEAPON_TYPE.BLUE_BREATH.id, WEAPON_TYPE.GREEN_BREATH.id, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id, WEAPON_TYPE.C_BEAST.id
+      ],
+      moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
+    }
   },
   DEFIANT_ATK_3: {
     name: "Defiant Atk 3",
@@ -1134,21 +1398,37 @@ const A_SKILLS = {
     description: "If unit has weapon-triangle advantage, boosts Atk by 20%. If unit has weapon-triangle disadvantage, reduces Atk by 20%.",
     img: "assets/skills/Triangle_Adept_3.webp",
     type: SKILL_TYPE.A,
-    effects: [EFFECT.triangleAdept()]
+    effects: [EFFECT.triangleAdept()],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
+        WEAPON_TYPE.RED_BREATH.id, WEAPON_TYPE.BLUE_BREATH.id, WEAPON_TYPE.GREEN_BREATH.id,
+        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id,
+        WEAPON_TYPE.RED_BOW.id, WEAPON_TYPE.BLUE_BOW.id, WEAPON_TYPE.GREEN_BOW.id,
+        WEAPON_TYPE.RED_DAGGER.id, WEAPON_TYPE.BLUE_DAGGER.id, WEAPON_TYPE.GREEN_DAGGER.id,
+        WEAPON_TYPE.RED_TOME.id, WEAPON_TYPE.BLUE_TOME.id, WEAPON_TYPE.GREEN_TOME.id
+      ]
+    }
   },
   CLOSE_COUNTER: {
     name: "Close Counter",
     description: "Unit can counterattack regardless of foe's range.",
     img: "assets/skills/Close_Counter.webp",
     type: SKILL_TYPE.A,
-    effects: [EFFECT.distantCloseCounter()]
+    effects: [EFFECT.distantCloseCounter()],
+    canUse: {
+      weaponType: RANGED
+    }
   },
   DISTANT_COUNTER: {
     name: "Distant Counter",
     description: "Unit can counterattack regardless of foe's range.",
     img: "assets/skills/Distant_Counter.webp",
     type: SKILL_TYPE.A,
-    effects: [EFFECT.distantCloseCounter()]
+    effects: [EFFECT.distantCloseCounter()],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   CLOSE_DEF_3: {
     name: "Close Def 3",
@@ -1195,14 +1475,20 @@ const A_SKILLS = {
     description: "Neutralizes \"effective against armoured\" bonuses.",
     img: "assets/skills/Svalinn_Shield.webp",
     type: SKILL_TYPE.A,
-    effects: [EFFECT.neutralizeEffectiveAgainstMoveType(MOVE_TYPE.ARMOURED.id)]
+    effects: [EFFECT.neutralizeEffectiveAgainstMoveType(MOVE_TYPE.ARMOURED.id)],
+    canUse: {
+      moveType: [MOVE_TYPE.ARMOURED.id]
+    }
   },
   GRANIS_SHIELD: {
     name: "Grani's Shield",
     description: "Neutralizes \"effective against cavalry\" bonuses.",
     img: "assets/skills/Grani's_Shield.webp",
     type: SKILL_TYPE.A,
-    effects: [EFFECT.neutralizeEffectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id)]
+    effects: [EFFECT.neutralizeEffectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id)],
+    canUse: {
+      moveType: [MOVE_TYPE.CAVALRY.id]
+    }
   },
   IOTES_SHIELD: {
     name: "Iote's Shield",
@@ -1210,7 +1496,10 @@ const A_SKILLS = {
     img: "assets/skills/Iote's_Shield.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
-    effects: [EFFECT.neutralizeEffectiveAgainstMoveType(MOVE_TYPE.FLIER.id)]
+    effects: [EFFECT.neutralizeEffectiveAgainstMoveType(MOVE_TYPE.FLIER.id)],
+    canUse: {
+      moveType: [MOVE_TYPE.FLIER.id]
+    }
   },
   HEAVY_BLADE_3: {
     name: "Heavy Blade 3",
@@ -1224,7 +1513,10 @@ const A_SKILLS = {
         condition: { type: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE, unitStat: STATS.ATK, foeStat: STATS.ATK, statType: STAT_CHECK_TYPE.IN_COMBAT },
         actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_UNIT_ATTACK, target: { type: EFFECT_TARGET.SELF } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   FLASHING_BLADE_3: {
     name: "Flashing Blade 3",
@@ -1238,7 +1530,11 @@ const A_SKILLS = {
         condition: { type: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE, unitStat: STATS.SPD, foeStat: STATS.SPD, statType: STAT_CHECK_TYPE.IN_COMBAT },
         actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_UNIT_ATTACK, target: { type: EFFECT_TARGET.SELF } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES,
+      moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
+    }
   },
   FIRE_BOOST_3: {
     name: "Fire Boost 3",
@@ -1439,7 +1735,10 @@ const B_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.ARMOURED.id]
+    }
   },
   SWORDBREAKER_3: {
     name: "Swordbreaker 3",
@@ -1458,7 +1757,17 @@ const B_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id,
+        WEAPON_TYPE.RED_BOW, WEAPON_TYPE.BLUE_BOW, WEAPON_TYPE.C_BOW.id,
+        WEAPON_TYPE.RED_DAGGER, WEAPON_TYPE.BLUE_DAGGER, WEAPON_TYPE.C_DAGGER.id,
+        WEAPON_TYPE.RED_TOME, WEAPON_TYPE.BLUE_TOME, WEAPON_TYPE.C_TOME.id,
+        WEAPON_TYPE.RED_BREATH, WEAPON_TYPE.BLUE_BREATH, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.RED_BEAST, WEAPON_TYPE.BLUE_BEAST, WEAPON_TYPE.C_BEAST.id
+      ]
+    }
   },
   LANCEBREAKER_3: {
     name: "Lancebreaker 3",
@@ -1477,7 +1786,17 @@ const B_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.AXE.id, WEAPON_TYPE.LANCE.id,
+        WEAPON_TYPE.GREEN_BOW, WEAPON_TYPE.BLUE_BOW, WEAPON_TYPE.C_BOW.id,
+        WEAPON_TYPE.GREEN_DAGGER, WEAPON_TYPE.BLUE_DAGGER, WEAPON_TYPE.C_DAGGER.id,
+        WEAPON_TYPE.GREEN_TOME, WEAPON_TYPE.BLUE_TOME, WEAPON_TYPE.C_TOME.id,
+        WEAPON_TYPE.GREEN_BREATH, WEAPON_TYPE.BLUE_BREATH, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.GREEN_BEAST, WEAPON_TYPE.BLUE_BEAST, WEAPON_TYPE.C_BEAST.id
+      ]
+    }
   },
   AXEBREAKER_3: {
     name: "Axebreaker 3",
@@ -1496,7 +1815,17 @@ const B_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.AXE.id,
+        WEAPON_TYPE.RED_BOW, WEAPON_TYPE.GREEN_BOW, WEAPON_TYPE.C_BOW.id,
+        WEAPON_TYPE.RED_DAGGER, WEAPON_TYPE.GREEN_DAGGER, WEAPON_TYPE.C_DAGGER.id,
+        WEAPON_TYPE.RED_TOME, WEAPON_TYPE.GREEN_TOME, WEAPON_TYPE.C_TOME.id,
+        WEAPON_TYPE.RED_BREATH, WEAPON_TYPE.GREEN_BREATH, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.RED_BEAST, WEAPON_TYPE.GREEN_BEAST, WEAPON_TYPE.C_BEAST.id
+      ]
+    }
   },
   BOWBREAKER_3: {
     name: "Bowbreaker 3",
@@ -1515,7 +1844,10 @@ const B_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id, MOVE_TYPE.CAVALRY.id],
+    }
   },
   DAGGERBREAKER_3: {
     name: "Daggerbreaker 3",
@@ -1553,7 +1885,17 @@ const B_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id,
+        WEAPON_TYPE.RED_BOW, WEAPON_TYPE.BLUE_BOW, WEAPON_TYPE.C_BOW.id,
+        WEAPON_TYPE.RED_DAGGER, WEAPON_TYPE.BLUE_DAGGER, WEAPON_TYPE.C_DAGGER.id,
+        WEAPON_TYPE.RED_TOME, WEAPON_TYPE.BLUE_TOME, WEAPON_TYPE.C_TOME.id,
+        WEAPON_TYPE.RED_BREATH, WEAPON_TYPE.BLUE_BREATH, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.RED_BEAST, WEAPON_TYPE.BLUE_BEAST, WEAPON_TYPE.C_BEAST.id
+      ]
+    }
   },
   B_TOMEBREAKER_3: {
     name: "B Tomebreaker 3",
@@ -1572,7 +1914,17 @@ const B_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.AXE.id, WEAPON_TYPE.LANCE.id,
+        WEAPON_TYPE.GREEN_BOW, WEAPON_TYPE.BLUE_BOW, WEAPON_TYPE.C_BOW.id,
+        WEAPON_TYPE.GREEN_DAGGER, WEAPON_TYPE.BLUE_DAGGER, WEAPON_TYPE.C_DAGGER.id,
+        WEAPON_TYPE.GREEN_TOME, WEAPON_TYPE.BLUE_TOME, WEAPON_TYPE.C_TOME.id,
+        WEAPON_TYPE.GREEN_BREATH, WEAPON_TYPE.BLUE_BREATH, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.GREEN_BEAST, WEAPON_TYPE.BLUE_BEAST, WEAPON_TYPE.C_BEAST.id
+      ]
+    }
   },
   G_TOMEBREAKER_3: {
     name: "G Tomebreaker 3",
@@ -1591,7 +1943,17 @@ const B_SKILLS = {
           { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [
+        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.AXE.id,
+        WEAPON_TYPE.RED_BOW, WEAPON_TYPE.GREEN_BOW, WEAPON_TYPE.C_BOW.id,
+        WEAPON_TYPE.RED_DAGGER, WEAPON_TYPE.GREEN_DAGGER, WEAPON_TYPE.C_DAGGER.id,
+        WEAPON_TYPE.RED_TOME, WEAPON_TYPE.GREEN_TOME, WEAPON_TYPE.C_TOME.id,
+        WEAPON_TYPE.RED_BREATH, WEAPON_TYPE.GREEN_BREATH, WEAPON_TYPE.C_BREATH.id,
+        WEAPON_TYPE.RED_BEAST, WEAPON_TYPE.GREEN_BEAST, WEAPON_TYPE.C_BEAST.id
+      ]
+    }
   },
   WINDSWEEP_3: {
     name: "Windsweep 3",
@@ -1628,7 +1990,10 @@ const B_SKILLS = {
         ),
         actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_COUNTERATTACK, target: { type: EFFECT_TARGET.FOE } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   WATERSWEEP_3: {
     name: "Watersweep 3",
@@ -1659,21 +2024,30 @@ const B_SKILLS = {
         ),
         actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_COUNTERATTACK, target: { type: EFFECT_TARGET.FOE } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   WRATHFUL_STAFF: {
     name: "Wrathful Staff 3",
     description: "Calculates damage from staff like other weapons.",
     img: "assets/skills/Wrathful_Staff_3.webp",
     type: SKILL_TYPE.B,
-    effects: [EFFECT.wrathful()]
+    effects: [EFFECT.wrathful()],
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
+    }
   },
   DAZZLING_STAFF: {
     name: "Dazzling Staff 3",
     description: "Foe cannot counterattack.",
     img: "assets/skills/Dazzling_Staff_3.webp",
     type: SKILL_TYPE.B,
-    effects: [EFFECT.foeCantCounterattack()]
+    effects: [EFFECT.foeCantCounterattack()],
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
+    }
   },
   BRASH_ASSAULT_3: {
     name: "Brash Assault 3",
@@ -1714,7 +2088,10 @@ const B_SKILLS = {
           }
         }]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.FLIER.id]
+    }
   },
   BLAZE_DANCE_3: {
     name: "Blaze Dance 3",
@@ -1779,7 +2156,10 @@ const B_SKILLS = {
         condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
         actions: [{ type: EFFECT_ACTION.POST_COMBAT_MOVEMENT, movementType: MOVEMENT_TYPE.SHOVE, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   LUNGE: {
     name: "Lunge",
@@ -1792,7 +2172,10 @@ const B_SKILLS = {
         condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
         actions: [{ type: EFFECT_ACTION.POST_COMBAT_MOVEMENT, movementType: MOVEMENT_TYPE.SWAP, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   DRAG_BACK: {
     name: "Drag Back",
@@ -1805,7 +2188,10 @@ const B_SKILLS = {
         condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
         actions: [{ type: EFFECT_ACTION.POST_COMBAT_MOVEMENT, movementType: MOVEMENT_TYPE.DRAW_BACK, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   HIT_AND_RUN: {
     name: "Hit and Run",
@@ -1818,7 +2204,10 @@ const B_SKILLS = {
         condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
         actions: [{ type: EFFECT_ACTION.POST_COMBAT_MOVEMENT, movementType: MOVEMENT_TYPE.HIT_AND_RUN, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   PASS_3: {
     name: "Pass 3",
@@ -1973,7 +2362,10 @@ const B_SKILLS = {
         phase: EFFECT_PHASE.USED_HEAL,
         actions: [{ type: EFFECT_ACTION.RESTORE_HP, calculation: { type: EFFECT_CALCULATION.HP_RESTORED_TO_TARGET }, target: { type: EFFECT_TARGET.SELF } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: [WEAPON_TYPE.STAFF.id]
+    }
   },
   POISON_STRIKE_3: {
     name: "Poison Strike 3",
@@ -1987,7 +2379,10 @@ const B_SKILLS = {
         condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, value: 10, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SEAL_ATK_3: {
     name: "Seal Atk 3",
@@ -2000,7 +2395,10 @@ const B_SKILLS = {
         phase: EFFECT_PHASE.AFTER_COMBAT,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 7, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SEAL_SPD_3: {
     name: "Seal Spd 3",
@@ -2013,7 +2411,10 @@ const B_SKILLS = {
         phase: EFFECT_PHASE.AFTER_COMBAT,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.SPD, value: 7, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SEAL_DEF_3: {
     name: "Seal Def 3",
@@ -2026,7 +2427,10 @@ const B_SKILLS = {
         phase: EFFECT_PHASE.AFTER_COMBAT,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.DEF, value: 7, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SEAL_RES_3: {
     name: "Seal Res 3",
@@ -2039,7 +2443,10 @@ const B_SKILLS = {
         phase: EFFECT_PHASE.AFTER_COMBAT,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.RES, value: 7, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SHIELD_PULSE_3: {
     name: "Shield Pulse 3",
@@ -2059,7 +2466,11 @@ const B_SKILLS = {
         phase: EFFECT_PHASE.ON_DEFENSIVE_SPECIAL_TRIGGER,
         actions: [{ type: EFFECT_ACTION.DAMAGE_REDUCTION, flat: 5 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE,
+      moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
+    }
   },
   RENEWAL_3: {
     name: "Renewal 3",
@@ -2091,7 +2502,11 @@ const B_SKILLS = {
         condition: { type: EFFECT_CONDITION.UNIT_HP_LESS_THAN_EQUAL_TO, percent: 75 },
         actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, value: 10 }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE,
+      moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
+    }
   },
   CANCEL_AFFINITY_3: {
     name: "Cancel Affinity 3",
@@ -2103,7 +2518,10 @@ const B_SKILLS = {
         phase: EFFECT_PHASE.START_OF_COMBAT,
         actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANCEL_AFFINITY, target: { type: EFFECT_TARGET.SELF } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
 };
 
@@ -2336,7 +2754,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.ARMOURED.id]
+    }
   },
   WARD_ARMOUR: {
     name: "Ward Armour",
@@ -2352,7 +2773,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.ARMOURED.id]
+    }
   },
   GOAD_CAVALRY: {
     name: "Goad Cavalry",
@@ -2368,7 +2792,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.CAVALRY.id]
+    }
   },
   WARD_CAVALRY: {
     name: "Ward Cavalry",
@@ -2384,7 +2811,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.CAVALRY.id]
+    }
   },
   GOAD_FLIERS: {
     name: "Goad Fliers",
@@ -2400,7 +2830,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.FLIER.id]
+    }
   },
   WARD_FLIERS: {
     name: "Ward Fliers",
@@ -2416,7 +2849,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.FLIER.id]
+    }
   },
   GOAD_DRAGONS: {
     name: "Goad Dragons",
@@ -2438,7 +2874,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: DRAGONS
+    }
   },
   WARD_DRAGONS: {
     name: "Ward Dragons",
@@ -2460,7 +2899,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: DRAGONS
+    }
   },
   GOAD_BEASTS: {
     name: "Goad Beasts",
@@ -2482,7 +2924,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: BEASTS
+    }
   },
   WARD_BEASTS: {
     name: "Ward Beasts",
@@ -2504,7 +2949,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
         ]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: BEASTS
+    }
   },
   SAVAGE_BLOW_3: {
     name: "Savage Blow 3",
@@ -2599,7 +3047,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.ARMOURED.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.ARMOURED.id]
+    }
   },
   FORTIFY_ARMOUR: {
     name: "Fortify Armour",
@@ -2614,7 +3065,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.ARMOURED.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.ARMOURED.id]
+    }
   },
   HONE_CAVALRY: {
     name: "Hone Cavalry",
@@ -2629,7 +3083,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.CAVALRY.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.CAVALRY.id]
+    }
   },
   FORTIFY_CAVALRY: {
     name: "Fortify Cavalry",
@@ -2644,7 +3101,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.CAVALRY.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.CAVALRY.id]
+    }
   },
   HONE_FLIERS: {
     name: "Hone Fliers",
@@ -2659,7 +3119,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.FLIER.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.FLIER.id]
+    }
   },
   FORTIFY_FLIERS: {
     name: "Fortify Fliers",
@@ -2674,7 +3137,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.FLIER.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.FLIER.id]
+    }
   },
   HONE_DRAGONS: {
     name: "Hone Dragons",
@@ -2696,7 +3162,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BREATH.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      weaponType: DRAGONS
+    }
   },
   FORTIFY_DRAGONS: {
     name: "Fortify Dragons",
@@ -2718,7 +3187,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BREATH.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      weaponType: DRAGONS
+    }
   },
   HONE_BEASTS: {
     name: "Hone Beasts",
@@ -2740,7 +3212,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BEAST.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      weaponType: DRAGONS
+    }
   },
   FORTIFY_BEASTS: {
     name: "Fortify Beasts",
@@ -2762,7 +3237,10 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BEAST.id } }
         ]
       },
-    ]
+    ],
+    canUse: {
+      weaponType: DRAGONS
+    }
   },
   THREATEN_ATK_3: {
     name: "Threaten Atk 3",
@@ -2831,7 +3309,10 @@ const C_SKILLS = {
         ),
         actions: [{ type: EFFECT_ACTION.ENABLE_WARP, target: { type: EFFECT_TARGET.SPACES_WITHIN_UNIT, spaces: 1 } }]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.FLIER.id]
+    }
   },
   ATK_PLOY_3: {
     name: "Atk Ploy 3",
@@ -2954,7 +3435,10 @@ const C_SKILLS = {
         phase: EFFECT_PHASE.AFTER_COMBAT,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 7, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   SPD_SMOKE_3: {
     name: "Spd Smoke 3",
@@ -2967,7 +3451,10 @@ const C_SKILLS = {
         phase: EFFECT_PHASE.AFTER_COMBAT,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.SPD, value: 7, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   DEF_SMOKE_3: {
     name: "Def Smoke 3",
@@ -2980,7 +3467,10 @@ const C_SKILLS = {
         phase: EFFECT_PHASE.AFTER_COMBAT,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.DEF, value: 7, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   RES_SMOKE_3: {
     name: "Res Smoke 3",
@@ -2993,7 +3483,10 @@ const C_SKILLS = {
         phase: EFFECT_PHASE.AFTER_COMBAT,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.RES, value: 7, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: NON_STAVES
+    }
   },
   INFANTRY_PULSE_3: {
     name: "Infantry Pulse 3",
@@ -3017,7 +3510,10 @@ const C_SKILLS = {
           }
         ]
       }
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.INFANTRY.id]
+    }
   },
 };
 
@@ -3033,7 +3529,10 @@ const S_SKILLS = {
         condition: { type: EFFECT_CONDITION.UNIT_HP_IS_MAX_HP },
         actions: [{ type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.MOBILITY_INCREASED.id, target: { type: EFFECT_TARGET.SELF } }]
       },
-    ]
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.ARMOURED.id]
+    }
   },
   QUICKENED_PULSE: {
     name: "Quickened Pulse",
@@ -3089,7 +3588,10 @@ const S_SKILLS = {
         ),
         actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CONSECUTIVE_HIT_DAMAGE_REDUCTION, percent: 80, target: { type: EFFECT_TARGET.SELF } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   DEFLECT_MISSILE_3: {
     name: "Deflect Missile 3",

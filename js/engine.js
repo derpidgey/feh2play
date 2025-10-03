@@ -15,10 +15,12 @@ function Engine() {
 
   function validateBuild(build) {
     const unitInfo = UNIT[build.unitId];
+    if (!unitInfo) return false;
     const counts = new Map(Object.values(SKILL_TYPE).map(type => [type, 0]));
     const skillMap = new Map();
     build.skills.forEach(skill => {
       const skillInfo = SKILLS[skill];
+      if (!skillInfo) return;
       const skillType = skillInfo.type;
       if (counts.has(skillType)) {
         counts.set(skillType, counts.get(skillType) + 1);
@@ -27,23 +29,83 @@ function Engine() {
     });
     if (Array.from(counts.values()).some(count => count > 1)) return false;
 
-    const weaponInfo = skillMap.get(SKILL_TYPE.WEAPON);
-    if (weaponInfo) {
-      if (weaponInfo.weaponType !== unitInfo.weaponType) return false;
+    for (const [type, skillInfo] of skillMap.entries()) {
+      if (!skillInfo.canUse) {
+        if (type === SKILL_TYPE.WEAPON) {
+          if (skillInfo.weaponType !== unitInfo.weaponType) return false;
+        }
+        continue;
+      }
+      if (skillInfo.canUse.unit?.length > 0) {
+        if (!skillInfo.canUse.unit.includes(unitInfo.id)) {
+          return false;
+        }
+      }
+      if (skillInfo.canUse.weaponType?.length > 0) {
+        if (!skillInfo.canUse.weaponType.includes(unitInfo.weaponType)) {
+          return false;
+        }
+      }
+      if (skillInfo.canUse.moveType?.length > 0) {
+        if (!skillInfo.canUse.moveType.includes(unitInfo.moveType)) {
+          return false;
+        }
+      }
     }
 
-    // skill restrictions e.g. move type exclusive, weapon type exclusive
-    // exclusive skills
     // in the future: rearmed and x
     return true;
   }
 
-  function validateTeam(team) {
-    // duplicate seals
-    // team size
+  function validateTeam(team, mode = "standard") {
+    for (const build of team) {
+      if (!validateBuild(build)) return false;
+    }
+
+    const seals = new Set();
+    for (const build of team) {
+      const seal = build.skills.find(skillId => SKILLS[skillId]?.type === SKILL_TYPE.S);
+      if (seal) {
+        if (seals.has(seal)) {
+          return false;
+        }
+        seals.add(seal);
+      }
+    }
+
+    // future mods: aro, ard
+    if (mode === "standard") {
+      return team.length <= 4;
+    } else if (mode === "sd") {
+      if (team.length !== 5) return false;
+      const unitIds = new Set();
+      for (const build of team) {
+        if (unitIds.has(build.unitId)) {
+          return false;
+        }
+        unitIds.add(build.unitId);
+      }
+      // come back when save skills implemented
+      // let saveSkillCount = 0;
+      // for (const build of team) {
+      //   if (build.skills.some(skillId => SKILLS[skillId]?.tags?.includes("save"))) {
+      //     saveSkillCount++;
+      //   }
+      // }
+      // if (saveSkillCount > 1) return false;
+      let refresherCount = 0;
+      for (const build of team) {
+        if (build.skills.some(skillId => SKILLS[skillId]?.assistType === ASSIST_TYPE.REFRESH)) {
+          refresherCount++;
+        }
+      }
+      if (refresherCount > 1) return false;
+      return true;
+    }
     // in the future: emblem rings
 
-    // sd: no duplicate heroes, 1 save skill, 1 dance/sing skill
+    // invalid mode
+    return false;
   }
 
   function newGame(map, team1Builds, team2Builds, mode = "regular") {
@@ -185,9 +247,8 @@ function Engine() {
       actionsRemaining: [[], []],
       endedTurn: [r32(), r32()],
       currentTurn: r32(),
-      turnCount: [r32(), r32(), r32(), r32(), r32()]
-      // todo one for capture area
-      // combats in phase <- probably not needed
+      turnCount: [r32(), r32(), r32(), r32(), r32()],
+      captureArea: [r32(), r32(), r32(), r32(), r32(), r32(), r32(), r32(), r32(), r32()],
     }
 
     const rows = gameState.map.terrain.length;
@@ -277,6 +338,11 @@ function Engine() {
     gameState.hash ^= gameState.zobristTable.turnCount[gameState.turnCount - 1];
   }
 
+  function hashCaptureArea(gameState) {
+    if (gameState.mode !== "duel") return;
+    gameState.hash ^= gameState.zobristTable.captureArea[gameState.captureArea.y];
+  }
+
   function initHash(gameState) {
     gameState.hash = 0;
     for (const unit of gameState.teams[0].concat(gameState.teams[1])) {
@@ -292,6 +358,7 @@ function Engine() {
     hashActionsRemaining(gameState, 0);
     hashActionsRemaining(gameState, 1);
     hashTurnCount(gameState);
+    hashCaptureArea(gameState);
   }
 
   function debug(gameState) {
@@ -1611,6 +1678,7 @@ function Engine() {
     if (specialFlags.restoreHpByPercentDamageDealt) {
       healValue += specialFlags.restoreHpByPercentDamageDealt(damage);
     }
+    // do we still need this?
     // if (attackerFlags[COMBAT_FLAG.PERCENT_HEALING_ON_HIT]) {
     //   healValue += Math.floor(damage * attackerFlags[COMBAT_FLAG.PERCENT_HEALING_ON_HIT] / 100);
     // }
@@ -2144,7 +2212,7 @@ function Engine() {
         context.specialFlags.addDamageByPercentOfMissingHp = missingHp => Math.floor(missingHp * action.calculation.percent / 100);
       }
     } else {
-      console.warn("shouldn't be here"); //todo check, this is old logic
+      // currently unused but could be here in future e.g. flared sparrow
       const targets = getTargetedUnits(context, action.target);
       targets.forEach(target => {
         hashHp(context.gameState, target);
@@ -2344,7 +2412,7 @@ function Engine() {
         break;
       }
       bestMove = getPvMove(searchInfo.hashTable, gameState.hash);
-      const pvLine = getPvLine(searchInfo.hashTable, gameState, currentDepth);
+      // const pvLine = getPvLine(searchInfo.hashTable, gameState, currentDepth);
       // let buffer = `d=${currentDepth},time=${Date.now() - searchInfo.start}ms,best=${getMoveString(gameState, bestMove)},score=${bestScore},nodes=${searchInfo.nodes},pv=${pvLine.join(" ")}`;
       // if (currentDepth !== 1) {
       //   buffer += `,ordering=${searchInfo.fh > 0 ? (100 * searchInfo.fhf / searchInfo.fh).toFixed(2) : 100}%`;
@@ -2520,7 +2588,7 @@ function Engine() {
       } else if (move.type === "end turn") {
         move.score = 0;
       } else {
-        // todo encoding doesn't know the unit might need to rethink this
+        // todo encoding doesn't know the unit might need to rethink this, is it a problem?
         move.score = searchInfo.historyMoves[encodeMove(move)];
       }
     }
@@ -2538,6 +2606,7 @@ function Engine() {
     return pos.x * MAX_COORD + pos.y;
   }
 
+  // for debugging
   function getPvLine(table, gameState, depth) {
     const clone = minClone(gameState);
     const line = [];
