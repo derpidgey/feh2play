@@ -43,6 +43,8 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
 
   const maxUnits = teamData.mode === "sd" ? 5 : 4;
   const team = teamData.units;
+  const currentUnit = team[editingIndex];
+  const currentUnitInfo = UNIT[currentUnit.unitId];
 
   while (team.length < maxUnits) team.push({ unitId: "", skills: Array(8).fill("") });
 
@@ -51,8 +53,8 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
       <h2>${teamData.name} (${teamData.mode})</h2>
       <div style="display: flex; margin-bottom: 16px;">
         ${team.map((unit, idx) => {
-          const isActive = editingIndex === idx;
-          return html`
+    const isActive = editingIndex === idx;
+    return html`
             <div
               style="
                 cursor: pointer;
@@ -67,61 +69,54 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
                 width: 60px;
                 height: 60px;
               "
-              onClick=${() => setEditingIndex(idx)}
-            >
+              onClick=${() => setEditingIndex(idx)}>
               ${unit.unitId
-                ? html`<img src=${UNIT[unit.unitId].imgFace} alt=${UNIT[unit.unitId].name} style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />`
-                : html`<span>${idx + 1}</span>`}
+        ? html`<img src=${UNIT[unit.unitId].imgFace} alt=${UNIT[unit.unitId].name} style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;" />`
+        : html`<span>${idx + 1}</span>`}
             </div>
           `;
-        })}
+  })}
       </div>
 
       <div style="margin-bottom: 16px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-        <label>
-          Unit:
-          <select
-            value=${team[editingIndex].unitId}
-            onChange=${e => {
-              const newTeam = [...team];
-              newTeam[editingIndex].unitId = e.target.value;
-              onChange(newTeam);
-            }}
-          >
-            <option value="">-- Select Unit --</option>
-            ${Object.values(UNIT).map(u => html`<option value=${u.id}>${u.name}: ${u.subtitle}</option>`)}
-          </select>
-        </label>
-
-        <div style="margin-top: 8px;">
-          ${Array.from(skillConfig).map((config, i) => {
-            const currentSkill = team[editingIndex].skills[i] || "";
-            return html`
-              <div style="margin-bottom: 4px;">
-                <label>
-                  <img src=${config.icon} style="height: 1em;" />
-                  <select
-                    value=${currentSkill}
-                    onChange=${e => {
-                      const newTeam = [...team];
-                      newTeam[editingIndex].skills[i] = e.target.value;
-                      onChange(newTeam);
-                    }}>
-                    <option value="">-- None --</option>
-                    ${Object.values(SKILLS).filter(skill => skill.type === config.skillType && !skill.id.includes("_REFINE_"))
-                      .filter(skill => team[editingIndex].unitId ? engine.canLearn(UNIT[team[editingIndex].unitId], skill) : false)
-                      .map(skill => html`<option value=${skill.id}>${skill.name}</option>`)}
-                  </select>
-                </label>
-              </div>
-            `;
-          })}
+        <div class="input-row">
+          <${Dropdown}
+          options=${Object.values(UNIT).map(u => `${u.name}: ${u.subtitle}`)}
+          placeholder=Unit
+          onSelect=${value => {
+      const newTeam = [...team];
+      const newId = Object.values(UNIT).find(u => value.includes(u.name) && value.includes(u.subtitle)).id;
+      newTeam[editingIndex].unitId = newId;
+      onChange(newTeam);
+    }}
+          defaultSelected=${currentUnit.unitId ? `${currentUnitInfo.name}: ${currentUnitInfo.subtitle}` : null}/>
         </div>
+
+        ${Array.from(skillConfig).map((config, i) => {
+      const currentSkill = currentUnit.skills[i] || "";
+      return html`
+          <div class="input-row" style="gap: 10px;">
+            <img src=${config.icon} style="height: 1em;" />
+            <${Dropdown}
+            options=${Object.values(SKILLS).filter(skill => skill.type === config.skillType && !skill.id.includes("_REFINE_"))
+          .filter(skill => currentUnit.unitId ? engine.canLearn(currentUnitInfo, skill) : false)
+          .map(skill => skill.name)}
+            onSelect=${value => {
+          const newTeam = [...team];
+          const newId = Object.values(SKILLS).find(s => value === s.name).id;
+          newTeam[editingIndex].skills[i] = newId;
+          onChange(newTeam);
+        }}
+            placeholder="-- None --"
+            defaultSelected=${currentSkill === "" ? null : Object.values(SKILLS).find(s => currentSkill === s.id).name}/>
+          </div>
+          `
+    })}
       </div>
 
-      <div style="display: flex; gap: 8px;">
-        <button onClick=${onCancel} style="padding: 6px 12px;">Cancel</button>
-        <button onClick=${onSave} style="padding: 6px 12px;">Save</button>
+      <div>
+        <button onClick=${onCancel}>Cancel</button>
+        <button onClick=${onSave}>Save</button>
       </div>
     </div>
   `;

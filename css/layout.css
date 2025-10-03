@@ -128,3 +128,8 @@
   border-radius: 100%;
   aspect-ratio: 1;
 }
+
+.input-row {
+  display: flex;
+  align-items: center;
+}

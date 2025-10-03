@@ -29,7 +29,7 @@ const TeamBuilder = ({ onExit }) => {
     const handleTeamChange = newUnits => {
       const newTeams = [...teams];
       newTeams[editingTeamIndex] = { ...teamData, units: newUnits };
-      saveTeams(newTeams);
+      setTeams(newTeams);
     };
     return html`<${TeamEditor}
       teamData=${teamData}
