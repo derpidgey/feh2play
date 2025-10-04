@@ -2145,6 +2145,46 @@ describe("Engine", function () {
           aoe: true
         }));
       });
+
+      it("should do adaptive damage", function () {
+        team1 = [createBuild(UNIT.NOWI.id, [SKILLS.PURIFYING_BREATH.id, SKILLS.BLAZING_WIND.id])];
+        team2 = [createBuild(UNIT.NINO.id)];
+        const gameState = engine.newGame(map, team1, team2);
+        const unit = gameState.teams[0][0];
+        unit.special.current = 0;
+        const foe = gameState.teams[1][0];
+        const results = engine.calculateCombatResult(gameState, unit, foe);
+        const aoeHit = results.sequence[0];
+        const expectedDamage = Math.floor((unit.stats.atk - foe.stats.def) * 1.5); // (48 - 19) * 1.5 = 43.5 = dead nino
+        expect(aoeHit).toEqual(jasmine.objectContaining({
+          attacker: unit.id,
+          defender: foe.id,
+          damage: expectedDamage,
+          aoe: true
+        }));
+        expect(results.units[0].special.current).toBe(4); // because reverse slaying
+        expect(results.units[1].startOfCombatHp).toBe(1);
+      });
+
+      it("should trigger aoe special on defensive terrain", function () {
+        map.defensiveTerrain.push({ x: 3, y: 0 });
+        const gameState = engine.newGame(map, team1, team2);
+        const unit = gameState.teams[0][0];
+        unit.special.current = 0;
+        const foe = gameState.teams[1][0];
+        const results = engine.calculateCombatResult(gameState, unit, foe);
+        const aoeHit = results.sequence[0];
+        const effectiveDef = Math.floor(foe.stats.def * 1.3);
+        const expectedDamage = Math.floor((unit.stats.atk - effectiveDef) * 1.5); // 50 - (32 * 1.3)
+        expect(aoeHit).toEqual(jasmine.objectContaining({
+          attacker: unit.id,
+          defender: foe.id,
+          damage: expectedDamage,
+          aoe: true
+        }));
+        expect(results.units[0].special.current).toBe(2);
+        expect(results.units[1].startOfCombatHp).toBe(foe.stats.hp - expectedDamage);
+      });
     });
 
     describe("Phantom", function () {

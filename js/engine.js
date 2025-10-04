@@ -1298,7 +1298,7 @@ function Engine() {
       const onSpecialEffects = getEligibleEffects(EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER, results.units[0], aoeContext);
       processEffects(onSpecialEffects, aoeContext);
       getUnitsInAoe(gameState, results.units[1].team, results.units[1].pos, initiatorSpecial.aoe.shape).forEach(unit => {
-        let damage = calculateAoeDamage(results.units[0], unit, initiatorSpecial.aoe.multiplier, gameState.mode) + specialFlags.situationalFixedDamage;
+        let damage = calculateAoeDamage(results.units[0], unit, initiatorSpecial.aoe.multiplier, gameState) + specialFlags.situationalFixedDamage;
         if (unit.id === results.units[1].id) {
           results.units[1].stats.hp = Math.max(1, results.units[1].stats.hp - damage);
           results.units[1].startOfCombatHp = results.units[1].stats.hp;
@@ -1443,16 +1443,22 @@ function Engine() {
     return affectedUnits;
   }
 
-  function calculateAoeDamage(attacker, target, multiplier, mode) {
-    // todo adaptive damage, def terrain
+  function calculateAoeDamage(attacker, target, multiplier, gameState) {
+    const mode = gameState.mode;
     const attackerWeapon = getWeaponType(attacker);
     const defenderWeapon = getWeaponInfo(target);
-    const defStat = attackerWeapon.defStat;
-    let defStatBonus = 0;
-    if (mode === "duel" && attackerWeapon.range === 2 && defenderWeapon.range === 1) {
-      defStatBonus += 7;
+    const defenderTotalStats = getVisibleStats(target);
+    let defStat = attackerWeapon.defStat;
+    if (attacker.flags[COMBAT_FLAG.CALCULATE_DAMAGE_USING_LOWER_OF_DEF_RES]) {
+      if (defenderTotalStats.def < defenderTotalStats.res) defStat = STATS.DEF;
+      else if (defenderTotalStats.res < defenderTotalStats.def) defStat = STATS.RES;
     }
-    return Math.floor(multiplier * (getVisibleStats(attacker).atk - getVisibleStats(target)[defStat] - defStatBonus));
+    if (mode === "duel" && attackerWeapon.range === 2 && defenderWeapon.range === 1) {
+      defenderTotalStats[STATS.DEF] += 7;
+      defenderTotalStats[STATS.RES] += 7;
+    }
+    const terrainMod = gameState.map.defensiveTerrain.some(pos => pos.x === target.pos.x && pos.y === target.pos.y) ? 0.3 : 0;
+    return Math.floor(multiplier * (getVisibleStats(attacker).atk - defenderTotalStats[defStat] - Math.floor(defenderTotalStats[defStat] * terrainMod)));
   }
 
   function resolveDuringCombatEffects(results, gameState) {
