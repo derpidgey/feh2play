@@ -2,6 +2,8 @@ import requests
 import os
 import time
 
+book_number = 2  # Set the desired book number
+
 def get_file_name(hero_name, image_type):
     formatted_name = hero_name.replace(' ', '_')
     return f"{formatted_name}_{image_type}.png"
@@ -44,15 +46,14 @@ def download_image(url, download_path):
 
 def process(hero_name, image_type):
     asset_path = 'face' if image_type == "Face_FC" else 'sprites'
-    download_path = os.path.join('..', 'assets', asset_path, f"{get_file_name(hero, image_type).replace('.png', '.webp')}")
+    download_path = os.path.join('..', 'assets', asset_path, f"book{book_number}", f"{get_file_name(hero_name, image_type).replace('.png', '.webp')}")
     if os.path.exists(download_path):
         print(f"{download_path} already exists. Skipping download.")
         return
-    image_url = get_image_url(hero, image_type)
+    image_url = get_image_url(hero_name, image_type)
     download_image(image_url, download_path)
 
 if __name__ == "__main__":
-    book_number = 1  # Set the desired book number
     heroes = fetch_heroes(book_number)
     # heroes = ['Abel The Panther'] # testing purposes
     

@@ -15,8 +15,8 @@ def parse_hero_data(soup):
     return {
         "name": soup.select_one(".page-header__title").text.split(":")[0].strip(),
         "subtitle": soup.select_one(".page-header__title").text.split(":")[1].strip(),
-        "imgFace": f"assets/face/{img_title}_Face_FC.webp",
-        "imgSprite": f"assets/sprites/{img_title}_Mini_Unit_Idle.webp",
+        "imgFace": f"assets/face/book1/{img_title}_Face_FC.webp",
+        "imgSprite": f"assets/sprites/book1/{img_title}_Mini_Unit_Idle.webp",
         "rarity": f"RARITY.{map_rarity(get_td_value(soup, "Rarities"))}",
         "weaponType": f"WEAPON_TYPE.{get_td_value(soup, "Weapon Type").upper()}.id",
         "moveType": f"MOVE_TYPE.{get_td_value(soup, "Move Type").upper().replace("OR", "OUR")}.id",
