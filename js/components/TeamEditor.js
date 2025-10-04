@@ -42,9 +42,9 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
   const [editingIndex, setEditingIndex] = useState(0);
 
   const maxUnits = teamData.mode === "sd" ? 5 : 4;
-  const team = teamData.units;
+  const team = [...teamData.units];
   const currentUnit = team[editingIndex];
-  const currentUnitInfo = UNIT[currentUnit.unitId];
+  const currentUnitInfo = currentUnit.unitId ? UNIT[currentUnit.unitId] : null;
 
   while (team.length < maxUnits) team.push({ unitId: "", skills: Array(8).fill("") });
 
@@ -81,34 +81,32 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
       <div style="margin-bottom: 16px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
         <div class="input-row">
           <${Dropdown}
-          options=${Object.values(UNIT).map(u => `${u.name}: ${u.subtitle}`)}
-          placeholder=Unit
+          options=${["-", ...Object.values(UNIT).map(u => `${u.name}: ${u.subtitle}`)]}
           onSelect=${value => {
       const newTeam = [...team];
-      const newId = Object.values(UNIT).find(u => value.includes(u.name) && value.includes(u.subtitle)).id;
+      const newId = Object.values(UNIT).find(u => value.includes(u.name) && value.includes(u.subtitle))?.id ?? "";
       newTeam[editingIndex].unitId = newId;
       onChange(newTeam);
     }}
-          defaultSelected=${currentUnit.unitId ? `${currentUnitInfo.name}: ${currentUnitInfo.subtitle}` : null}/>
+          defaultSelected=${currentUnit.unitId ? `${currentUnitInfo.name}: ${currentUnitInfo.subtitle}` : "-"}/>
         </div>
 
         ${Array.from(skillConfig).map((config, i) => {
       const currentSkill = currentUnit.skills[i] || "";
       return html`
           <div class="input-row" style="gap: 10px;">
-            <img src=${config.icon} style="height: 1em;" />
+            <img src=${config.icon} style="height: 1.8rem;" />
             <${Dropdown}
-            options=${Object.values(SKILLS).filter(skill => skill.type === config.skillType && !skill.id.includes("_REFINE_"))
+            options=${["-", ...Object.values(SKILLS).filter(skill => skill.type === config.skillType && !skill.id.includes("_REFINE_"))
           .filter(skill => currentUnit.unitId ? engine.canLearn(currentUnitInfo, skill) : false)
-          .map(skill => skill.name)}
+          .map(skill => skill.name)]}
             onSelect=${value => {
           const newTeam = [...team];
-          const newId = Object.values(SKILLS).find(s => value === s.name).id;
+          const newId = Object.values(SKILLS).find(s => value === s.name)?.id ?? "";
           newTeam[editingIndex].skills[i] = newId;
           onChange(newTeam);
         }}
-            placeholder="-- None --"
-            defaultSelected=${currentSkill === "" ? null : Object.values(SKILLS).find(s => currentSkill === s.id).name}/>
+            defaultSelected=${currentSkill === "" ? "-" : Object.values(SKILLS).find(s => currentSkill === s.id).name}/>
           </div>
           `
     })}

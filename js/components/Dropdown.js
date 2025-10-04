@@ -69,9 +69,9 @@ const Dropdown = ({ options = [], placeholder = "Select an option", onSelect, de
 
   return html`
     <div ref=${containerRef} style=${{ position: "relative", width: "250px" }}>
-    <div
-    onClick=${() => setOpen(!open)}
-    style=${{
+      <div
+      onClick=${() => setOpen(!open)}
+      style=${{
       border: "1px solid #ccc",
       borderRadius: "6px",
       padding: "8px 12px",
@@ -81,12 +81,12 @@ const Dropdown = ({ options = [], placeholder = "Select an option", onSelect, de
       cursor: "pointer",
       backgroundColor: "#fff"
     }}>
-    <span>${selected || placeholder}</span>
-    <span style=${{ fontSize: "12px", opacity: 0.6 }}>▼</span>
-    </div>
-    ${open && html`
-    <div
-    style=${{
+        <span>${selected || placeholder}</span>
+        <span style=${{ fontSize: "12px", opacity: 0.6 }}>▼</span>
+      </div>
+      ${open && html`
+        <div
+        style=${{
         position: "absolute",
         top: "110%",
         left: 0,
@@ -99,27 +99,27 @@ const Dropdown = ({ options = [], placeholder = "Select an option", onSelect, de
         overflowY: "auto",
         zIndex: 1000
       }}>
-    <input
-    ref=${inputRef}
-    type="text"
-    placeholder="Search..."
-    value=${query}
-    onInput=${(e) => setQuery(e.target.value)}
-    style=${{
+        <input
+        ref=${inputRef}
+        type="text"
+        placeholder="Search..."
+        value=${query}
+        onInput=${(e) => setQuery(e.target.value)}
+        style=${{
         width: "calc(100% - 16px)",
         margin: "8px",
         padding: "6px 8px",
         border: "1px solid #ddd",
         borderRadius: "4px"
       }}/>
-    ${filteredOptions.length === 0
+        ${filteredOptions.length === 0
         ? html`<div style=${{ padding: "8px", fontSize: "14px", color: "#666" }}>No results found.</div>`
         : filteredOptions.map((option, index) =>
           html`<div
-    key=${option}
-    onClick=${() => handleSelect(option)}
-    onMouseEnter=${() => setHighlightedIndex(index)}
-    style=${{
+        key=${option}
+        onClick=${() => handleSelect(option)}
+        onMouseEnter=${() => setHighlightedIndex(index)}
+        style=${{
               padding: "8px 12px",
               cursor: "pointer",
               backgroundColor:
@@ -129,9 +129,9 @@ const Dropdown = ({ options = [], placeholder = "Select an option", onSelect, de
                     ? "#f0f0f0"
                     : "transparent"
             }}>
-    ${option}
-    </div>`)}
-    </div>`}
+        ${option}
+        </div>`)}
+      </div>`}
     </div>
   `;
 }

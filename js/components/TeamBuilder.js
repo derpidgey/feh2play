@@ -1,7 +1,12 @@
 import { html, useState } from "https://esm.sh/htm/preact/standalone";
 import TeamEditor from "./TeamEditor.js";
+import Engine from "../engine.js";
+import SKILLS from "../data/skills.js";
+import UNIT from "../data/units.js";
 
 const LOCAL_STORAGE_KEY = "teams";
+
+const engine = Engine();
 
 const TeamBuilder = ({ onExit }) => {
   const [teams, setTeams] = useState(() => {
@@ -24,11 +29,16 @@ const TeamBuilder = ({ onExit }) => {
     setNewTeamName("");
   };
 
+  const removeInvalidSkills = unit => {
+    unit.skills = unit.skills.map(skill => engine.canLearn(UNIT[unit.unitId], SKILLS[skill]) ? skill : "");
+    return unit;
+  }
+
   if (editingTeamIndex !== null) {
     const teamData = teams[editingTeamIndex];
     const handleTeamChange = newUnits => {
       const newTeams = [...teams];
-      newTeams[editingTeamIndex] = { ...teamData, units: newUnits };
+      newTeams[editingTeamIndex] = { ...teamData, units: newUnits.map(removeInvalidSkills) };
       setTeams(newTeams);
     };
     return html`<${TeamEditor}

@@ -38,6 +38,9 @@ function Engine() {
   }
 
   function canLearn(unitInfo, skillInfo) {
+    if (!unitInfo || !skillInfo) {
+      return false;
+    }
     if (!skillInfo.canUse) {
       if (skillInfo.type === SKILL_TYPE.WEAPON) {
         if (!unitInfo.weaponType.includes(skillInfo.weaponType)) return false;
