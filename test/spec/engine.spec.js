@@ -817,6 +817,23 @@ describe("Engine", function () {
         expect(range.length).toBe(3);
       });
 
+      it("should not stack extra movement", function () {
+        map = {
+          name: "test map",
+          terrain: [
+            [TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS]
+          ],
+          defensiveTerrain: [],
+          blocks: [],
+          startingPositions: [[{ x: 0, y: 0 }], [{ x: 4, y: 0 }]]
+        }
+        team1[0].skills.push(SKILLS.ARMOURED_BOOTS.id, SKILLS.ARMOURED_BOOTS.id);
+        const gameState = engine.newGame(map, team1, team2);
+        engine.endSwapPhase(gameState);
+        const range = engine.calculateMovementRange(gameState, gameState.teams[0][0]);
+        expect(range.length).toBe(3);
+      });
+
       it("should not land on flier terrain", function () {
         map = {
           name: "test map",

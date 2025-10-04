@@ -4,13 +4,13 @@ import json
 import re
 
 # Define the URL for the unit's wiki page
-url = "https://feheroes.fandom.com/wiki/Hinata:_Wild_Samurai"
+url = "https://feheroes.fandom.com/wiki/Lyn:_Lady_of_the_Plains"
 
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
 
 def parse_hero_data(soup):
-    img_title = url.split("/")[-1].replace(":", "")
+    img_title = url.split("/")[-1].replace(":", "").replace("%27","")
     entry = get_td_value(soup, "Entry")
     return {
         "name": soup.select_one(".page-header__title").text.split(":")[0].strip(),
@@ -149,6 +149,7 @@ hero_name = hero_data['name'].upper()  # Format name in uppercase for object key
 # Create JavaScript string
 js_object = f"{hero_name}: {json.dumps(hero_data, indent=2)}"
 js_object = re.sub(r'"(\w+)"\s*:', r'\1:', js_object)
+js_object = re.sub(r'"([A-Z_][A-Z0-9_]*(?:\.[A-Z0-9_]+)*(\.id)?)"', r'\1', js_object)
 
 # with open("heroes_data.js", "w") as file:
 #     file.write(js_object)

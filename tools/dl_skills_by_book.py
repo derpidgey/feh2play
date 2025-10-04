@@ -7,7 +7,7 @@ book_number = 2  # Set the desired book number
 slots_with_icons = ['W_91', 'W_92', 'W_93', 'W_95']
 
 def get_file_name(skill_name):
-    formatted_name = skill_name.replace(' ', '_').replace('/', '_').replace('+','').replace('\'', '').replace('-','_')
+    formatted_name = skill_name.replace(' ', '_').replace('/', '_').replace('+','').replace('\'', '').replace('-','_').replace('Armor','Armour')
     return f"{formatted_name}.png"
 
 def get_image_url(skill_name):

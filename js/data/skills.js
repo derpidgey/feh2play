@@ -1288,9 +1288,9 @@ const A_SKILLS = {
     }
   },
   STEADY_BREATH: {
-    name: "Fierce Breath",
+    name: "Steady Breath",
     description: "If foe initiates combat, grants Def+4 during combat and Special cooldown charge +1 per attack. (Only highest value applied. Does not stack.)",
-    img: "assets/skills/Fierce_Breath.webp",
+    img: "assets/skills/Steady_Breath.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
     effects: [
@@ -1483,7 +1483,7 @@ const A_SKILLS = {
   GRANIS_SHIELD: {
     name: "Grani's Shield",
     description: "Neutralizes \"effective against cavalry\" bonuses.",
-    img: "assets/skills/Grani's_Shield.webp",
+    img: "assets/skills/Granis_Shield.webp",
     type: SKILL_TYPE.A,
     effects: [EFFECT.neutralizeEffectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id)],
     canUse: {
@@ -1493,7 +1493,7 @@ const A_SKILLS = {
   IOTES_SHIELD: {
     name: "Iote's Shield",
     description: "Neutralizes \"effective against flying\" bonuses.",
-    img: "assets/skills/Iote's_Shield.webp",
+    img: "assets/skills/Iotes_Shield.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
     effects: [EFFECT.neutralizeEffectiveAgainstMoveType(MOVE_TYPE.FLIER.id)],
@@ -3513,6 +3513,22 @@ const C_SKILLS = {
     ],
     canUse: {
       moveType: [MOVE_TYPE.INFANTRY.id]
+    }
+  },
+  ARMOUR_MARCH: {
+    name: "Armoured March",
+    description: "At start of turn, if unit is adjacent to an armored ally, unit and adjacent armored allies can move 1 extra space. (That turn only. Does not stack.)",
+    img: "assets/skills/Armour_March.webp",
+    type: SKILL_TYPE.S,
+    effects: [
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        condition: { type: EFFECT_CONDITION.UNIT_IS_ADJACENT_TO_ALLY, moveType: MOVE_TYPE.ARMOURED.id },
+        actions: [{ type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.MOBILITY_INCREASED.id, target: { type: EFFECT_TARGET.UNIT_AND_ALLIES_WITHIN_X_SPACES, spaces: 1 } }]
+      },
+    ],
+    canUse: {
+      moveType: [MOVE_TYPE.ARMOURED.id]
     }
   },
 };

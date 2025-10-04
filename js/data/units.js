@@ -897,6 +897,34 @@ const UNIT = {
     superboons: [STATS.HP],
     superbanes: [STATS.RES],
   },
+  HAWKEYE: {
+    name: "Hawkeye",
+    subtitle: "Desert Guardian",
+    imgFace: "assets/face/book1/Hawkeye_Desert_Guardian_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Hawkeye_Desert_Guardian_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.AXE.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.BLAZING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: {
+      hp: 21,
+      atk: 9,
+      spd: 5,
+      def: 6,
+      res: 6
+    },
+    level40Stats: {
+      hp: 45,
+      atk: 33,
+      spd: 22,
+      def: 28,
+      res: 30
+    },
+    superboons: [],
+    superbanes: [STATS.DEF]
+  },
   HECTOR: {
     name: "Hector",
     subtitle: "General of Ostia",
@@ -958,12 +986,10 @@ const UNIT = {
     subtitle: "Wild Samurai",
     imgFace: "assets/face/book1/Hinata_Wild_Samurai_Face_FC.webp",
     imgSprite: "assets/sprites/book1/Hinata_Wild_Samurai_Mini_Unit_Idle.webp",
-    rarity: "RARITY.THREE_STAR",
-    weaponType: "WEAPON_TYPE.SWORD.id",
-    moveType: "MOVE_TYPE.INFANTRY.id",
-    entry: [
-      "ENTRY.FATES"
-    ],
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
     level1Stats: {
@@ -980,9 +1006,7 @@ const UNIT = {
       def: 36,
       res: 18
     },
-    superboons: [
-      "STATS.SPD"
-    ],
+    superboons: [STATS.SPD],
     superbanes: []
   },
   HINOKA: {
@@ -1040,6 +1064,62 @@ const UNIT = {
     },
     superboons: [STATS.HP, STATS.DEF],
     superbanes: [],
+  },
+  LONQU: {
+    name: "Lon'qu",
+    subtitle: "Solitary Blade",
+    imgFace: "assets/face/book1/Lonqu_Solitary_Blade_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Lonqu_Solitary_Blade_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.AWAKENING],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: {
+      hp: 19,
+      atk: 7,
+      spd: 11,
+      def: 5,
+      res: 5
+    },
+    level40Stats: {
+      hp: 45,
+      atk: 29,
+      spd: 39,
+      def: 22,
+      res: 22
+    },
+    superboons: [],
+    superbanes: [STATS.ATK]
+  },
+  LYN: {
+    name: "Lyn",
+    subtitle: "Lady of the Plains",
+    imgFace: "assets/face/book1/Lyn_Lady_of_the_Plains_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Lyn_Lady_of_the_Plains_Mini_Unit_Idle.webp",
+    rarity: RARITY.FIVE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.BLAZING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: {
+      hp: 18,
+      atk: 6,
+      spd: 11,
+      def: 7,
+      res: 5
+    },
+    level40Stats: {
+      hp: 37,
+      atk: 28,
+      spd: 37,
+      def: 26,
+      res: 29
+    },
+    superboons: [STATS.HP, STATS.DEF],
+    superbanes: [STATS.ATK]
   },
   NINO: {
     name: "Nino",

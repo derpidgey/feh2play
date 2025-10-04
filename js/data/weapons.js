@@ -4,7 +4,6 @@ import { EFFECT } from "./effects.js";
 import STATUS from "./status.js";
 import UNIT from "./units.js";
 
-// todo handle refines that don't fit this e.g. Arden's Blade, hewn lance
 const MELEE_REFINE_OPTIONS = {
   EFF: { hp: 3 },
   ATK: { hp: 5, atk: 2 },
@@ -43,6 +42,12 @@ const REFINE_IMAGE_MAP = {
 
 function createRefinedWeapon(baseWeapon, refineType) {
   const refineStats = baseWeapon.range === 1 ? MELEE_REFINE_OPTIONS[refineType] : RANGED_REFINE_OPTIONS[refineType];
+  if (refineType === "ATK") {
+    const tax = ["CHERCHES_AXE", "HEWN_LANCE"];
+    if (tax.includes(baseWeapon.id)) {
+      refineStats.atk -= 1;
+    }
+  }
   const id = `${baseWeapon.id}_REFINE_${refineType.toUpperCase()}`;
   let description = baseWeapon.refinedBaseUpgrade?.description ?? baseWeapon.description;
   const effects = baseWeapon.refinedBaseUpgrade
@@ -763,8 +768,8 @@ const INHERITABLE_WEAPONS = {
           phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
           condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
           actions: [
-            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 7, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
-            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 7, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }
+            { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 7, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
+            { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.SPD, value: 7, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }
           ]
         },
         EFFECT.adaptiveVsRanged()
@@ -1570,6 +1575,34 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.FREDERICK.id]
     }
   },
+  GUARDIANS_AXE: {
+    name: "Guardian's Axe",
+    description: "Accelerates Special trigger (cooldown count-1).",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.AXE.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.slaying()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Inflicts Atk/Def-3 on foe and neutralizes foe's bonuses to Atk/Def (from skills like Fortify, Rally, etc.) during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: -3, target: { type: EFFECT_TARGET.FOE } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: -3, target: { type: EFFECT_TARGET.FOE } },
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_SPECIFIC_BONUSES, stat: STATS.ATK, target: { type: EFFECT_TARGET.FOE } },
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_SPECIFIC_BONUSES, stat: STATS.DEF, target: { type: EFFECT_TARGET.FOE } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Lull_Atk_Def_W.webp",
+    canUse: {
+      unit: [UNIT.HAWKEYE.id]
+    }
+  },
   HANAS_KATANA: {
     name: "Hana's Katana",
     description: "Effective against armoured foes.",
@@ -1604,6 +1637,24 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Hewn_Lance_W.webp",
     canUse: {
       unit: [UNIT.DONNEL.id]
+    }
+  },
+  HINATAS_KATANA: {
+    name: "Hinata's Katana",
+    description: "If foe initiates combat, grants Atk/Def+4 during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.enemyPhaseStats({ atk: 4, def: 4 })],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Grants Atk/Spd/Def/Res+3. After combat, deals 6 damage to unit.",
+      effects: [EFFECT.visibleStats({ atk: 3, spd: 3, def: 3, res: 3 }), EFFECT.postCombatSelfDamage(6)]
+    },
+    refineImg: "assets/refines/Fury_W.webp",
+    canUse: {
+      unit: [UNIT.HINATA.id]
     }
   },
   HINOKAS_SPEAR: {
@@ -1860,6 +1911,64 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Purifying_Breath_W.webp",
     canUse: {
       unit: [UNIT.NOWI.id]
+    }
+  },
+  SOL_KATTI: {
+    name: "Sol Katti",
+    description: "If unit's HP ≤ 50% and unit initiates combat, unit can make a follow-up attack before foe can counterattack.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 16 }),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: CONDITION.and(
+          { type: EFFECT_CONDITION.UNIT_HP_LESS_THAN_EQUAL_TO, percent: 50 },
+          { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT }
+        ),
+        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.DESPERATION, target: { type: EFFECT_TARGET.SELF } }]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit initiates combat against a foe that can counter and unit's HP ≤ 75%, unit makes a guaranteed follow-up attack.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.DURING_COMBAT_2,
+          condition: CONDITION.and(
+            { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+            { type: EFFECT_CONDITION.FOE_CAN_COUNTER },
+            { type: EFFECT_CONDITION.UNIT_HP_LESS_THAN_EQUAL_TO, percent: 50 }
+          ),
+          actions: [
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.GUARANTEED_FOLLOW_UP, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Brash_Assault_W.webp",
+    canUse: {
+      unit: [UNIT.LYN.id]
+    }
+  },
+  SOLITARY_BLADE: {
+    name: "Solitary Blade",
+    description: "Accelerates Special trigger (cooldown count-1).",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.slaying()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Grants Atk/Spd+5. Inflicts Def/Res-5.",
+      effects: [EFFECT.visibleStats({ atk: 5, spd: 5, def: -5, res: -5 })]
+    },
+    refineImg: "assets/refines/Life_and_Death_W.webp",
+    canUse: {
+      unit: [UNIT.LONQU.id]
     }
   },
   STALWART_SWORD: {
