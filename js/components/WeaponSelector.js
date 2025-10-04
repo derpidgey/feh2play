@@ -58,6 +58,6 @@ const WeaponSelector = ({ weaponId, onChange, unitInfo }) => {
         defaultSelected=${refineLabels[refinePart] || "-"} />
     </div>
   `;
-};
+}
 
 export default WeaponSelector;

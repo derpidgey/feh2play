@@ -1154,6 +1154,38 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.CAMILLA.id]
     }
   },
+  CHERCHES_AXE: {
+    name: "Cherche's Axe",
+    description: "Inflicts Spd-5. If unit initiates combat, unit attacks twice.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.AXE.id,
+    might: 11,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 8, spd: -5 }), EFFECT.playerPhaseBrave()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "At start of turn, converts bonuses on foes in cardinal directions with HP < unit's HP into penalties through their next actions.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_TURN,
+          actions: [
+            {
+              type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.PANIC.id,
+              target: {
+                type: EFFECT_TARGET.FOES_IN_CARDINAL_DIRECTIONS,
+                with: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE,
+                unitStat: STATS.HP,
+                foeStat: STATS.HP
+              }
+            }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Panic_Ploy_W.webp",
+    canUse: {
+      unit: [UNIT.CHERCHE.id]
+    }
+  },
   CORDELIAS_LANCE: {
     name: "Cordelia's Lance",
     description: "Inflicts Spd-2. If unit initiates combat, unit attacks twice.",

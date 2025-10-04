@@ -393,7 +393,7 @@ const UNIT = {
     superboons: [STATS.HP, STATS.SPD],
     superbanes: [STATS.RES],
   },
-  CHERCHE: { // todo prf
+  CHERCHE: {
     name: "Cherche",
     subtitle: "Wyvern Friend",
     imgFace: "assets/face/Cherche_Wyvern_Friend_Face_FC.webp",
@@ -952,6 +952,38 @@ const UNIT = {
     },
     superboons: [STATS.RES],
     superbanes: [],
+  },
+  HINATA: {
+    name: "Hinata",
+    subtitle: "Wild Samurai",
+    imgFace: "assets/face/Hinata_Wild_Samurai_Face_FC.webp",
+    imgSprite: "assets/sprites/Hinata_Wild_Samurai_Mini_Unit_Idle.webp",
+    rarity: "RARITY.THREE_STAR",
+    weaponType: "WEAPON_TYPE.SWORD.id",
+    moveType: "MOVE_TYPE.INFANTRY.id",
+    entry: [
+      "ENTRY.FATES"
+    ],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: {
+      hp: 21,
+      atk: 8,
+      spd: 5,
+      def: 10,
+      res: 3
+    },
+    level40Stats: {
+      hp: 47,
+      atk: 32,
+      spd: 24,
+      def: 36,
+      res: 18
+    },
+    superboons: [
+      "STATS.SPD"
+    ],
+    superbanes: []
   },
   HINOKA: {
     name: "Hinoka",

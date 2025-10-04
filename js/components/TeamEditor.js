@@ -97,7 +97,8 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
     </div>
 
     <div style="margin-bottom: 16px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
-      <div class="input-row">
+      <div class="input-row" style="gap: 10px;">
+        <div style="width: 1.8rem;"></div>
         <${Dropdown}
         options=${[{ label: "-", value: "" }, ...Object.values(UNIT).map(u => ({ label: `${u.name}: ${u.subtitle}`, value: u.id }))]}
         onSelect=${updateUnit}
