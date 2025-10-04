@@ -2,12 +2,12 @@ import requests
 import os
 import time
 
-book_number = 1  # Set the desired book number
+book_number = 2  # Set the desired book number
 
 slots_with_icons = ['W_91', 'W_92', 'W_93', 'W_95']
 
 def get_file_name(skill_name):
-    formatted_name = skill_name.replace(' ', '_')
+    formatted_name = skill_name.replace(' ', '_').replace('/', '_').replace('+','').replace('\'', '').replace('-','_')
     return f"{formatted_name}.png"
 
 def get_image_url(skill_name):
@@ -35,7 +35,7 @@ def fetch_skills(book_number):
         return []
 
     skills = response.json()['data']
-    return [skill['stripped_name'] for skill in skills if skill['book'] == book_number and skill['slot']['name'] in slots_with_icons]
+    return [skill['name']['name'] for skill in skills if skill['book'] == book_number and skill['slot']['name'] in slots_with_icons]
 
 def download_image(url, download_path):
     try:

@@ -1027,7 +1027,7 @@ const A_SKILLS = {
   ATK_RES_2: {
     name: "Atk/Res 2",
     description: "Grants Atk/Res+2.",
-    img: "assets/skills/Atk_Res_2.webp",
+    img: "assets/skills/Attack_Res_2.webp",
     type: SKILL_TYPE.A,
     availableAsSeal: true,
     effects: [EFFECT.visibleStats({ atk: 2, res: 2 })]
