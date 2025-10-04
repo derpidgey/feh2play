@@ -8,20 +8,18 @@ const Dropdown = ({ options = [], placeholder = "Select an option", onSelect, de
   const containerRef = useRef(null);
   const inputRef = useRef(null);
 
-  const filteredOptions = options.filter((option) =>
-    option.toLowerCase().includes(query.toLowerCase())
-  );
+  const filteredOptions = options.filter(option => option.label.toLowerCase().includes(query.toLowerCase()));
 
   useEffect(() => {
     setSelected(defaultSelected);
   }, [defaultSelected]);
 
-  const handleSelect = (value) => {
-    setSelected(value);
+  const handleSelect = (option) => {
+    setSelected(option);
     setOpen(false);
     setQuery("");
     setHighlightedIndex(0);
-    if (onSelect) onSelect(value);
+    if (onSelect) onSelect(option.value);
   };
 
   const handleKeyDown = (e) => {
@@ -67,56 +65,62 @@ const Dropdown = ({ options = [], placeholder = "Select an option", onSelect, de
     return () => document.removeEventListener("keydown", handleKeyDown);
   }, [open, filteredOptions, highlightedIndex]);
 
+  const dropdownStyle = {
+    border: "1px solid #ccc",
+    borderRadius: "6px",
+    padding: "8px 12px",
+    display: "flex",
+    justifyContent: "space-between",
+    alignItems: "center",
+    cursor: "pointer",
+    backgroundColor: "#fff"
+  };
+
+  const boxStyle = {
+    position: "absolute",
+    top: "110%",
+    left: 0,
+    right: 0,
+    border: "1px solid #ccc",
+    borderRadius: "6px",
+    backgroundColor: "#fff",
+    boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
+    maxHeight: "250px",
+    overflowY: "auto",
+    zIndex: 1000
+  };
+
+  const inputStyle = {
+    width: "calc(100% - 16px)",
+    margin: "8px",
+    padding: "6px 8px",
+    border: "1px solid #ddd",
+    borderRadius: "4px"
+  };
+
   return html`
     <div ref=${containerRef} style=${{ position: "relative", width: "250px" }}>
       <div
       onClick=${() => setOpen(!open)}
-      style=${{
-      border: "1px solid #ccc",
-      borderRadius: "6px",
-      padding: "8px 12px",
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      cursor: "pointer",
-      backgroundColor: "#fff"
-    }}>
+      style=${dropdownStyle}>
         <span>${selected || placeholder}</span>
         <span style=${{ fontSize: "12px", opacity: 0.6 }}>▼</span>
       </div>
       ${open && html`
         <div
-        style=${{
-        position: "absolute",
-        top: "110%",
-        left: 0,
-        right: 0,
-        border: "1px solid #ccc",
-        borderRadius: "6px",
-        backgroundColor: "#fff",
-        boxShadow: "0 4px 8px rgba(0,0,0,0.1)",
-        maxHeight: "250px",
-        overflowY: "auto",
-        zIndex: 1000
-      }}>
-        <input
-        ref=${inputRef}
-        type="text"
-        placeholder="Search..."
-        value=${query}
-        onInput=${(e) => setQuery(e.target.value)}
-        style=${{
-        width: "calc(100% - 16px)",
-        margin: "8px",
-        padding: "6px 8px",
-        border: "1px solid #ddd",
-        borderRadius: "4px"
-      }}/>
+        style=${boxStyle}>
+          <input
+          ref=${inputRef}
+          type="text"
+          placeholder="Search..."
+          value=${query}
+          onInput=${(e) => setQuery(e.target.value)}
+          style=${inputStyle}/>
         ${filteredOptions.length === 0
         ? html`<div style=${{ padding: "8px", fontSize: "14px", color: "#666" }}>No results found.</div>`
         : filteredOptions.map((option, index) =>
           html`<div
-        key=${option}
+        key=${option.label}
         onClick=${() => handleSelect(option)}
         onMouseEnter=${() => setHighlightedIndex(index)}
         style=${{
@@ -125,11 +129,11 @@ const Dropdown = ({ options = [], placeholder = "Select an option", onSelect, de
               backgroundColor:
                 highlightedIndex === index
                   ? "#e6f0ff"
-                  : selected === option
+                  : selected === option.label
                     ? "#f0f0f0"
                     : "transparent"
             }}>
-        ${option}
+        ${option.label}
         </div>`)}
       </div>`}
     </div>

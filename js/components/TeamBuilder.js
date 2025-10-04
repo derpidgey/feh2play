@@ -1,6 +1,6 @@
-import { html, useState, useEffect } from "https://esm.sh/htm/preact/standalone";
+import { html, useState } from "https://esm.sh/htm/preact/standalone";
 import TeamEditor from "./TeamEditor.js";
-import { deepClone } from "../utils.js";
+import { useTeamDraft } from "../hooks/useTeamDraft.js";
 
 const LOCAL_STORAGE_KEY = "teams";
 
@@ -9,37 +9,23 @@ const TeamBuilder = ({ onExit }) => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
   });
-  const [editingTeamIndex, setEditingTeamIndex] = useState(null);
-  const [draftTeam, setDraftTeam] = useState(null);
-  const [newTeamName, setNewTeamName] = useState("");
-  const [newTeamMode, setNewTeamMode] = useState("standard");
-
-  useEffect(() => {
-    if (editingTeamIndex !== null) {
-      setDraftTeam(deepClone(teams[editingTeamIndex]));
-    } else {
-      setDraftTeam(null);
-    }
-  }, [editingTeamIndex, teams]);
 
   const saveTeams = (updatedTeams) => {
     setTeams(updatedTeams);
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedTeams));
   };
 
-  const handleSaveDraft = () => {
-    if (editingTeamIndex === null || !draftTeam) return;
-    const updated = [...teams];
-    updated[editingTeamIndex] = deepClone(draftTeam);
-    saveTeams(updated);
-    setEditingTeamIndex(null);
-    setDraftTeam(null);
-  };
+  const {
+    editingIndex,
+    draft,
+    setDraft,
+    startEditing,
+    cancelEditing,
+    saveDraft,
+  } = useTeamDraft(teams, saveTeams);
 
-  const handleCancelEdit = () => {
-    setEditingTeamIndex(null);
-    setDraftTeam(null);
-  };
+  const [newTeamName, setNewTeamName] = useState("");
+  const [newTeamMode, setNewTeamMode] = useState("standard");
 
   const createTeam = () => {
     if (!newTeamName) return;
@@ -48,13 +34,13 @@ const TeamBuilder = ({ onExit }) => {
     setNewTeamName("");
   };
 
-  if (editingTeamIndex !== null && draftTeam) {
+  if (editingIndex !== null && draft) {
     return html`<${TeamEditor}
-    teamData=${draftTeam}
-    onChange=${setDraftTeam}
-    onCancel=${handleCancelEdit}
-    onSave=${handleSaveDraft}
-  />`;
+      teamData=${draft}
+      onChange=${setDraft}
+      onCancel=${cancelEditing}
+      onSave=${saveDraft}
+    />`;
   }
 
   return html`
@@ -74,12 +60,12 @@ const TeamBuilder = ({ onExit }) => {
         <button onClick=${createTeam}>Create Team</button>
       </div>
 
-      <h3>Existing Teams</h3>
+      <h3>Teams</h3>
       <div>
         ${teams.map((team, i) => html`
           <div>
             ${team.name} (${team.mode})
-            <button onClick=${() => setEditingTeamIndex(i)}>Edit</button>
+            <button onClick=${() => startEditing(i)}>Edit</button>
             <button onClick=${() => saveTeams(teams.filter((_, idx) => idx !== i))}>Delete</button>
           </div>
         `)}
