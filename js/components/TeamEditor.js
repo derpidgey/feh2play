@@ -66,6 +66,14 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
     onChange(newTeamData);
   }
 
+  const validateAndSave = () => {
+    if (engine.validateTeam(team.filter(unit => unit.unitId !== ""), teamData.mode)) {
+      onSave();
+    } else {
+      console.log("kekw")
+    }
+  }
+
   return html`
   <div class="screen" style="padding: 16px;">
     <h2>${teamData.name} (${teamData.mode})</h2>
@@ -130,7 +138,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
 
     <div>
       <button onClick=${onCancel}>Cancel</button>
-      <button onClick=${onSave}>Save</button>
+      <button onClick=${validateAndSave}>Save</button>
     </div>
   </div>
   `;

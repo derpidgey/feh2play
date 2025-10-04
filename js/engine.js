@@ -49,7 +49,7 @@ function Engine() {
       if (!skillInfo.canUse.unit.includes(unitInfo.id)) {
         return false;
       }
-    }else if (skillInfo.canUse.weaponType) {
+    } else if (skillInfo.canUse.weaponType) {
       if (!skillInfo.canUse.weaponType.includes(unitInfo.weaponType)) {
         return false;
       }

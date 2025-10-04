@@ -3519,7 +3519,7 @@ const C_SKILLS = {
     name: "Armoured March",
     description: "At start of turn, if unit is adjacent to an armored ally, unit and adjacent armored allies can move 1 extra space. (That turn only. Does not stack.)",
     img: "assets/skills/Armour_March.webp",
-    type: SKILL_TYPE.S,
+    type: SKILL_TYPE.C,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
