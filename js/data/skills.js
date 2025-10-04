@@ -3518,13 +3518,13 @@ const C_SKILLS = {
   ARMOUR_MARCH: {
     name: "Armoured March",
     description: "At start of turn, if unit is adjacent to an armored ally, unit and adjacent armored allies can move 1 extra space. (That turn only. Does not stack.)",
-    img: "assets/skills/Armour_March.webp",
+    img: "assets/skills/Armour_March_3.webp",
     type: SKILL_TYPE.C,
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
         condition: { type: EFFECT_CONDITION.UNIT_IS_ADJACENT_TO_ALLY, moveType: MOVE_TYPE.ARMOURED.id },
-        actions: [{ type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.MOBILITY_INCREASED.id, target: { type: EFFECT_TARGET.UNIT_AND_ALLIES_WITHIN_X_SPACES, spaces: 1 } }]
+        actions: [{ type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.MOBILITY_INCREASED.id, target: { type: EFFECT_TARGET.UNIT_AND_ALLIES_WITHIN_X_SPACES, moveType: MOVE_TYPE.ARMOURED.id, spaces: 1 } }]
       },
     ],
     canUse: {

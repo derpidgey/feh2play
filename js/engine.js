@@ -648,7 +648,7 @@ function Engine() {
           y: 3 * targetUnit.pos.y - 2 * unitpos.y
         }
         if (onMap(gameState.map, intermediateTile) && gameState.map.terrain[intermediateTile.y][intermediateTile.x] !== TERRAIN.WALL) {
-          const block = gameState.map.blocks[intermediateTile.y][intermediateTile.x];
+          const block = gameState.map.blocks.find(b => b.x === intermediateTile.x && b.y === intermediateTile.y);
           if (!block || block.hp === 0) {
             if (canLandOn(UNIT[targetUnit.unitId].moveType, gameState.map, target) && !occupiedByAnyUnit(gameState, target)) {
               return {

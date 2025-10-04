@@ -590,10 +590,10 @@ const UNIT = {
     superbanes: [STATS.ATK],
   },
   EFFIE: {
-    name: "Efffie",
+    name: "Effie",
     subtitle: "Army of One",
-    imgFace: "assets/face/book1/Efffie_Army_of_One_Face_FC.webp",
-    imgSprite: "assets/sprites/book1/Efffie_Army_of_One_Mini_Unit_Idle.webp",
+    imgFace: "assets/face/book1/Effie_Army_of_One_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Effie_Army_of_One_Mini_Unit_Idle.webp",
     rarity: RARITY.THREE_STAR,
     weaponType: WEAPON_TYPE.LANCE.id,
     moveType: MOVE_TYPE.ARMOURED.id,

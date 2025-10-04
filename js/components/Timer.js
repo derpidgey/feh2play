@@ -1,8 +1,8 @@
 import { html, useState } from "https://esm.sh/htm/preact/standalone";
 
 const Timer = ({ tileSize, currentTurn, playingAs }) => {
-  const time = 69;
-  const extra = 69;
+  const time = "∞";
+  const extra = "∞";
 
   const line1 = tileSize / 6;
   const line2 = line1 + tileSize / 6;
