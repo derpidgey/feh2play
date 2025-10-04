@@ -1857,9 +1857,9 @@ function Engine() {
       case EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY:
         return handleUnitWithinSpacesOfAlly(context, params);
       case EFFECT_CONDITION.UNIT_IS_ADJACENT_TO_ALLY:
-        return handleUnitWithinSpacesOfAlly(context, { spaces: 1 });
+        return handleUnitWithinSpacesOfAlly(context, { ...params, spaces: 1 });
       case EFFECT_CONDITION.UNIT_NOT_ADJACENT_TO_ALLY:
-        return !handleUnitWithinSpacesOfAlly(context, { spaces: 1 });
+        return !handleUnitWithinSpacesOfAlly(context, { ...params, spaces: 1 });
       case EFFECT_CONDITION.ALLY_IN_COMBAT_WITHIN_X_SPACES_OF_UNIT:
         return handleAllyInCombatWithinSpacesOfUnit(context, params);
       case EFFECT_CONDITION.MOVING_ALLY_WITHIN_X_SPACES_OF_UNIT:
