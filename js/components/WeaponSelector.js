@@ -5,10 +5,21 @@ import Dropdown from "./Dropdown.js";
 
 const engine = Engine();
 
+const refineLabels = {
+  ATK: "Atk",
+  SPD: "Spd",
+  DEF: "Def",
+  RES: "Res",
+  EFF: "Effect",
+  WRATHFUL: "Wrathful",
+  DAZZLE: "Dazzling"
+}
+
 const WeaponSelector = ({ weaponId, onChange, unitInfo }) => {
   const [basePart, refinePart] = weaponId?.includes("_REFINE_")
     ? weaponId.split("_REFINE_")
     : [weaponId, ""];
+  const baseLabel = WEAPON_SKILLS[weaponId]?.name;
 
   const weaponOptions = [{ label: "-", value: "" }, ...Object.values(WEAPON_SKILLS)
     .filter(skill => !skill.id.includes("_REFINE_"))
@@ -18,7 +29,7 @@ const WeaponSelector = ({ weaponId, onChange, unitInfo }) => {
 
   const refineOptions = WEAPON_SKILLS[basePart]?.canBeRefined ? [{ label: "-", value: "" }, ...Object.values(WEAPON_SKILLS)
     .filter(skill => skill.id.includes("_REFINE_") && skill.id.startsWith(basePart))
-    .map(skill => ({ label: skill.id.split("_REFINE_")[1], value: skill.id.split("_REFINE_")[1] }))
+    .map(skill => ({ label: refineLabels[skill.id.split("_REFINE_")[1]], value: skill.id.split("_REFINE_")[1] }))
   ] : [];
 
   const handleWeaponChange = newWeaponId => {
@@ -37,14 +48,14 @@ const WeaponSelector = ({ weaponId, onChange, unitInfo }) => {
       <${Dropdown}
         options=${weaponOptions}
         onSelect=${handleWeaponChange}
-        defaultSelected=${basePart || "-"} />
+        defaultSelected=${baseLabel || "-"} />
     </div>
     <div class="input-row" style="gap: 10px;">
       <img src="assets/icons/Refine.webp" style="height: 1.8rem;" />
       <${Dropdown}
         options=${refineOptions}
         onSelect=${handleRefineChange}
-        defaultSelected=${refinePart || "-"} />
+        defaultSelected=${refineLabels[refinePart] || "-"} />
     </div>
   `;
 };
