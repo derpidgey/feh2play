@@ -1,12 +1,8 @@
-import { html, useState } from "https://esm.sh/htm/preact/standalone";
+import { html, useState, useEffect } from "https://esm.sh/htm/preact/standalone";
 import TeamEditor from "./TeamEditor.js";
-import Engine from "../engine.js";
-import SKILLS from "../data/skills.js";
-import UNIT from "../data/units.js";
+import { deepClone } from "../utils.js";
 
 const LOCAL_STORAGE_KEY = "teams";
-
-const engine = Engine();
 
 const TeamBuilder = ({ onExit }) => {
   const [teams, setTeams] = useState(() => {
@@ -14,12 +10,35 @@ const TeamBuilder = ({ onExit }) => {
     return saved ? JSON.parse(saved) : [];
   });
   const [editingTeamIndex, setEditingTeamIndex] = useState(null);
+  const [draftTeam, setDraftTeam] = useState(null);
   const [newTeamName, setNewTeamName] = useState("");
   const [newTeamMode, setNewTeamMode] = useState("standard");
+
+  useEffect(() => {
+    if (editingTeamIndex !== null) {
+      setDraftTeam(deepClone(teams[editingTeamIndex]));
+    } else {
+      setDraftTeam(null);
+    }
+  }, [editingTeamIndex, teams]);
 
   const saveTeams = (updatedTeams) => {
     setTeams(updatedTeams);
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(updatedTeams));
+  };
+
+  const handleSaveDraft = () => {
+    if (editingTeamIndex === null || !draftTeam) return;
+    const updated = [...teams];
+    updated[editingTeamIndex] = deepClone(draftTeam);
+    saveTeams(updated);
+    setEditingTeamIndex(null);
+    setDraftTeam(null);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingTeamIndex(null);
+    setDraftTeam(null);
   };
 
   const createTeam = () => {
@@ -29,26 +48,14 @@ const TeamBuilder = ({ onExit }) => {
     setNewTeamName("");
   };
 
-  const removeInvalidSkills = unit => {
-    unit.skills = unit.skills.map(skill => engine.canLearn(UNIT[unit.unitId], SKILLS[skill]) ? skill : "");
-    return unit;
-  }
-
-  if (editingTeamIndex !== null) {
-    const teamData = teams[editingTeamIndex];
-    const handleTeamChange = newUnits => {
-      const newTeams = [...teams];
-      newTeams[editingTeamIndex] = { ...teamData, units: newUnits.map(removeInvalidSkills) };
-      setTeams(newTeams);
-    };
+  if (editingTeamIndex !== null && draftTeam) {
     return html`<${TeamEditor}
-      teamData=${teamData}
-      onChange=${handleTeamChange}
-      onCancel=${() => setEditingTeamIndex(null)}
-      onSave=${() => setEditingTeamIndex(null)} 
-    />`;
+    teamData=${draftTeam}
+    onChange=${setDraftTeam}
+    onCancel=${handleCancelEdit}
+    onSave=${handleSaveDraft}
+  />`;
   }
-
 
   return html`
     <div class="screen">

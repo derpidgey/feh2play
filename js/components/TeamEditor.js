@@ -48,6 +48,11 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
 
   while (team.length < maxUnits) team.push({ unitId: "", skills: Array(8).fill("") });
 
+  const removeInvalidSkills = unit => {
+    unit.skills = unit.skills.map(skill => engine.canLearn(UNIT[unit.unitId], SKILLS[skill]) ? skill : "");
+    return unit;
+  }
+
   return html`
     <div class="screen" style="padding: 16px;">
       <h2>${teamData.name} (${teamData.mode})</h2>
@@ -83,10 +88,11 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
           <${Dropdown}
           options=${["-", ...Object.values(UNIT).map(u => `${u.name}: ${u.subtitle}`)]}
           onSelect=${value => {
-      const newTeam = [...team];
+      const newTeamData = JSON.parse(JSON.stringify(teamData));
       const newId = Object.values(UNIT).find(u => value.includes(u.name) && value.includes(u.subtitle))?.id ?? "";
-      newTeam[editingIndex].unitId = newId;
-      onChange(newTeam);
+      newTeamData.units[editingIndex].unitId = newId;
+      removeInvalidSkills(newTeamData.units[editingIndex]);
+      onChange(newTeamData);
     }}
           defaultSelected=${currentUnit.unitId ? `${currentUnitInfo.name}: ${currentUnitInfo.subtitle}` : "-"}/>
         </div>
@@ -101,10 +107,11 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
           .filter(skill => currentUnit.unitId ? engine.canLearn(currentUnitInfo, skill) : false)
           .map(skill => skill.name)]}
             onSelect=${value => {
-          const newTeam = [...team];
+          const newTeamData = JSON.parse(JSON.stringify(teamData));
           const newId = Object.values(SKILLS).find(s => value === s.name)?.id ?? "";
-          newTeam[editingIndex].skills[i] = newId;
-          onChange(newTeam);
+          newTeamData.units[editingIndex].skills[i] = newId;
+          removeInvalidSkills(newTeamData.units[editingIndex]);
+          onChange(newTeamData);
         }}
             defaultSelected=${currentSkill === "" ? "-" : Object.values(SKILLS).find(s => currentSkill === s.id).name}/>
           </div>
