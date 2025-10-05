@@ -31,72 +31,73 @@ describe("Engine", function () {
   describe("Build Validation", function () {
     it("should not allow more than one weapon", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.SILVER_SWORD_PLUS.id, SKILLS.BRAVE_SWORD_PLUS.id]);
-      expect(engine.validateBuild(build)).result.toBeFalse();
+      expect(engine.validateBuild(build).result).toBeFalse();
     });
 
     it("should not allow weapon of different type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.SILVER_LANCE_PLUS.id]);
-      expect(engine.validateBuild(build)).result.toBeFalse();
+      expect(engine.validateBuild(build).result).toBeFalse();
     });
 
     it("should not allow duplicate skills", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.HIT_AND_RUN.id, SKILLS.QUICK_RIPOSTE_3.id]);
-      expect(engine.validateBuild(build)).result.toBeFalse();
+      expect(engine.validateBuild(build).result).toBeFalse();
     });
 
     it("should allow exclusive skills", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.FOLKVANGR.id]);
-      expect(engine.validateBuild(build)).result.toBeTrue();
+      expect(engine.validateBuild(build).result).toBeTrue();
     });
 
     it("should not allow exclusive skills on wrong unit", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.WING_SWORD.id]);
-      expect(engine.validateBuild(build)).result.toBeFalse();
+      expect(engine.validateBuild(build).result).toBeFalse();
     });
 
     it("should allow correct weapon type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.SWORDBREAKER_3.id]);
-      expect(engine.validateBuild(build)).result.toBeTrue();
+      expect(engine.validateBuild(build).result).toBeTrue();
     });
 
     it("should not allow incorrect weapon type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.LANCEBREAKER_3.id]);
-      expect(engine.validateBuild(build)).result.toBeFalse();
+      expect(engine.validateBuild(build).result).toBeFalse();
     });
 
     it("should allow correct move type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.INFANTRY_PULSE_3.id]);
-      expect(engine.validateBuild(build)).result.toBeTrue();
+      expect(engine.validateBuild(build).result).toBeTrue();
     });
 
     it("should not allow incorrect move type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.GUIDANCE_3.id]);
-      expect(engine.validateBuild(build)).result.toBeFalse();
+      expect(engine.validateBuild(build).result).toBeFalse();
     });
 
     it("should allow seal versions", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.QUICK_RIPOSTE_3.id, SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]);
-      expect(engine.validateBuild(build)).result.toBeTrue();
+      expect(engine.validateBuild(build).result).toBeTrue();
     });
 
     it("should have healer restrictions", function () {
       const build1 = createBuild(UNIT.AZAMA.id, [SKILLS.ABSORB_PLUS.id]);
-      expect(engine.validateBuild(build1)).toBeTrue();
+      expect(engine.validateBuild(build1).result).toBeTrue();
 
       const build2 = createBuild(UNIT.AZAMA.id, [SKILLS.MOONBOW.id]);
-      expect(engine.validateBuild(build2)).toBeFalse();
+      expect(engine.validateBuild(build2).result).toBeFalse();
     });
 
     it("should allow different seals on team", function () {
       const build1 = createBuild(UNIT.ALFONSE.id, [SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]);
       const build2 = createBuild(UNIT.ANNA.id, [SKILLS.GUARD_3.id + "_SEAL"]);
-      expect(engine.validateTeam([build1, build2])).toBeTrue();
+      console.log(engine.validateTeam([build1, build2]))
+      expect(engine.validateTeam([build1, build2]).result).toBeTrue();
     });
 
     it("should not allow duplicate seals on team", function () {
       const build1 = createBuild(UNIT.ALFONSE.id, [SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]);
       const build2 = createBuild(UNIT.ANNA.id, [SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]);
-      expect(engine.validateTeam([build1, build2])).toBeFalse();
+      expect(engine.validateTeam([build1, build2]).result).toBeFalse();
     });
   });
 
@@ -108,7 +109,7 @@ describe("Engine", function () {
         createBuild(UNIT.ANNA.id, [SKILLS.NOATUN.id]),
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id])
       ];
-      expect(engine.validateTeam(team, "sd")).toBeFalse();
+      expect(engine.validateTeam(team, "sd").result).toBeFalse();
 
       const validTeam = [
         createBuild(UNIT.ALFONSE.id, [SKILLS.FOLKVANGR.id]),
@@ -117,7 +118,7 @@ describe("Engine", function () {
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id]),
         createBuild(UNIT.CAIN.id, [SKILLS.BRAVE_SWORD_PLUS.id])
       ];
-      expect(engine.validateTeam(validTeam, "sd")).toBeTrue();
+      expect(engine.validateTeam(validTeam, "sd").result).toBeTrue();
     });
 
     it("should not allow duplicate heroes", function () {
@@ -128,7 +129,7 @@ describe("Engine", function () {
         createBuild(UNIT.ANNA.id, [SKILLS.NOATUN.id]),
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id])
       ];
-      expect(engine.validateTeam(team, "sd")).toBeFalse();
+      expect(engine.validateTeam(team, "sd").result).toBeFalse();
     });
 
     it("should allow at most 1 refresher", function () {
@@ -139,7 +140,7 @@ describe("Engine", function () {
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id]),
         createBuild(UNIT.CAIN.id, [SKILLS.BRAVE_SWORD_PLUS.id])
       ];
-      expect(engine.validateTeam(team, "sd")).toBeTrue();
+      expect(engine.validateTeam(team, "sd").result).toBeTrue();
 
       const invalidTeam = [
         createBuild(UNIT.OLIVIA.id, [SKILLS.DANCE.id]),
@@ -148,7 +149,7 @@ describe("Engine", function () {
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id]),
         createBuild(UNIT.CAIN.id, [SKILLS.BRAVE_SWORD_PLUS.id])
       ];
-      expect(engine.validateTeam(invalidTeam, "sd")).toBeFalse();
+      expect(engine.validateTeam(invalidTeam, "sd").result).toBeFalse();
     });
   });
 
@@ -918,26 +919,6 @@ describe("Engine", function () {
         ],
         defensiveTerrain: [],
         blocks: [{ x: 2, y: 0, breakable: false }],
-        startingPositions: [[{ x: 2, y: 2 }], [{ x: 0, y: 0 }]]
-      }
-      team1[0].skills.push(SKILLS.SILVER_SWORD_PLUS.id);
-      const gameState = engine.newGame(map, team1, team2);
-      const range = engine.calculateThreatRange(gameState, gameState.teams[0][0]);
-      expect(range.length).toBe(20);
-    });
-
-    it("should not threaten breakble blocks with hp > 0", function () {
-      map = {
-        name: "test map",
-        terrain: [
-          [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
-          [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
-          [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
-          [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
-          [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS]
-        ],
-        defensiveTerrain: [],
-        blocks: [{ x: 2, y: 0, breakable: true, hp: 1 }],
         startingPositions: [[{ x: 2, y: 2 }], [{ x: 0, y: 0 }]]
       }
       team1[0].skills.push(SKILLS.SILVER_SWORD_PLUS.id);

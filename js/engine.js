@@ -80,7 +80,10 @@ function Engine() {
 
     // future mods: aro, ard
     if (mode === "standard") {
-      return team.length <= 4;
+      if (team.length <= 4) {
+        return { result: true, reason: "" };
+      }
+      return { result: false, reason: "Number of units must be <= 4" };
     } else if (mode === "sd") {
       if (team.length !== 5) return { result: false, reason: "Number of units must be 5" };
       const unitIds = new Set();
