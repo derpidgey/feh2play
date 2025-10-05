@@ -160,52 +160,30 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
   const BIT_S = 4; // 0100
   const BIT_W = 8; // 1000
 
-  const MASK_TO_ROW = {
-    0: 0,
-    1: 3,     // N
-    2: 4,     // E
-    3: 3,     // NE
-    4: 4,     // S
-    5: 0,     // NS
-    6: 2,     // ES
-    7: 1,     // NES
-    8: 4,     // W
-    9: 3,     // NW
-    10: 0,    // EW
-    11: 0,    // NEW
-    12: 2,    // SW
-    13: 1,    // NSW
-    14: 1,    // ESW
-    15: 2     // NESW
-  };
-
-  const MASK_TO_COL = {
-    0: 9,
-    1: 6,     // N
-    2: 3,     // E
-    3: 3,     // NE
-    4: 0,     // S
-    5: 3,     // NS
-    6: 3,     // ES
-    7: 3,     // NES
-    8: 6,     // W
-    9: 0,     // NW
-    10: 0,    // EW
-    11: 6,    // NEW
-    12: 6,    // SW
-    13: 6,    // NSW
-    14: 0,    // ESW
-    15: 0     // NESW
+  const MASK_TO_COORDS = {
+    0: { x: 9, y: 0 },
+    1: { x: 6, y: 3 },  // N
+    2: { x: 3, y: 4 },  // E
+    3: { x: 3, y: 3 },  // NE
+    4: { x: 0, y: 4 },  // S
+    5: { x: 3, y: 0 },  // NS
+    6: { x: 3, y: 2 },  // ES
+    7: { x: 3, y: 1 },  // NES
+    8: { x: 6, y: 4 },  // W
+    9: { x: 0, y: 3 },  // NW
+    10: { x: 0, y: 0 },  // EW
+    11: { x: 6, y: 0 },  // NEW
+    12: { x: 6, y: 2 },  // SW
+    13: { x: 6, y: 1 },  // NSW
+    14: { x: 0, y: 1 },  // ESW
+    15: { x: 0, y: 2 }   // NESW
   };
 
   function getOffset(block) {
-    const hp = typeof block.hp === "number" ? block.hp : 2;
-
-    if (!block.breakable) return 0;       // unbreakable column (unbreakable variants)
-    if (hp >= 2) return 1;          // breakable, 2 hp column
-    if (hp === 1) return 2;         // breakable, 1 hp column
-    // if hp <= 0 we prefer to render special 0hp tiles (handled separately)
-    return 2;
+    if (!block || !block.breakable) return 0;
+    if (block.hp >= 2) return 1;
+    if (block.hp === 1) return 2;
+    console.warn("Invalid block", block);
   }
 
   function getBlockSprite(block, mask) {
@@ -219,18 +197,15 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
       };
     }
 
-    let row = MASK_TO_ROW[mask];
-    let col = MASK_TO_COL[mask];
-
+    let { x, y } = MASK_TO_COORDS[mask];
     if (mask === 0) {
-      row += getOffset(block);
+      y += getOffset(block);
     } else {
-      col += getOffset(block);
+      x += getOffset(block);
     }
-
     return {
-      x: col * ATLAS_TILE,
-      y: row * ATLAS_TILE,
+      x: x * ATLAS_TILE,
+      y: y * ATLAS_TILE,
       w: ATLAS_TILE,
       h: ATLAS_TILE
     };

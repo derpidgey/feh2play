@@ -526,7 +526,7 @@ function Engine() {
           if (onMap(gameState.map, targetPosition)) {
             if (gameState.map.terrain[targetPosition.y][targetPosition.x] === TERRAIN.WALL) continue;
             const block = gameState.map.blocks.find(b => b.x === targetPosition.x && b.y === targetPosition.y);
-            if (block && (!block.breakable || block.hp <= 0)) continue;
+            if (block && !block.breakable) continue;
             attackableTiles.set(key, targetPosition);
           }
         }
@@ -2597,7 +2597,7 @@ function Engine() {
       } else if (move.type === "assist") {
         move.score = 700;
       } else if (move.type === "end turn") {
-        move.score = 10;
+        move.score = 100;
       } else {
         // todo encoding doesn't know the unit might need to rethink this, is it a problem?
         move.score = searchInfo.historyMoves[encodeMove(move)];
