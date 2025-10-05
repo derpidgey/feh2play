@@ -1,12 +1,158 @@
 import { html, useState } from "https://esm.sh/htm/preact/standalone";
+import Game from "./Game.js";
+import UNIT from "../data/units.js";
+import SKILLS from "../data/skills.js";
+import Engine from "../engine.js";
+import MAPS from "../data/maps.js";
+
+function createBuild(unitId, skills = []) {
+  return {
+    unitId,
+    level: 40,
+    merges: 0,
+    skills
+  }
+}
+const engine = Engine();
+
+const team1 = [
+  createBuild(UNIT.FAE.id, [SKILLS.ETERNAL_BREATH.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.GLIMMER.id, SKILLS.CLOSE_DEF_3.id, SKILLS.GUARD_3.id, SKILLS.PANIC_PLOY_3.id, SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]),
+  createBuild(UNIT.ELIWOOD.id, [SKILLS.DURANDAL.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.GALEFORCE.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.GUARD_3.id, SKILLS.ATK_SMOKE_3.id, SKILLS.SWIFT_SPARROW_2.id + "_SEAL"]),
+  createBuild(UNIT.ABEL.id, [SKILLS.PANTHER_LANCE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.DEATH_BLOW_3.id, SKILLS.HIT_AND_RUN.id, SKILLS.ATK_SMOKE_3.id, SKILLS.DEATH_BLOW_3.id + "_SEAL"]),
+  createBuild(UNIT.CLARINE.id, [SKILLS.GRAVITY_PLUS.id + "_REFINE_WRATHFUL", SKILLS.PHYSIC_PLUS.id, SKILLS.MIRACLE.id, SKILLS.ATK_SPD_BOND_3.id, SKILLS.DAZZLING_STAFF.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.ATK_SPD_BOND_3.id + "_SEAL"]),
+  createBuild(UNIT.CAEDA.id, [SKILLS.WING_SWORD.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.ICEBERG.id, SKILLS.FURY_3.id, SKILLS.HIT_AND_RUN.id, SKILLS.DRIVE_ATK_2.id, SKILLS.DRIVE_SPD_2.id + "_SEAL"])
+];
+const team2 = [
+  createBuild(UNIT.CATRIA.id, [SKILLS.WHITEWING_LANCE.id + "_REFINE_EFF", SKILLS.SWAP.id, SKILLS.MOONBOW.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.GOAD_FLIERS.id, SKILLS.DRIVE_ATK_2.id + "_SEAL"]),
+  createBuild(UNIT.OLIVIA.id, [SKILLS.SLAYING_EDGE_PLUS.id + "_REFINE_DEF", SKILLS.DANCE.id, SKILLS.MOONBOW.id, SKILLS.FURY_3.id, SKILLS.WINGS_OF_MERCY_3.id, SKILLS.DRIVE_DEF_2.id, SKILLS.DRIVE_RES_2.id + "_SEAL"]),
+  createBuild(UNIT.EST.id, [SKILLS.WHITEWING_SPEAR.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.LUNA.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.GOAD_FLIERS.id, SKILLS.ATK_DEF_BOND_3.id + "_SEAL"]),
+  createBuild(UNIT.CAMILLA.id, [SKILLS.CAMILLAS_AXE.id + "_REFINE_EFF", SKILLS.SWAP.id, SKILLS.MOONBOW.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.WARD_FLIERS.id, SKILLS.SWIFT_SPARROW_2.id + "_SEAL"]),
+  createBuild(UNIT.PALLA.id, [SKILLS.WHITEWING_BLADE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.LUNA.id, SKILLS.FURY_3.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.WARD_FLIERS.id, SKILLS.ATK_SPD_BOND_3.id + "_SEAL"])
+];
+
+const team3 = [
+  createBuild(UNIT.AZAMA.id, [SKILLS.PAIN_PLUS.id + "_REFINE_WRATHFUL", SKILLS.MARTYR_PLUS.id, SKILLS.MIRACLE.id, SKILLS.FORTRESS_DEF_3.id, SKILLS.DAZZLING_STAFF.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.SAVAGE_BLOW_3.id + "_SEAL"]),
+  createBuild(UNIT.FAE.id, [SKILLS.ETERNAL_BREATH.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.GLIMMER.id, SKILLS.CLOSE_DEF_3.id, SKILLS.GUARD_3.id, SKILLS.PANIC_PLOY_3.id, SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]),
+  createBuild(UNIT.GWENDOLYN.id, [SKILLS.WEIGHTED_LANCE.id + "_REFINE_EFF", SKILLS.SWAP.id, SKILLS.BONFIRE.id, SKILLS.DISTANT_COUNTER.id, SKILLS.QUICK_RIPOSTE_3.id, SKILLS.WARD_ARMOUR.id, SKILLS.STEADY_BREATH.id + "_SEAL"]),
+  createBuild(UNIT.DRAUG.id, [SKILLS.STALWART_SWORD.id + "_REFINE_EFF", SKILLS.SMITE.id, SKILLS.MOONBOW.id, SKILLS.ATK_SPD_BOND_3.id, SKILLS.WINGS_OF_MERCY_3.id, SKILLS.ARMOUR_MARCH.id, SKILLS.ATK_SPD_BOND_3.id + "_SEAL"]),
+  createBuild(UNIT.EFFIE.id, [SKILLS.EFFIES_LANCE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.DISTANT_COUNTER.id, SKILLS.VANTAGE_3.id, SKILLS.WARD_ARMOUR.id, SKILLS.DEATH_BLOW_3.id + "_SEAL"])
+];
+
+const SD_LEVELS = [
+  {
+    id: "sd_whitewings",
+    name: "Whitewings Unite",
+    description: "Defeat the Whitewings squad.",
+    battles: [
+      {
+        map: MAPS.SD15,
+        enemyTeam: team2,
+      },
+    ],
+  },
+  {
+    id: "sd_armor_gauntlet",
+    name: "Fortress March",
+    description: "Survive the wall of armor units.",
+    battles: [
+      { map: MAPS.SD7, enemyTeam: team3 },
+      { map: MAPS.SD7, enemyTeam: team1 },
+    ],
+  },
+];
+
 
 const SDAssault = ({ onExit }) => {
+  const [screen, setScreen] = useState("levelSelect");
+  const [selectedLevel, setSelectedLevel] = useState(null);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [battleIndex, setBattleIndex] = useState(0);
+  const [gameResult, setGameResult] = useState("suck");
+
+  const savedTeams = JSON.parse(localStorage.getItem("teams") || "[]");
+
+  const startLevel = () => {
+    if (!selectedTeam) return alert("Please select a team first!");
+    setBattleIndex(0);
+    setScreen("battle");
+  };
+
+  const level = selectedLevel ? SD_LEVELS.find(l => l.id === selectedLevel) : null;
+
+  const handleBattleEnd = result => {
+    const isLastBattle = battleIndex >= level.battles.length - 1;
+    if (result === "loss" || isLastBattle) {
+      setScreen("result");
+    } else {
+      setBattleIndex(battleIndex + 1);
+    }
+  };
+
+  const createInitialGameState = () => {
+    return engine.newGame(
+      level.battles[battleIndex].map,
+      selectedTeam.units.map(unit => ({
+        ...unit,
+        skills: unit.skills.filter(skill => skill !== "")
+      })),
+      level.battles[battleIndex].enemyTeam,
+      "duel"
+    )
+  }
+
   return html`
     <div class="screen menu">
-      <div>
-        <h2>Team Builder (WIP)</h2>
-        <button onClick=${onExit}>Back</button>
-      </div>
+      ${screen === "levelSelect" && html`
+        <div>
+          <h2>SD Assault</h2>
+          ${SD_LEVELS.map(l => html`
+            <div style="border:1px solid #888; padding:8px; margin:6px; cursor:pointer;"
+                 onClick=${() => { setSelectedLevel(l.id); setScreen("preview"); }}>
+              <strong>${l.name}</strong><br/>
+              <small>${l.description}</small>
+            </div>
+          `)}
+          <button onClick=${onExit}>Back</button>
+        </div>
+      `}
+
+      ${screen === "preview" && level && html`
+        <div>
+          <h3>${level.name}</h3>
+          <p>${level.description}</p>
+          <div>Maps in this challenge: ${level.battles.length}</div>
+
+          <div style="margin-top:10px;">
+            <label>Select Your Team:</label><br/>
+            <select onChange=${e => setSelectedTeam(savedTeams[e.target.value])}>
+              <option value="">-- Select --</option>
+              ${savedTeams.map((t, i) => html`<option value=${i}>Team ${i + 1}</option>`)}
+            </select>
+          </div>
+
+          <button onClick=${startLevel}>Start</button>
+          <button onClick=${() => setScreen("levelSelect")}>Back</button>
+        </div>
+      `}
+
+      ${screen === "battle" && level && html`
+        <${Game}
+          key=${battleIndex} 
+          initialGameState=${createInitialGameState}
+          playingAs=${0}
+          onGameOver=${handleBattleEnd}
+        />
+      `}
+
+      ${screen === "result" && html`
+        <div class="screen menu">
+          <div>
+            <h2>Game Over</h2>
+            <div>${gameResult}</div>
+            <button onClick=${() => setScreen("menlevelSelectu")}>Back to Levels</button>
+          </div>
+        </div>
+      `}
     </div>
   `;
 }

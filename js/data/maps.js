@@ -84,6 +84,45 @@ const MAPS = {
       { x: 5, y: 5, breakable: true, hp: 1 }
     ]
   },
+  SD7: {
+    name: "SD7",
+    bg: "assets/maps/summonerduels/Map_ZR007.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 3, y: 4, breakable: true, hp: 2 },
+      { x: 3, y: 5, breakable: true, hp: 2 },
+      { x: 4, y: 4, breakable: true, hp: 2 },
+      { x: 4, y: 5, breakable: true, hp: 2 }
+    ],
+    startingPositions: [
+      [
+        { x: 0, y: 7 },
+        { x: 1, y: 7 },
+        { x: 1, y: 8 },
+        { x: 2, y: 8 },
+        { x: 2, y: 9 }
+      ],
+      [
+        { x: 7, y: 2 },
+        { x: 6, y: 2 },
+        { x: 6, y: 1 },
+        { x: 5, y: 1 },
+        { x: 5, y: 0 }
+      ]
+    ]
+  },
   SD15: {
     name: "SD15",
     bg: "assets/maps/summonerduels/Map_ZR015.webp",

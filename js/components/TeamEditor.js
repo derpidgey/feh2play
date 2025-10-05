@@ -40,12 +40,9 @@ const engine = Engine();
 const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
   const [editingIndex, setEditingIndex] = useState(0);
 
-  const maxUnits = teamData.mode === "sd" ? 5 : 4;
   const team = [...teamData.units];
   const currentUnit = team[editingIndex];
-  const currentUnitInfo = currentUnit.unitId ? UNIT[currentUnit.unitId] : null;
-
-  while (team.length < maxUnits) team.push({ unitId: "", skills: Array(8).fill("") });
+  const currentUnitInfo = currentUnit?.unitId ? UNIT[currentUnit.unitId] : null;  
 
   const removeInvalidSkills = unit => {
     unit.skills = unit.skills.map(skill => engine.canLearn(UNIT[unit.unitId], SKILLS[skill]) ? skill : "");
@@ -67,10 +64,11 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
   }
 
   const validateAndSave = () => {
-    if (engine.validateTeam(team.filter(unit => unit.unitId !== ""), teamData.mode)) {
+    const result = engine.validateTeam(team.filter(unit => unit.unitId !== ""), teamData.mode);
+    if (result.result) {
       onSave();
     } else {
-      console.log("kekw")
+      console.log(result.reason);
     }
   }
 
@@ -110,11 +108,11 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
         <${Dropdown}
         options=${[{ label: "-", value: "" }, ...Object.values(UNIT).map(u => ({ label: `${u.name}: ${u.subtitle}`, value: u.id }))]}
         onSelect=${updateUnit}
-        defaultSelected=${currentUnit.unitId ? `${currentUnitInfo.name}: ${currentUnitInfo.subtitle}` : "-"}/>
+        defaultSelected=${currentUnit?.unitId ? `${currentUnitInfo.name}: ${currentUnitInfo.subtitle}` : "-"}/>
       </div>
 
       ${skillConfig.map((config, i) => {
-    const currentSkill = currentUnit.skills[i] || "";
+    const currentSkill = currentUnit?.skills[i] || "";
     if (i === 0) {
       return html`<${WeaponSelector}
       weaponId=${currentSkill}
@@ -127,7 +125,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
           <img src=${config.icon} style="height: 1.8rem;" />
           <${Dropdown}
           options=${[{ label: "-", value: "" }, ...Object.values(SKILLS).filter(skill => skill.type === config.skillType)
-        .filter(skill => currentUnit.unitId ? engine.canLearn(currentUnitInfo, skill) : false)
+        .filter(skill => currentUnit?.unitId ? engine.canLearn(currentUnitInfo, skill) : false)
         .map(skill => ({ label: skill.name, value: skill.id }))]}
           onSelect=${skillId => updateSkill(i, skillId)}
           defaultSelected=${currentSkill === "" ? "-" : Object.values(SKILLS).find(s => currentSkill === s.id).name}/>

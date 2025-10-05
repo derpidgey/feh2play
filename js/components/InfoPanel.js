@@ -28,10 +28,11 @@ const ActionPreview = ({ gameState, potentialAction }) => {
   const unit = [...gameState.teams[0], ...gameState.teams[1]]
     .find(unit => unit.pos.x === potentialAction.from.x && unit.pos.y === potentialAction.from.y);
   const unitInfo = UNIT[unit.unitId];
-  const target = [...gameState.teams[0], ...gameState.teams[1]]
+  const targetUnit = [...gameState.teams[0], ...gameState.teams[1]]
     .find(unit => unit.pos.x === potentialAction.target.x && unit.pos.y === potentialAction.target.y)
-  const targetInfo = UNIT[target.unitId];
-  const actionType = unit.team === target.team ? "assist" : "attack";
+  const targetBlock = gameState.map.blocks
+    .find(b => b.x === potentialAction.target.x && b.y === potentialAction.target.y);
+  const actionType = targetUnit ? (unit.team === targetUnit.team ? "assist" : "attack") : "block";
   const backgroundType = gameState.mode === "duel" ? "absolute" : "relative";
   const backgrounds = ["mediumturquoise", "darkred"];
   let leftBackground;
@@ -44,18 +45,21 @@ const ActionPreview = ({ gameState, potentialAction }) => {
     rightBackground = actionType === "assist" ? leftBackground : leftBackground ^ 1;
   }
 
+  const targetName = targetUnit ? UNIT[targetUnit.unitId].name : "Obstacle";
+
+  let unitStartingHp = unit.stats.hp;
   let unitRemainingHp = unit.stats.hp;
-  let targetRemainingHp = target.stats.hp;
+  let targetStartingHp = targetUnit ? targetUnit.stats.hp : targetBlock.hp;
+  let targetRemainingHp = targetUnit ? targetUnit.stats.hp : targetBlock.hp - 1;
   let assist;
   let result;
   let formulas;
-
   if (actionType === "assist") {
     assist = getAssistInfo(unit).name; // todo implement calculateAssistResult
-  } else {
+  } else if (actionType === "attack") {
     const unitPos = unit.pos;
     unit.pos = { ...potentialAction.to }
-    result = engine.calculateCombatResult(gameState, unit, target);
+    result = engine.calculateCombatResult(gameState, unit, targetUnit);
     unit.pos = unitPos;
     unitRemainingHp = result.units[0].stats.hp;
     targetRemainingHp = result.units[1].stats.hp;
@@ -86,19 +90,21 @@ const ActionPreview = ({ gameState, potentialAction }) => {
     </div>
     <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[leftBackground]};">
       <h2>${unitInfo.name}</h2>
-      <p>${unit.stats.hp} → ${unitRemainingHp}</p>
+      <p>${unitStartingHp} → ${unitRemainingHp}</p>
       ${actionType === "assist" && html`<p>${assist}</p>`}
       ${actionType === "attack" && html`<p>${formulas[0]}</p>`}
       ${actionType === "attack" && html`<p>${renderTempStats(result.units[0].tempStats)}</p>`}
     </div>
     <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[rightBackground]};">
-      <h2>${targetInfo.name}</h2>
-      <p>${target.stats.hp} → ${targetRemainingHp}</p>
+      <h2>${targetName}</h2>
+      <p>${targetStartingHp} → ${targetRemainingHp}</p>
       ${actionType === "attack" && html`<p>${formulas[1]}</p>`}
       ${actionType === "attack" && html`<p>${renderTempStats(result.units[1].tempStats)}</p>`}
     </div>
     <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center; background: ${backgrounds[rightBackground]};">
-      <img src=${targetInfo.imgFace} alt=${targetInfo.name} style="width: 100%; max-width: 80px; object-fit: contain;" />
+      ${targetUnit
+      ? html`<img src=${UNIT[targetUnit.unitId].imgFace} alt=${UNIT[targetUnit.unitId].name} style="width: 100%; max-width: 80px; object-fit: contain;" />`
+      : html`<div style="width: 100%; max-width: 80px;" />`}
     </div>
   </div>`;
 }

@@ -15,26 +15,26 @@ function Engine() {
 
   function validateBuild(build) {
     const unitInfo = UNIT[build.unitId];
-    if (!unitInfo) return false;
+    if (!unitInfo) return { result: false, reason: `Invalid unit ${build.unitId}` };
     const counts = new Map(Object.values(SKILL_TYPE).map(type => [type, 0]));
     const skillMap = new Map();
     build.skills.forEach(skill => {
       const skillInfo = SKILLS[skill];
-      if (!skillInfo) return;
+      if (!skillInfo) return { result: false, reason: `Invalid skill ${skill}` };
       const skillType = skillInfo.type;
       if (counts.has(skillType)) {
         counts.set(skillType, counts.get(skillType) + 1);
         skillMap.set(skillType, skillInfo);
       }
     });
-    if (Array.from(counts.values()).some(count => count > 1)) return false;
+    if (Array.from(counts.values()).some(count => count > 1)) return { result: false, reason: `${counts.entries()}` };
 
     for (const skillInfo of skillMap.values()) {
-      if (!canLearn(unitInfo, skillInfo)) return false;
+      if (!canLearn(unitInfo, skillInfo)) return { result: false, reason: `${build.unitId} can't learn ${skillInfo.id}` };
     }
 
     // in the future: rearmed and x
-    return true;
+    return { result: true, reason: "" };
   }
 
   function canLearn(unitInfo, skillInfo) {
@@ -63,7 +63,8 @@ function Engine() {
 
   function validateTeam(team, mode = "standard") {
     for (const build of team) {
-      if (!validateBuild(build)) return false;
+      const buildResult = validateBuild(build);
+      if (!buildResult.result) return buildResult;
     }
 
     const seals = new Set();
@@ -71,7 +72,7 @@ function Engine() {
       const seal = build.skills.find(skillId => SKILLS[skillId]?.type === SKILL_TYPE.S);
       if (seal) {
         if (seals.has(seal)) {
-          return false;
+          return { result: false, reason: `Duplicate seal ${seal}` };
         }
         seals.add(seal);
       }
@@ -81,11 +82,11 @@ function Engine() {
     if (mode === "standard") {
       return team.length <= 4;
     } else if (mode === "sd") {
-      if (team.length !== 5) return false;
+      if (team.length !== 5) return { result: false, reason: "Number of units must be 5" };
       const unitIds = new Set();
       for (const build of team) {
         if (unitIds.has(build.unitId)) {
-          return false;
+          return { result: false, reason: `Duplicate unit ${build.unitId}` };
         }
         unitIds.add(build.unitId);
       }
@@ -103,13 +104,12 @@ function Engine() {
           refresherCount++;
         }
       }
-      if (refresherCount > 1) return false;
-      return true;
+      if (refresherCount > 1) return { result: false, reason: "Team contains more than one refresh skill" };
+      return { result: true, reason: "" };
     }
     // in the future: emblem rings
 
-    // invalid mode
-    return false;
+    return { result: false, reason: `Unsupported mode ${mode}` };
   }
 
   function newGame(map, team1Builds, team2Builds, mode = "regular") {
@@ -526,7 +526,7 @@ function Engine() {
           if (onMap(gameState.map, targetPosition)) {
             if (gameState.map.terrain[targetPosition.y][targetPosition.x] === TERRAIN.WALL) continue;
             const block = gameState.map.blocks.find(b => b.x === targetPosition.x && b.y === targetPosition.y);
-            if (block && (!block.breakable || block.hp > 0)) continue;
+            if (block && (!block.breakable || block.hp <= 0)) continue;
             attackableTiles.set(key, targetPosition);
           }
         }
@@ -730,7 +730,7 @@ function Engine() {
     if (!onMap(map, { x, y })) return;
     const terrain = map.terrain[y][x];
     if (terrain === TERRAIN.WALL) return false;
-    if ((moveType === MOVE_TYPE.INFANTRY.id || moveType === MOVE_TYPE.ARMOURED) && terrain === TERRAIN.FLIER) return false;
+    if ((moveType === MOVE_TYPE.INFANTRY.id || moveType === MOVE_TYPE.ARMOURED.id) && terrain === TERRAIN.FLIER) return false;
     if (moveType === MOVE_TYPE.CAVALRY.id && (terrain === TERRAIN.FOREST || terrain === TERRAIN.FLIER)) return false;
 
     const block = map.blocks.find(b => b.x === x && b.y === y);
@@ -781,7 +781,7 @@ function Engine() {
     hashHasAction(gameState, unit);
     // console.log(`${unitInfo.name} moved from (${action.from.x}, ${action.from.y}) to (${action.to.x}, ${action.to.y})`);
     if (action.target) {
-      const block = gameState.map.blocks.find(b => b.x === action.target.x && b.y === action.target.y);
+      const block = gameState.map.blocks.find(b => b.breakable && b.hp > 0 && b.x === action.target.x && b.y === action.target.y);
       if (block) {
         sequence.push([{ type: "attack", id: unit.id, target: { ...action.target } }]);
         block.hp -= 1;
@@ -2568,9 +2568,8 @@ function Engine() {
   }
 
   function evaluate(gameState) {
-    let score = gameState.duelState[0].koScore + gameState.duelState[0].captureScore
-      - gameState.duelState[1].koScore - gameState.duelState[1].captureScore;
-    score *= 100;
+    let score = (gameState.duelState[0].koScore + gameState.duelState[0].captureScore
+      - gameState.duelState[1].koScore - gameState.duelState[1].captureScore) * 100;
     const captureAreaBonus = 20; // score for being in capture area
     const distanceFactor = 5;    // score subtracted for each space away
     gameState.teams.forEach((team, i) => {
@@ -2593,10 +2592,12 @@ function Engine() {
         move.score = 900;
       } else if (actionEquals(move, searchInfo.killerMoves[1][searchInfo.ply])) {
         move.score = 800;
+      } else if (move.type === "block") {
+        move.score = 700;
       } else if (move.type === "assist") {
         move.score = 700;
       } else if (move.type === "end turn") {
-        move.score = 0;
+        move.score = 10;
       } else {
         // todo encoding doesn't know the unit might need to rethink this, is it a problem?
         move.score = searchInfo.historyMoves[encodeMove(move)];

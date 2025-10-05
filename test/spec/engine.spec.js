@@ -31,52 +31,52 @@ describe("Engine", function () {
   describe("Build Validation", function () {
     it("should not allow more than one weapon", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.SILVER_SWORD_PLUS.id, SKILLS.BRAVE_SWORD_PLUS.id]);
-      expect(engine.validateBuild(build)).toBeFalse();
+      expect(engine.validateBuild(build)).result.toBeFalse();
     });
 
     it("should not allow weapon of different type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.SILVER_LANCE_PLUS.id]);
-      expect(engine.validateBuild(build)).toBeFalse();
+      expect(engine.validateBuild(build)).result.toBeFalse();
     });
 
     it("should not allow duplicate skills", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.HIT_AND_RUN.id, SKILLS.QUICK_RIPOSTE_3.id]);
-      expect(engine.validateBuild(build)).toBeFalse();
+      expect(engine.validateBuild(build)).result.toBeFalse();
     });
 
     it("should allow exclusive skills", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.FOLKVANGR.id]);
-      expect(engine.validateBuild(build)).toBeTrue();
+      expect(engine.validateBuild(build)).result.toBeTrue();
     });
 
     it("should not allow exclusive skills on wrong unit", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.WING_SWORD.id]);
-      expect(engine.validateBuild(build)).toBeFalse();
+      expect(engine.validateBuild(build)).result.toBeFalse();
     });
 
     it("should allow correct weapon type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.SWORDBREAKER_3.id]);
-      expect(engine.validateBuild(build)).toBeTrue();
+      expect(engine.validateBuild(build)).result.toBeTrue();
     });
 
     it("should not allow incorrect weapon type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.LANCEBREAKER_3.id]);
-      expect(engine.validateBuild(build)).toBeFalse();
+      expect(engine.validateBuild(build)).result.toBeFalse();
     });
 
     it("should allow correct move type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.INFANTRY_PULSE_3.id]);
-      expect(engine.validateBuild(build)).toBeTrue();
+      expect(engine.validateBuild(build)).result.toBeTrue();
     });
 
     it("should not allow incorrect move type", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.GUIDANCE_3.id]);
-      expect(engine.validateBuild(build)).toBeFalse();
+      expect(engine.validateBuild(build)).result.toBeFalse();
     });
 
     it("should allow seal versions", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.QUICK_RIPOSTE_3.id, SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]);
-      expect(engine.validateBuild(build)).toBeTrue();
+      expect(engine.validateBuild(build)).result.toBeTrue();
     });
 
     it("should have healer restrictions", function () {

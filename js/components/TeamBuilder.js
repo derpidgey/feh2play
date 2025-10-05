@@ -25,11 +25,14 @@ const TeamBuilder = ({ onExit }) => {
   } = useTeamDraft(teams, saveTeams);
 
   const [newTeamName, setNewTeamName] = useState("");
-  const [newTeamMode, setNewTeamMode] = useState("standard");
+  const [newTeamMode, setNewTeamMode] = useState("sd");
 
   const createTeam = () => {
     if (!newTeamName) return;
-    const updated = [...teams, { name: newTeamName, mode: newTeamMode, units: [] }];
+    const maxUnits = newTeamMode === "sd" ? 5 : 4;
+    const team = { name: newTeamName, mode: newTeamMode, units: [] };
+    while (team.units.length < maxUnits) team.units.push({ unitId: "", level: 40, merges: 0, skills: Array(8).fill("") });
+    const updated = [...teams, team];
     saveTeams(updated);
     setNewTeamName("");
   };
