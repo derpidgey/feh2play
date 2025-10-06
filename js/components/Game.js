@@ -38,7 +38,9 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   if (gameState.mode === "duel") {
     useEffect(() => {
       if (gameState.currentTurn !== playingAs && !gameState.isSwapPhase && !gameState.gameOver) {
-        handleAction(getAiMove());
+        setTimeout(() => {
+          handleAction(getAiMove());
+        }, 50);
       }
     }, [
       gameState.currentTurn,

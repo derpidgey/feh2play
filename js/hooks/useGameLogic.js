@@ -39,7 +39,7 @@ const useGameLogic = (initialGameState) => {
   }
 
   const getAiMove = () => {
-    const info = engine.search(gameState, 3);
+    const info = engine.search(gameState, 5);
     return info.best;
   }
 

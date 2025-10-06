@@ -81,8 +81,11 @@ const SDAssault = ({ onExit }) => {
 
   const handleBattleEnd = result => {
     const isLastBattle = battleIndex >= level.battles.length - 1;
-    if (result === "loss" || isLastBattle) {
+    if (result === "lose" || isLastBattle) {
+      setTimeout(() => {
       setScreen("result");
+        setGameResult(result);
+      }, 1000);
     } else {
       setBattleIndex(battleIndex + 1);
     }
@@ -98,6 +101,16 @@ const SDAssault = ({ onExit }) => {
       level.battles[battleIndex].enemyTeam,
       "duel"
     )
+  }
+
+  if (screen === "battle" && level) {
+    return html`
+    <${Game}
+      key=${battleIndex} 
+      initialGameState=${createInitialGameState}
+      playingAs=${0}
+      onGameOver=${handleBattleEnd}
+    />`;
   }
 
   return html`
@@ -135,21 +148,12 @@ const SDAssault = ({ onExit }) => {
         </div>
       `}
 
-      ${screen === "battle" && level && html`
-        <${Game}
-          key=${battleIndex} 
-          initialGameState=${createInitialGameState}
-          playingAs=${0}
-          onGameOver=${handleBattleEnd}
-        />
-      `}
-
       ${screen === "result" && html`
         <div class="screen menu">
           <div>
             <h2>Game Over</h2>
             <div>${gameResult}</div>
-            <button onClick=${() => setScreen("menlevelSelectu")}>Back to Levels</button>
+            <button onClick=${() => setScreen("levelSelect")}>Back to Levels</button>
           </div>
         </div>
       `}
