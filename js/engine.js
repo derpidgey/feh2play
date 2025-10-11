@@ -256,6 +256,7 @@ function Engine() {
       currentTurn: r32(),
       turnCount: [r32(), r32(), r32(), r32(), r32()],
       captureArea: [r32(), r32(), r32(), r32(), r32(), r32(), r32(), r32(), r32(), r32()],
+      blockHp: [[], [], []]
     }
 
     const rows = gameState.map.terrain.length;
@@ -283,6 +284,9 @@ function Engine() {
     }
     gameState.zobristTable.actionsRemaining[0] = Array(7).fill(0).map(() => r32());
     gameState.zobristTable.actionsRemaining[1] = Array(7).fill(0).map(() => r32());
+    for (let hp = 0; hp < 3; ++hp) {
+      gameState.zobristTable.blockHp[hp] = Array.from({ length: rows }, () => Array.from({ length: cols }, () => r32()));
+    }
   }
 
   function hashPos(gameState, unit) {
@@ -350,6 +354,12 @@ function Engine() {
     gameState.hash ^= gameState.zobristTable.captureArea[gameState.captureArea.y];
   }
 
+  function hashBlock(gameState, block) {
+    if (gameState.mode !== "duel") return;
+    if (!block.breakable) return;
+    gameState.hash ^= gameState.zobristTable.blockHp[block.hp][block.x][block.y];
+  }
+
   function initHash(gameState) {
     gameState.hash = 0;
     for (const unit of gameState.teams[0].concat(gameState.teams[1])) {
@@ -366,6 +376,7 @@ function Engine() {
     hashActionsRemaining(gameState, 1);
     hashTurnCount(gameState);
     hashCaptureArea(gameState);
+    gameState.map.blocks.forEach(block => hashBlock(gameState, block));
   }
 
   function debug(gameState) {
@@ -792,9 +803,10 @@ function Engine() {
     if (action.target) {
       const block = gameState.map.blocks.find(b => b.breakable && b.hp > 0 && b.x === action.target.x && b.y === action.target.y);
       if (block) {
-        // todo hash block
-        sequence.push([{ type: "attack", id: unit.id, target: { ...action.target } }]);
+        hashBlock(gameState, block);
+        sequence.push([{ type: "attack", attackType: "block", id: unit.id, target: { ...action.target } }]);
         block.hp -= 1;
+        hashBlock(gameState, block);
       } else {
         const targetUnit = gameState.teams[0].concat(gameState.teams[1])
           .find(u => u.pos.x === action.target.x && u.pos.y === action.target.y);
@@ -833,6 +845,7 @@ function Engine() {
             const { attacker, defender, damage, healing } = step;
             sequence.push([{
               type: "attack",
+              attackType: "unit",
               id: attacker,
               target: [unit, targetUnit].find(u => u.id === defender).pos
             }]);
@@ -2484,7 +2497,7 @@ function Engine() {
     if (triggersEndTurn(gameState, move)) {
       return false;
     }
-    if (move.type === "move") {
+    if (move.type === "move" || move.type === "block") {
       return true;
     }
     if (move.type === "assist") {
@@ -2523,6 +2536,11 @@ function Engine() {
         hashPos(gameState, unit);
         unit.pos = { ...step.from };
         hashPos(gameState, unit);
+      } else if (step.type === "attack" && step.attackType === "block") {
+        const block = gameState.map.blocks.find(b => b.x === step.target.x && b.y === step.target.y);
+        hashBlock(gameState, block);
+        block.hp += 1;
+        hashBlock(gameState, block);
       } else if (step.type === "hasAction") {
         unit.hasAction = step.previousAction;
         hashHasAction(gameState, unit);
