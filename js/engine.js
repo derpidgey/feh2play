@@ -911,19 +911,21 @@ function Engine() {
     const unitContext = { gameState, assistTarget: targetUnit };
     const targetContext = { gameState, assistUser: unit };
     if (assist.assistType === ASSIST_TYPE.MOVEMENT) {
+      hashPos(gameState, unit);
       hashPos(gameState, targetUnit);
       const { unitDestination, targetDestination } = calculateMovementTypeDestinations(gameState, unit.pos, targetUnit, assist.movementAssist);
       sequence.push([
-        { type: "move", id: unit.id, to: { ...unitDestination } },
-        { type: "move", id: targetUnit.id, to: { ...targetDestination } },
+        { type: "move", id: unit.id, to: { ...unitDestination }, from: { x: unit.pos.x, y: unit.pos.y } },
+        { type: "move", id: targetUnit.id, to: { ...targetDestination }, from: { x: targetUnit.pos.x, y: targetUnit.pos.y } },
       ]);
       unit.pos = unitDestination;
       targetUnit.pos = targetDestination;
+      hashPos(gameState, unit);
       hashPos(gameState, targetUnit);
       const movementEffects = getEligibleEffects(EFFECT_PHASE.USED_MOVEMENT_ASSIST, unit, unitContext);
       processEffects(movementEffects, unitContext);
-      const targetedByMovementEffects = getEligibleEffects(EFFECT_PHASE.TARGETTED_BY_MOVEMENT_ASSIST, unit, targetContext);
-      processEffects(targetedByMovementEffects, unitContext);
+      const targetedByMovementEffects = getEligibleEffects(EFFECT_PHASE.TARGETTED_BY_MOVEMENT_ASSIST, targetUnit, targetContext);
+      processEffects(targetedByMovementEffects, targetContext);
     } else if (assist.assistType === ASSIST_TYPE.REFRESH) {
       targetUnit.hasAction = true;
       hashHasAction(gameState, targetUnit);
@@ -2384,11 +2386,11 @@ function Engine() {
     const { unitDestination, targetDestination } = calculateMovementTypeDestinations(gameState, unit.pos, target, movementType);
     if (validateMovementTypeDestinations(gameState, unit, unitDestination, target, targetDestination, movementType)) {
       unit.pos = unitDestination;
-      context.sequence.push([{ type: "move", id: unit.id, to: { ...unitDestination } }]);
+      context.sequence.push([{ type: "move", id: unit.id, to: { ...unitDestination }, from: { x: unit.pos.x, y: unit.pos.y } }]);
       if (target.stats.hp > 0) {
         hashPos(gameState, target);
         target.pos = targetDestination;
-        context.sequence.push([{ type: "move", id: target.id, to: { ...targetDestination } }]);
+        context.sequence.push([{ type: "move", id: target.id, to: { ...targetDestination }, from: { x: target.pos.x, y: target.pos.y } }]);
         hashPos(gameState, target);
       }
     }
@@ -2485,14 +2487,14 @@ function Engine() {
     if (move.type === "move") {
       return true;
     }
-    // if (move.type === "assist") {
-    //   const unit = gameState.teams[0].concat(gameState.teams[1])
-    //     .find(u => move.unitId === u.id);
-    //   const assist = getAssistInfo(unit);
-    //   if (assist.assistType === ASSIST_TYPE.MOVEMENT) {
-    //     return true;
-    //   }
-    // }
+    if (move.type === "assist") {
+      const unit = gameState.teams[0].concat(gameState.teams[1])
+        .find(u => move.unitId === u.id);
+      const assist = getAssistInfo(unit);
+      if (assist.assistType === ASSIST_TYPE.MOVEMENT) {
+        return true;
+      }
+    }
     return false;
   }
 
@@ -2589,9 +2591,6 @@ function Engine() {
         const hashAfterUndo = gameState.hash;
         if (hashBefore !== hashAfterUndo) {
           console.error(`Hash mismatch ${hashBefore} ${hashAfterUndo}`, move, sequence, gameState);
-          console.log(move);
-          console.log(sequence)
-          console.log(gameState);
         }
       } else {
       const newGameState = minClone(gameState);
