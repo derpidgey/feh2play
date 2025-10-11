@@ -543,6 +543,7 @@ function Engine() {
     const actions = [];
     calculateMovementRange(gameState, unit).forEach(tile => {
       actions.push({
+        unitId: unit.id, // only for move ordering and undo
         type: "move",
         from: { ...unit.pos },
         to: { ...tile }
@@ -560,6 +561,7 @@ function Engine() {
     gameState.teams[unit.team ^ 1].forEach(enemy => {
       if (manhattan(tile, enemy.pos) === weapon.range) {
         actions.push({
+          unitId: unit.id,
           type: "attack",
           from: { ...unit.pos },
           to: { ...tile },
@@ -575,6 +577,7 @@ function Engine() {
     gameState.map.blocks.forEach(block => {
       if (manhattan(tile, block) === weapon.range && block.breakable && block.hp > 0) {
         actions.push({
+          unitId: unit.id,
           type: "block",
           from: { ...unit.pos },
           to: { ...tile },
@@ -610,6 +613,7 @@ function Engine() {
         if (ally.debuffs.atk === 0 && ally.debuffs.spd === 0 && ally.debuffs.def === 0 && ally.debuffs.res === 0) return;
       }
       actions.push({
+        unitId: unit.id,
         type: "assist",
         from: { ...unit.pos },
         to: { ...tile },
@@ -760,32 +764,35 @@ function Engine() {
     return validActions.some(validAction => actionEquals(validAction, action));
   }
 
-  function actionEquals(a, b) {
+  function actionEquals(a, b, compareUnit = false) {
     if (!a || !b) return false;
+    if (compareUnit && a.unitId !== b.unitId) return false;
     return a.from?.x === b.from?.x && a.from?.y === b.from?.y
       && a.to?.x === b.to?.x && a.to?.y === b.to?.y
       && a.target?.x === b.target?.x && a.target?.y === b.target?.y
   }
 
   function executeAction(gameState, action) { // can add options parameter to check stuff like checkAutoEndTurn
+    const sequence = [];
     if (action.type === "end turn") {
-      endTurn(gameState);
+      endTurn(gameState, sequence);
       return;
     }
     gameState.history.push(action);
-    const sequence = [];
     const unit = gameState.teams[0].concat(gameState.teams[1])
       .find(u => u.pos.x === action.from.x && u.pos.y === action.from.y);
-    sequence.push([{ type: "move", id: unit.id, to: { x: action.to.x, y: action.to.y } }]);
-    // const unitInfo = UNIT[unit.unitId];
+    sequence.push([{ type: "move", id: unit.id, from: { x: action.from.x, y: action.from.y }, to: { x: action.to.x, y: action.to.y } }]);
     hashPos(gameState, unit);
     unit.pos = { x: action.to.x, y: action.to.y };
+    hashPos(gameState, unit);
+    sequence.push([{ type: "hasAction", id: unit.id, previousAction: unit.hasAction }]);
     unit.hasAction = false;
     hashHasAction(gameState, unit);
-    // console.log(`${unitInfo.name} moved from (${action.from.x}, ${action.from.y}) to (${action.to.x}, ${action.to.y})`);
+    // console.log(`${UNIT[unit.unitId].name} moved from (${action.from.x}, ${action.from.y}) to (${action.to.x}, ${action.to.y})`);
     if (action.target) {
       const block = gameState.map.blocks.find(b => b.breakable && b.hp > 0 && b.x === action.target.x && b.y === action.target.y);
       if (block) {
+        // todo hash block
         sequence.push([{ type: "attack", id: unit.id, target: { ...action.target } }]);
         block.hp -= 1;
       } else {
@@ -812,9 +819,8 @@ function Engine() {
           targetUnit.special.current = results.units[1].special.current;
           hashSpecial(gameState, targetUnit);
           const aoeSequence = []
-          // todo add result sequence to action sequence
-          results.sequence.filter(seq => seq.aoe).forEach(seq => {
-            const { defender, damage } = seq;
+          results.sequence.filter(step => step.aoe).forEach(step => {
+            const { defender, damage } = step;
             if (defender === targetUnit.id) return;
             const aoeVictim = gameState.teams[targetUnit.team].find(victim => victim.id === defender);
             hashHp(gameState, aoeVictim);
@@ -823,8 +829,8 @@ function Engine() {
             sequence.push([{ type: "damage", id: aoeVictim.id, amount: damage }]);
           });
           sequence.push(aoeSequence);
-          results.sequence.filter(seq => !seq.aoe).forEach(seq => {
-            const { attacker, defender, damage, healing } = seq;
+          results.sequence.filter(step => !step.aoe).forEach(step => {
+            const { attacker, defender, damage, healing } = step;
             sequence.push([{
               type: "attack",
               id: attacker,
@@ -883,14 +889,19 @@ function Engine() {
       }
     }
     for (const stat of [STATS.ATK, STATS.SPD, STATS.DEF, STATS.RES]) {
+      if (unit.debuffs[stat] !== 0) {
       hashDebuff(gameState, unit, stat);
+        sequence.push([{ type: "debuff", id: unit.id, stat, previousValue: unit.debuffs[stat] }]);
       unit.debuffs[stat] = 0;
       hashDebuff(gameState, unit, stat);
     }
-    unit.penalties.forEach(penalty => hashPenalty(gameState, unit, penalty));
+    }
+    unit.penalties.forEach(penalty => {
+      hashPenalty(gameState, unit, penalty);
+      sequence.push([{ type: "penalty", id: unit.id, penalty, operation: "remove" }]);
+    });
     unit.penalties = [];
-    hashPos(gameState, unit);
-    checkAutoEndTurn(gameState);
+    checkAutoEndTurn(gameState, sequence);
     checkGameOver(gameState);
     return sequence;
   }
@@ -979,7 +990,7 @@ function Engine() {
     } else if (assist.assistType === ASSIST_TYPE.HARSH_COMMAND) {
       Object.keys(targetUnit.debuffs).forEach(stat => {
         const penaltyValue = targetUnit.debuffs[stat];
-        if (penaltyValue > 0) {
+        if (penaltyValue > 0) { // todo hash buffs/debuffs
           targetUnit.buffs[stat] = Math.max(targetUnit.buffs[stat], penaltyValue);
           targetUnit.debuffs[stat] = 0;
         }
@@ -1068,25 +1079,31 @@ function Engine() {
     }
   }
 
-  function checkAutoEndTurn(gameState) {
+  function checkAutoEndTurn(gameState, sequence) {
     if (gameState.mode === "duel") {
       const currentDuelState = gameState.duelState[gameState.currentTurn];
       const foeDuelState = gameState.duelState[gameState.currentTurn ^ 1];
       hashActionsRemaining(gameState, gameState.currentTurn);
+      sequence.push([{ type: "duelStateActionsRemaining", currentTurn: gameState.currentTurn, previousActions: currentDuelState.actionsRemaining }]);
       currentDuelState.actionsRemaining -= 1;
       hashActionsRemaining(gameState, gameState.currentTurn);
       const currentTeam = gameState.teams[gameState.currentTurn];
       if (currentTeam.every(unit => !unit.hasAction) || currentDuelState.actionsRemaining === 0) {
-        endTurn(gameState);
+        endTurn(gameState, sequence);
       } else if (!foeDuelState.endedTurn) {
+        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn }]);
         gameState.currentTurn ^= 1;
         hashCurrentTurn(gameState);
+        const foeTeam = gameState.teams[gameState.currentTurn];
+        if (foeTeam.every(unit => !unit.hasAction)) {
+          endTurn(gameState, sequence);
+        }
       }
       return;
     }
     const currentTeam = gameState.teams[gameState.currentTurn];
     if (currentTeam.every(unit => !unit.hasAction)) {
-      endTurn(gameState);
+      endTurn(gameState, sequence);
     }
   }
 
@@ -1105,20 +1122,28 @@ function Engine() {
     return xDistance + yDistance;
   }
 
-  function endTurn(gameState) {
+  function endTurn(gameState, sequence = []) {
     gameState.teams[gameState.currentTurn].forEach(unit => {
       if (unit.hasAction) {
         for (const stat of [STATS.ATK, STATS.SPD, STATS.DEF, STATS.RES]) {
+          if (unit.debuffs[stat] !== 0) {
           hashDebuff(gameState, unit, stat);
+            sequence.push([{ type: "debuff", id: unit.id, stat, previousValue: unit.debuffs[stat] }]);
           unit.debuffs[stat] = 0;
           hashDebuff(gameState, unit, stat);
         }
-        unit.penalties.forEach(penalty => hashPenalty(gameState, unit, penalty));
+        }
+        unit.penalties.forEach(penalty => {
+          hashPenalty(gameState, unit, penalty);
+          sequence.push([{ type: "penalty", id: unit.id, penalty, operation: "remove" }]);
+        });
         unit.penalties = [];
+        sequence.push([{ type: "hasAction", id: unit.id, previousAction: unit.hasAction }]);
         hashHasAction(gameState, unit);
         unit.hasAction = false;
       }
       if (gameState.mode === "regular") {
+        sequence.push([{ type: "hasAction", id: unit.id, previousAction: unit.hasAction }]);
         hashHasAction(gameState, unit);
         unit.hasAction = true;
       }
@@ -1156,6 +1181,7 @@ function Engine() {
         hashTurnCount(gameState);
         handleStartOfDuelTurn(gameState);
       } else {
+        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn }]);
         gameState.currentTurn ^= 1;
         hashCurrentTurn(gameState);
       }
@@ -2414,9 +2440,22 @@ function Engine() {
       score: 0,
       thinking: true,
       hashTable: new Array(TABLE_SIZE).fill().map(() => ({ hash: 0, move: null, score: 0, flag: HASH_EXACT, depth: 0 })),
-      historyMoves: new Array((MAX_COORD * MAX_COORD - 1) * MAX_COORD * MAX_COORD + (MAX_COORD * MAX_COORD - 1) * MAX_COORD + (MAX_COORD * MAX_COORD - 1)).fill(0),
       killerMoves: [[], []]
     }
+    searchInfo.idMap = {};
+    searchInfo.nextUnitIndex = 0;
+    searchInfo.getUnitIndex = id => {
+      if (!(id in searchInfo.idMap)) {
+        searchInfo.idMap[id] = searchInfo.nextUnitIndex++;
+      }
+      return searchInfo.idMap[id];
+    }
+    searchInfo.historyMoves = Array.from({ length: 10 }, () =>
+      Array.from({ length: MAX_COORD * MAX_COORD }, () =>
+        new Array(MAX_COORD * MAX_COORD).fill(0)
+      )
+    );
+
     let bestMove = null;
     let bestScore = -INFINITY;
     for (let currentDepth = 1; currentDepth <= depth; ++currentDepth) {
@@ -2437,6 +2476,75 @@ function Engine() {
     searchInfo.score = bestScore;
     searchInfo.thinking = false;
     return searchInfo;
+  }
+
+  function supportsUndo(gameState, move) {
+    if (triggersEndTurn(gameState, move)) {
+      return false;
+    }
+    if (move.type === "move") {
+      return true;
+    }
+    // if (move.type === "assist") {
+    //   const unit = gameState.teams[0].concat(gameState.teams[1])
+    //     .find(u => move.unitId === u.id);
+    //   const assist = getAssistInfo(unit);
+    //   if (assist.assistType === ASSIST_TYPE.MOVEMENT) {
+    //     return true;
+    //   }
+    // }
+    return false;
+  }
+
+  function triggersEndTurn(gameState, move) {
+    if (move.type === "end turn") {
+      return true;
+    }
+    let actions = 0;
+    const currentTeam = gameState.teams[gameState.currentTurn];
+    currentTeam.forEach(unit => {
+      if (unit.hasAction) {
+        actions += 1;
+      }
+    });
+    if (actions === 1) return true;
+    const currentDuelState = gameState.duelState[gameState.currentTurn];
+    if (currentDuelState.actionsRemaining === 1) return true;
+  }
+
+  function undo(gameState, sequence) {
+    for (let i = sequence.length - 1; i >= 0; i--) {
+      const step = sequence[i];
+      const unit = gameState.teams[0].concat(gameState.teams[1])
+        .find(u => u.id === step.id);
+      if (step.type === "move") {
+        hashPos(gameState, unit);
+        unit.pos = { ...step.from };
+        hashPos(gameState, unit);
+      } else if (step.type === "hasAction") {
+        unit.hasAction = step.previousAction;
+        hashHasAction(gameState, unit);
+      } else if (step.type === "debuff") {
+        hashDebuff(gameState, unit, step.stat);
+        unit.debuffs[step.stat] = step.previousValue;
+        hashDebuff(gameState, unit, step.stat);
+      } else if (step.type === "penalty") {
+        if (step.operation === "remove") {
+          unit.penalties.push(step.penalty);
+          hashPenalty(gameState, unit, step.penalty);
+        }
+      } else if (step.type === "duelStateActionsRemaining") {
+        const currentDuelState = gameState.duelState[step.currentTurn];
+        hashActionsRemaining(gameState, step.currentTurn);
+        currentDuelState.actionsRemaining = step.previousActions;
+        hashActionsRemaining(gameState, step.currentTurn);
+      } else if (step.type === "currentTurn") {
+        gameState.currentTurn = step.previous;
+        hashCurrentTurn(gameState);
+      } else {
+        console.warn(`unsupported undo step ${step.type}`);
+      }
+    }
   }
 
   function negamax(gameState, alpha, beta, depth, searchInfo) {
@@ -2466,6 +2574,26 @@ function Engine() {
     let oldAlpha = alpha;
     let bestMove = null;
     for (const move of moves) {
+      if (supportsUndo(gameState, move)) {
+        const hashBefore = gameState.hash;
+        const currentTurn = gameState.currentTurn;
+        const sequence = executeAction(gameState, move);
+        ++movesChecked;
+        ++searchInfo.ply;
+        if (currentTurn === gameState.currentTurn) {
+          score = negamax(gameState, alpha, beta, depth - 1, searchInfo)
+        } else {
+          score = -negamax(gameState, -beta, -alpha, depth - 1, searchInfo);
+        }
+        undo(gameState, sequence.flat());
+        const hashAfterUndo = gameState.hash;
+        if (hashBefore !== hashAfterUndo) {
+          console.error(`Hash mismatch ${hashBefore} ${hashAfterUndo}`, move, sequence, gameState);
+          console.log(move);
+          console.log(sequence)
+          console.log(gameState);
+        }
+      } else {
       const newGameState = minClone(gameState);
       executeAction(newGameState, move);
       ++movesChecked;
@@ -2474,6 +2602,7 @@ function Engine() {
         score = negamax(newGameState, alpha, beta, depth - 1, searchInfo)
       } else {
         score = -negamax(newGameState, -beta, -alpha, depth - 1, searchInfo);
+        }
       }
       --searchInfo.ply;
       if (searchInfo.stop) {
@@ -2496,7 +2625,10 @@ function Engine() {
             return beta;
           }
           if (move.type !== "attack" && move.type !== "end turn") {
-            searchInfo.historyMoves[encodeMove(move)] += depth * depth;
+            const unitIndex = searchInfo.getUnitIndex(move.unitId);
+            const fromIndex = encodePos(move.from);
+            const toIndex = encodePos(move.to);
+            searchInfo.historyMoves[unitIndex][fromIndex][toIndex] += depth * depth;
           }
           alpha = score;
         }
@@ -2530,7 +2662,7 @@ function Engine() {
       alpha = score;
     }
     let moves = gameState.teams[gameState.currentTurn].flatMap(unit => generateKoActions(gameState, unit));
-    // could allow end turn in quiescence
+    moves.push({ type: "end turn" });
     moves = orderMoves(gameState, moves, searchInfo);
     let movesChecked = 0;
     let oldAlpha = alpha;
@@ -2575,10 +2707,14 @@ function Engine() {
       - gameState.duelState[1].koScore - gameState.duelState[1].captureScore) * 100;
     const captureAreaBonus = 20; // score for being in capture area
     const distanceFactor = 5;    // score subtracted for each space away
+    const hpWeight = 20;
     gameState.teams.forEach((team, i) => {
       team.forEach(unit => {
         const distance = distanceFromCaptureArea(gameState, unit.pos);
         score += (captureAreaBonus - distance * distanceFactor) * (i === 0 ? 1 : -1);
+
+        const hpRatio = Math.floor((unit.stats.hp * 100) / unit.stats.maxHp);
+        score += hpRatio * (hpWeight / 100) * (i === 0 ? 1 : -1);
       });
     });
     return gameState.currentTurn === 0 ? score : -score;
@@ -2587,13 +2723,13 @@ function Engine() {
   function orderMoves(gameState, moves, searchInfo) {
     const pvMove = getPvMove(searchInfo.hashTable, gameState.hash);
     for (const move of moves) {
-      if (actionEquals(move, pvMove)) {
+      if (actionEquals(move, pvMove, true)) {
         move.score = 2000;
       } else if (move.type === "attack") {
         move.score = 1000;
-      } else if (actionEquals(move, searchInfo.killerMoves[0][searchInfo.ply])) {
+      } else if (actionEquals(move, searchInfo.killerMoves[0][searchInfo.ply], true)) {
         move.score = 900;
-      } else if (actionEquals(move, searchInfo.killerMoves[1][searchInfo.ply])) {
+      } else if (actionEquals(move, searchInfo.killerMoves[1][searchInfo.ply], true)) {
         move.score = 800;
       } else if (move.type === "block") {
         move.score = 700;
@@ -2602,18 +2738,13 @@ function Engine() {
       } else if (move.type === "end turn") {
         move.score = 100;
       } else {
-        // todo encoding doesn't know the unit might need to rethink this, is it a problem?
-        move.score = searchInfo.historyMoves[encodeMove(move)];
+        const unitIndex = searchInfo.getUnitIndex(move.unitId);
+        const fromIndex = encodePos(move.from);
+        const toIndex = encodePos(move.to);
+        move.score = searchInfo.historyMoves[unitIndex][fromIndex][toIndex];
       }
     }
     return moves.sort((a, b) => b.score - a.score);
-  }
-
-  function encodeMove(move) {
-    const fromIndex = encodePos(move.from);
-    const toIndex = encodePos(move.to);
-    const targetIndex = move.target ? encodePos(move.target) : null;
-    return fromIndex * (MAX_COORD * MAX_COORD) + toIndex * MAX_COORD + (targetIndex || 0);
   }
 
   function encodePos(pos) {

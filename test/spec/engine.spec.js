@@ -90,7 +90,6 @@ describe("Engine", function () {
     it("should allow different seals on team", function () {
       const build1 = createBuild(UNIT.ALFONSE.id, [SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]);
       const build2 = createBuild(UNIT.ANNA.id, [SKILLS.GUARD_3.id + "_SEAL"]);
-      console.log(engine.validateTeam([build1, build2]))
       expect(engine.validateTeam([build1, build2]).result).toBeTrue();
     });
 

@@ -119,7 +119,7 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
               setUnitPositions({ ...unitPositionsRef.current });
               resolve();
             } else {
-              console.warn(`Unhandled animation type ${animation.type}`);
+              // console.warn(`Unhandled animation type ${animation.type}`);
               resolve();
             }
           });
