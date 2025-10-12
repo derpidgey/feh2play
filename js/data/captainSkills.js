@@ -10,10 +10,7 @@ const CAPTAIN_SKILLS = {
     img: "assets/captainskills/Adroit_Captain.webp",
     type: SKILL_TYPE.CAPTAIN,
     effects: [
-      {
-        phase: EFFECT_PHASE.START_OF_COMBAT,
-        actions: [{ type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 5, target: { type: EFFECT_TARGET.SELF } }]
-      },
+      EFFECT.inCombatStats({ spd: 5 }),
       EFFECT.spdBasedNfu(),
       EFFECT.driveSpdBasedNfu()
     ]
@@ -37,6 +34,33 @@ const CAPTAIN_SKILLS = {
           { type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.GUARD.id, target: { type: EFFECT_TARGET.FOES_IN_CARDINAL_DIRECTIONS } }
         ]
       }
+    ]
+  },
+  EARTH_RENDERING: {
+    name: "Earth Rendering",
+    description: "At the start of turns 2-4, if your captain is in the Capture Area, the Capture Area will move one space closer to your team. (Red: moves up. Blue: moves down.)",
+    img: "assets/captainskills/Earth_Rendering.webp",
+    type: SKILL_TYPE.CAPTAIN,
+    effects: [
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        condition: CONDITION.or(
+          { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 2 },
+          { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 3 },
+          { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 4 }
+        ),
+        actions: [{ type: EFFECT_ACTION.PULL_CAPTURE_AREA }]
+      }
+    ]
+  },
+  MIGHT_OF_MIRIADS: {
+    name: "Might of Miriads",
+    description: "Grants Atk/Spd/Def/Res+6 to captain during combat. Captain can counterattack regardless of foe's range (excluding when unit's Savior skill triggers).",
+    img: "assets/captainskills/Might_of_Myriads.webp",
+    type: SKILL_TYPE.CAPTAIN,
+    effects: [
+      EFFECT.inCombatStats({ atk: 6, spd: 6, def: 6, res: 6 }),
+      EFFECT.distantCloseCounter() // come back when savior skills implemented
     ]
   },
 }

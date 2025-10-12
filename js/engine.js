@@ -1296,6 +1296,18 @@ function Engine() {
       .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_TURN, unit, context)));
     gameState.teams[gameState.currentTurn ^ 1]
       .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_TURN, unit, context)));
+
+    if (gameState.captureArea.y < 1) {
+      hashCaptureArea(gameState);
+      gameState.captureArea.y = 1;
+      hashCaptureArea(gameState);
+    }
+    if (gameState.captureArea.y > 5) {
+      hashCaptureArea(gameState);
+      gameState.captureArea.y = 5;
+      hashCaptureArea(gameState);
+    }
+
     gameState.teams[gameState.currentTurn]
       .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_ENEMY_PHASE, unit, context)));
     gameState.teams[gameState.currentTurn ^ 1]
@@ -2095,6 +2107,11 @@ function Engine() {
         break;
       case EFFECT_ACTION.POST_COMBAT_MOVEMENT:
         handlePostCombatMovement(action, context);
+        break;
+      case EFFECT_ACTION.PULL_CAPTURE_AREA:
+        hashCaptureArea(gameState);
+        context.gameState.captureArea.y += context.unit.team === 0 ? 1 : -1;
+        hashCaptureArea(gameState);
         break;
       default:
         console.warn(`Unknown action type: ${action.type}`);

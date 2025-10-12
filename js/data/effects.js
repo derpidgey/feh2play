@@ -16,6 +16,17 @@ export const EFFECT = {
     phase: EFFECT_PHASE.ON_EQUIP,
     actions: [{ type: EFFECT_ACTION.PHANTOM_STAT, stat, value }]
   }),
+  inCombatStats: ({ hp = 0, atk = 0, spd = 0, def = 0, res = 0 }) => {
+    const stats = { hp, atk, spd, def, res };
+
+    return {
+      phase: EFFECT_PHASE.START_OF_COMBAT,
+      condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+      actions: Object.entries(stats)
+        .filter(([, value]) => value !== 0)
+        .map(([stat, value]) => ({ type: EFFECT_ACTION.COMBAT_STAT_MOD, stat, value, target: { type: EFFECT_TARGET.SELF } }))
+    }
+  },
   playerPhaseStats: ({ hp = 0, atk = 0, spd = 0, def = 0, res = 0 }) => {
     const stats = { hp, atk, spd, def, res };
 
