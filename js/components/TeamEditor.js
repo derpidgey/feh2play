@@ -42,7 +42,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
 
   const team = [...teamData.units];
   const currentUnit = team[editingIndex];
-  const currentUnitInfo = currentUnit?.unitId ? UNIT[currentUnit.unitId] : null;  
+  const currentUnitInfo = currentUnit?.unitId ? UNIT[currentUnit.unitId] : null;
 
   const removeInvalidSkills = unit => {
     unit.skills = unit.skills.map(skill => engine.canLearn(UNIT[unit.unitId], SKILLS[skill]) ? skill : "");
@@ -58,8 +58,9 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
 
   const updateSkill = (skillIndex, skillId) => {
     const newTeamData = deepClone(teamData);
-    newTeamData.units[editingIndex].skills[skillIndex] = skillId;
-    removeInvalidSkills(newTeamData.units[editingIndex]);
+    const targetIndex = skillIndex === 7 && teamData.mode === "sd" ? 0 : editingIndex;
+    newTeamData.units[targetIndex].skills[skillIndex] = skillId;
+    removeInvalidSkills(newTeamData.units[targetIndex]);
     onChange(newTeamData);
   }
 
@@ -133,6 +134,23 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
         `
   })}
     </div>
+
+    ${teamData.mode === "sd" && html`
+      <div style="margin-top: 24px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+        <div class="input-row" style="gap: 10px;">
+          <${Dropdown}
+            options=${[
+        { label: "-", value: "" },
+        ...Object.values(SKILLS)
+          .filter(skill => skill.type === SKILL_TYPE.CAPTAIN)
+          .map(skill => ({ label: skill.name, value: skill.id })),
+      ]}
+            onSelect=${skillId => updateSkill(7, skillId)}
+            defaultSelected=${team[0]?.skills?.[7] ? SKILLS[team[0].skills[7]].name : "-"}/>
+        </div>
+      </div>
+    `}
+
 
     <div>
       <button onClick=${onCancel}>Cancel</button>

@@ -1296,6 +1296,13 @@ function Engine() {
       .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_TURN, unit, context)));
     gameState.teams[gameState.currentTurn ^ 1]
       .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_TURN, unit, context)));
+    gameState.teams[gameState.currentTurn]
+      .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_ENEMY_PHASE, unit, context)));
+    gameState.teams[gameState.currentTurn ^ 1]
+      .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_ENEMY_PHASE, unit, context)));
+    gameState.teams[0].concat(gameState.teams[1])
+      .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_PLAYER_PHASE_OR_ENEMY_PHASE, unit, context)));
+    processEffects(startOfTurnEffects, context);
 
     if (gameState.captureArea.y < 1) {
       hashCaptureArea(gameState);
@@ -1307,14 +1314,6 @@ function Engine() {
       gameState.captureArea.y = 5;
       hashCaptureArea(gameState);
     }
-
-    gameState.teams[gameState.currentTurn]
-      .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_ENEMY_PHASE, unit, context)));
-    gameState.teams[gameState.currentTurn ^ 1]
-      .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_ENEMY_PHASE, unit, context)));
-    gameState.teams[0].concat(gameState.teams[1])
-      .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_PLAYER_PHASE_OR_ENEMY_PHASE, unit, context)));
-    processEffects(startOfTurnEffects, context);
   }
 
   function handleStartOfRegularTurn(gameState) {
@@ -1764,8 +1763,8 @@ function Engine() {
       if (attackerSpecialTriggered) {
         attacker.special.current = attacker.special.max;
       } else {
-        const hasExtraSpecialCharge = attackerFlags[COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK] > 0 || attackerFlags[COMBAT_FLAG.SPECIAL_CHARGES_PER_UNIT_ATTACK] > 0;
-        const affectedByGuard = attackerFlags[COMBAT_FLAG.GUARD] > 0;
+        const hasExtraSpecialCharge = attackerFlags[COMBAT_FLAG.NEUTRALIZE_SPECIAL_CHARGES] > 0 ? false : attackerFlags[COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK] > 0 || attackerFlags[COMBAT_FLAG.SPECIAL_CHARGES_PER_UNIT_ATTACK] > 0;
+        const affectedByGuard = attackerFlags[COMBAT_FLAG.NEUTRALIZE_GUARD] > 0 ? false : attackerFlags[COMBAT_FLAG.GUARD] > 0;
         const charge = 1 + (hasExtraSpecialCharge ? 1 : 0) - (affectedByGuard ? 1 : 0);
         attacker.special.current = Math.max(attacker.special.current - charge, 0);
       }
@@ -1774,8 +1773,8 @@ function Engine() {
       if (defenderSpecialTriggered || miracleSpecialTriggered) {
         defender.special.current = defender.special.max;
       } else {
-        const hasExtraSpecialCharge = defenderFlags[COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK] > 0 || defenderFlags[COMBAT_FLAG.SPECIAL_CHARGES_PER_FOE_ATTACK] > 0;
-        const affectedByGuard = defenderFlags[COMBAT_FLAG.GUARD] > 0;
+        const hasExtraSpecialCharge = defenderFlags[COMBAT_FLAG.NEUTRALIZE_SPECIAL_CHARGES] > 0 ? false : defenderFlags[COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK] > 0 || defenderFlags[COMBAT_FLAG.SPECIAL_CHARGES_PER_FOE_ATTACK] > 0;
+        const affectedByGuard = defenderFlags[COMBAT_FLAG.NEUTRALIZE_GUARD] > 0 ? false : defenderFlags[COMBAT_FLAG.GUARD] > 0;
         const charge = 1 + (hasExtraSpecialCharge ? 1 : 0) - (affectedByGuard ? 1 : 0);
         defender.special.current = Math.max(defender.special.current - charge, 0);
       }
@@ -1965,6 +1964,13 @@ function Engine() {
         return evaluateStatCondition(context, condition);
       case EFFECT_CONDITION.FIRST_COMBAT_IN_PHASE:
         return unit.combatsInPhase === 0;
+      case EFFECT_CONDITION.UNIT_IN_CAPTURE_AREA:
+        return (
+          unit.pos.x >= context.gameState.captureArea.x &&
+          unit.pos.x < context.gameState.captureArea.x + context.gameState.captureArea.w &&
+          unit.pos.y >= context.gameState.captureArea.y &&
+          unit.pos.y < context.gameState.captureArea.y + context.gameState.captureArea.h);
+
       default:
         return false;
     }
@@ -2109,9 +2115,9 @@ function Engine() {
         handlePostCombatMovement(action, context);
         break;
       case EFFECT_ACTION.PULL_CAPTURE_AREA:
-        hashCaptureArea(gameState);
+        hashCaptureArea(context.gameState);
         context.gameState.captureArea.y += context.unit.team === 0 ? 1 : -1;
-        hashCaptureArea(gameState);
+        hashCaptureArea(context.gameState);
         break;
       default:
         console.warn(`Unknown action type: ${action.type}`);

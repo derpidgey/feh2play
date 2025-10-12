@@ -218,7 +218,10 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     }
   }
 
-  const getCaptainInfo = unit => CAPTAIN_SKILLS[unit.skills.find(skill => SKILLS[skill].type === SKILL_TYPE.CAPTAIN)];
+  const getCaptainInfo = unit => {
+    if (!unit) return null;
+    return CAPTAIN_SKILLS[unit.skills.find(skill => SKILLS[skill].type === SKILL_TYPE.CAPTAIN)];
+  }
   const captainSkillsRevealed = [null, null].map((_, i) => i === playingAs || gameState.duelState[i].captainSkillRevealed);
   const captainImages = [null, null].map((_, i) => getCaptainInfo(gameState.teams[i][0])?.img);
 

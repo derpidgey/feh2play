@@ -44,12 +44,43 @@ const CAPTAIN_SKILLS = {
     effects: [
       {
         phase: EFFECT_PHASE.START_OF_TURN,
-        condition: CONDITION.or(
-          { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 2 },
-          { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 3 },
-          { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 4 }
+        condition: CONDITION.and(
+          { type: EFFECT_CONDITION.UNIT_IN_CAPTURE_AREA },
+          CONDITION.or(
+            { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 2 },
+            { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 3 },
+            { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 4 }
+          )
         ),
         actions: [{ type: EFFECT_ACTION.PULL_CAPTURE_AREA }]
+      }
+    ]
+  },
+  FLASH_OF_STEEL: {
+    name: "Flash of Steel",
+    description: "If captain initiates combat, captain can make a follow-up attack before foe can counterattack.\nGrants the following to captain and allies within 2 spaces of captain during combat: \"neutralizes effects that grant 'Special cooldown charge +X' to foe or inflict 'Special cooldown charge -X' on unit.\"",
+    img: "assets/captainskills/Flash_of_Steel.webp",
+    type: SKILL_TYPE.CAPTAIN,
+    effects: [
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.DESPERATION, target: { type: EFFECT_TARGET.SELF } }]
+      },
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        actions: [
+          { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_SPECIAL_CHARGES, target: { type: EFFECT_TARGET.FOE } },
+          { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_GUARD, target: { type: EFFECT_TARGET.SELF } }
+        ]
+      },
+      {
+        phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
+        condition: { type: EFFECT_CONDITION.ALLY_IN_COMBAT_WITHIN_X_SPACES_OF_UNIT, spaces: 2 },
+        actions: [
+          { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_SPECIAL_CHARGES, target: { type: EFFECT_TARGET.FOE } },
+          { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_GUARD, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
+        ]
       }
     ]
   },
