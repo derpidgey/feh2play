@@ -559,16 +559,17 @@ function Engine() {
         from: { ...unit.pos },
         to: { ...tile }
       });
-      generateAttackActions(gameState, unit, tile, actions);
-      generateAssistActions(gameState, unit, tile, actions);
-      generateBlockActions(gameState, unit, tile, actions);
+      actions.push(...generateAttackActions(gameState, unit, tile));
+      actions.push(...generateAssistActions(gameState, unit, tile));
+      actions.push(...generateBlockActions(gameState, unit, tile));
     });
     return actions;
   }
 
-  function generateAttackActions(gameState, unit, tile, actions) {
+  function generateAttackActions(gameState, unit, tile) {
     const weapon = getWeaponInfo(unit);
-    if (!weapon) return;
+    if (!weapon) return [];
+    const actions = [];
     gameState.teams[unit.team ^ 1].forEach(enemy => {
       if (manhattan(tile, enemy.pos) === weapon.range) {
         actions.push({
@@ -580,11 +581,13 @@ function Engine() {
         });
       }
     });
+    return actions;
   }
 
-  function generateBlockActions(gameState, unit, tile, actions) {
+  function generateBlockActions(gameState, unit, tile) {
     const weapon = getWeaponInfo(unit);
-    if (!weapon) return;
+    if (!weapon) return [];
+    const actions = [];
     gameState.map.blocks.forEach(block => {
       if (manhattan(tile, block) === weapon.range && block.breakable && block.hp > 0) {
         actions.push({
@@ -596,11 +599,13 @@ function Engine() {
         });
       }
     });
+    return actions;
   }
 
-  function generateAssistActions(gameState, unit, tile, actions) {
+  function generateAssistActions(gameState, unit, tile) {
     const assist = getAssistInfo(unit);
-    if (!assist) return;
+    if (!assist) return [];
+    const actions = [];
     gameState.teams[unit.team].forEach(ally => {
       if (unit === ally) return;
       if (manhattan(tile, ally.pos) !== assist.range) return;
@@ -631,21 +636,24 @@ function Engine() {
         target: { ...ally.pos }
       })
     });
+    return actions;
   }
 
-  function generateKoActions(gameState, unit) {
+  function generateQuiescenceActions(gameState, unit) {
     if (!unit.hasAction) return [];
     const actions = [];
     calculateMovementRange(gameState, unit).forEach(tile => {
-      generateAttackActions(gameState, unit, tile, actions);
+      actions.push(...generateAttackActions(gameState, unit, tile));
+      actions.push(...generateBlockActions(gameState, unit, tile));
     });
     return actions.filter(action => {
+      if (action.type === "block") return true;
       const targetUnit = gameState.teams[unit.team ^ 1].find(u => u.pos.x === action.target.x && u.pos.y === action.target.y);
       const unitPos = unit.pos;
       unit.pos = action.to;
       const results = calculateCombatResult(gameState, unit, targetUnit);
       unit.pos = unitPos;
-      return results.units[1].stats.hp <= 0;
+      return results.units[1].stats.hp <= 0; // todo increase threshold
     });
   }
 
@@ -903,11 +911,11 @@ function Engine() {
     }
     for (const stat of [STATS.ATK, STATS.SPD, STATS.DEF, STATS.RES]) {
       if (unit.debuffs[stat] !== 0) {
-      hashDebuff(gameState, unit, stat);
+        hashDebuff(gameState, unit, stat);
         sequence.push([{ type: "debuff", id: unit.id, stat, previousValue: unit.debuffs[stat] }]);
-      unit.debuffs[stat] = 0;
-      hashDebuff(gameState, unit, stat);
-    }
+        unit.debuffs[stat] = 0;
+        hashDebuff(gameState, unit, stat);
+      }
     }
     unit.penalties.forEach(penalty => {
       hashPenalty(gameState, unit, penalty);
@@ -1142,11 +1150,11 @@ function Engine() {
       if (unit.hasAction) {
         for (const stat of [STATS.ATK, STATS.SPD, STATS.DEF, STATS.RES]) {
           if (unit.debuffs[stat] !== 0) {
-          hashDebuff(gameState, unit, stat);
+            hashDebuff(gameState, unit, stat);
             sequence.push([{ type: "debuff", id: unit.id, stat, previousValue: unit.debuffs[stat] }]);
-          unit.debuffs[stat] = 0;
-          hashDebuff(gameState, unit, stat);
-        }
+            unit.debuffs[stat] = 0;
+            hashDebuff(gameState, unit, stat);
+          }
         }
         unit.penalties.forEach(penalty => {
           hashPenalty(gameState, unit, penalty);
@@ -2455,7 +2463,9 @@ function Engine() {
       score: 0,
       thinking: true,
       hashTable: new Array(TABLE_SIZE).fill().map(() => ({ hash: 0, move: null, score: 0, flag: HASH_EXACT, depth: 0 })),
-      killerMoves: [[], []]
+      killerMoves: [[], []],
+      undoNodes: 0,
+      cloneNodes: 0
     }
     searchInfo.idMap = {};
     searchInfo.nextUnitIndex = 0;
@@ -2480,10 +2490,11 @@ function Engine() {
       }
       bestMove = getPvMove(searchInfo.hashTable, gameState.hash);
       // const pvLine = getPvLine(searchInfo.hashTable, gameState, currentDepth);
-      // let buffer = `d=${currentDepth},time=${Date.now() - searchInfo.start}ms,best=${getMoveString(gameState, bestMove)},score=${bestScore},nodes=${searchInfo.nodes},pv=${pvLine.join(" ")}`;
+      // let buffer = `d=${currentDepth},time=${Date.now() - searchInfo.start}ms,best=${getMoveString(gameState, bestMove)},score=${bestScore},nodes=${searchInfo.nodes} (undo=${searchInfo.undoNodes},cloned=${searchInfo.cloneNodes}),pv=${pvLine.join(" ")}`;
       // if (currentDepth !== 1) {
       //   buffer += `,ordering=${searchInfo.fh > 0 ? (100 * searchInfo.fhf / searchInfo.fh).toFixed(2) : 100}%`;
       // }
+      // buffer += `,hash=${gameState.hash}`;
       // console.log(buffer);
     }
 
@@ -2565,6 +2576,7 @@ function Engine() {
         console.warn(`unsupported undo step ${step.type}`);
       }
     }
+    gameState.history.pop();
   }
 
   function negamax(gameState, alpha, beta, depth, searchInfo) {
@@ -2594,16 +2606,18 @@ function Engine() {
     let oldAlpha = alpha;
     let bestMove = null;
     for (const move of moves) {
+      let nextDepth = depth - 1;
       if (supportsUndo(gameState, move)) {
+        ++searchInfo.undoNodes;
         const hashBefore = gameState.hash;
         const currentTurn = gameState.currentTurn;
         const sequence = executeAction(gameState, move);
         ++movesChecked;
         ++searchInfo.ply;
         if (currentTurn === gameState.currentTurn) {
-          score = negamax(gameState, alpha, beta, depth - 1, searchInfo)
+          score = negamax(gameState, alpha, beta, nextDepth, searchInfo)
         } else {
-          score = -negamax(gameState, -beta, -alpha, depth - 1, searchInfo);
+          score = -negamax(gameState, -beta, -alpha, nextDepth, searchInfo);
         }
         undo(gameState, sequence.flat());
         const hashAfterUndo = gameState.hash;
@@ -2611,14 +2625,15 @@ function Engine() {
           console.error(`Hash mismatch ${hashBefore} ${hashAfterUndo}`, move, sequence, gameState);
         }
       } else {
-      const newGameState = minClone(gameState);
-      executeAction(newGameState, move);
-      ++movesChecked;
-      ++searchInfo.ply;
-      if (gameState.currentTurn === newGameState.currentTurn) {
-        score = negamax(newGameState, alpha, beta, depth - 1, searchInfo)
-      } else {
-        score = -negamax(newGameState, -beta, -alpha, depth - 1, searchInfo);
+        ++searchInfo.cloneNodes;
+        const newGameState = minClone(gameState);
+        executeAction(newGameState, move);
+        ++movesChecked;
+        ++searchInfo.ply;
+        if (gameState.currentTurn === newGameState.currentTurn) {
+          score = negamax(newGameState, alpha, beta, nextDepth, searchInfo)
+        } else {
+          score = -negamax(newGameState, -beta, -alpha, nextDepth, searchInfo);
         }
       }
       --searchInfo.ply;
@@ -2638,7 +2653,7 @@ function Engine() {
               searchInfo.killerMoves[1][searchInfo.ply] = searchInfo.killerMoves[0][searchInfo.ply];
               searchInfo.killerMoves[0][searchInfo.ply] = move;
             }
-            storeHashEntry(searchInfo, gameState.hash, move, beta, HASH_BETA, depth); // causing ordering to go down
+            storeHashEntry(searchInfo, gameState.hash, move, beta, HASH_BETA, depth); // causing ordering to go down, not sure if bug
             return beta;
           }
           if (move.type !== "attack" && move.type !== "end turn") {
@@ -2678,13 +2693,14 @@ function Engine() {
     if (score > alpha) {
       alpha = score;
     }
-    let moves = gameState.teams[gameState.currentTurn].flatMap(unit => generateKoActions(gameState, unit));
+    let moves = gameState.teams[gameState.currentTurn].flatMap(unit => generateQuiescenceActions(gameState, unit));
     moves.push({ type: "end turn" });
     moves = orderMoves(gameState, moves, searchInfo);
     let movesChecked = 0;
     let oldAlpha = alpha;
     let bestMove = null;
     for (const move of moves) {
+      ++searchInfo.cloneNodes;
       const newGameState = minClone(gameState);
       executeAction(newGameState, move);
       ++movesChecked;
@@ -2844,7 +2860,7 @@ function Engine() {
     let targetInfo = '';
     if (target) {
       const { x: targetX, y: targetY } = target;
-      if (gameState.map.blocks.find(b => b.x === targetX && b.y === targetY)) {
+      if (move.type === "block" && gameState.map.blocks.find(b => b.x === targetX && b.y === targetY)) {
         targetInfo = "Block";
       } else {
         const targetUnit = findUnitAtPosition(gameState, target);
