@@ -15,14 +15,14 @@ function createBuild(unitId, skills = []) {
 }
 const engine = Engine();
 
-const team1 = [
-  createBuild(UNIT.FAE.id, [SKILLS.ETERNAL_BREATH.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.GLIMMER.id, SKILLS.CLOSE_DEF_3.id, SKILLS.GUARD_3.id, SKILLS.PANIC_PLOY_3.id, SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]),
+const cavs = [
+  createBuild(UNIT.CECILIA.id, [SKILLS.TURMOIL.id, SKILLS.TOME_OF_ORDER.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.GLIMMER.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.GUARD_3.id, SKILLS.GOAD_CAVALRY.id, SKILLS.DRIVE_ATK_2.id + "_SEAL"]),
   createBuild(UNIT.ELIWOOD.id, [SKILLS.DURANDAL.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.GALEFORCE.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.GUARD_3.id, SKILLS.ATK_SMOKE_3.id, SKILLS.SWIFT_SPARROW_2.id + "_SEAL"]),
   createBuild(UNIT.ABEL.id, [SKILLS.PANTHER_LANCE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.DEATH_BLOW_3.id, SKILLS.HIT_AND_RUN.id, SKILLS.ATK_SMOKE_3.id, SKILLS.DEATH_BLOW_3.id + "_SEAL"]),
   createBuild(UNIT.CLARINE.id, [SKILLS.GRAVITY_PLUS.id + "_REFINE_WRATHFUL", SKILLS.PHYSIC_PLUS.id, SKILLS.MIRACLE.id, SKILLS.ATK_SPD_BOND_3.id, SKILLS.DAZZLING_STAFF.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.ATK_SPD_BOND_3.id + "_SEAL"]),
   createBuild(UNIT.CAEDA.id, [SKILLS.WING_SWORD.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.ICEBERG.id, SKILLS.FURY_3.id, SKILLS.HIT_AND_RUN.id, SKILLS.DRIVE_ATK_2.id, SKILLS.DRIVE_SPD_2.id + "_SEAL"])
 ];
-const team2 = [
+const fliers = [
   createBuild(UNIT.CATRIA.id, [SKILLS.DAUNTLESS.id, SKILLS.WHITEWING_LANCE.id + "_REFINE_EFF", SKILLS.SWAP.id, SKILLS.LUNA.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.GOAD_FLIERS.id, SKILLS.DRIVE_ATK_2.id + "_SEAL"]),
   createBuild(UNIT.OLIVIA.id, [SKILLS.SLAYING_EDGE_PLUS.id + "_REFINE_DEF", SKILLS.DANCE.id, SKILLS.LUNA.id, SKILLS.FURY_3.id, SKILLS.WINGS_OF_MERCY_3.id, SKILLS.DRIVE_DEF_2.id, SKILLS.DRIVE_RES_2.id + "_SEAL"]),
   createBuild(UNIT.EST.id, [SKILLS.WHITEWING_SPEAR.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.GOAD_FLIERS.id, SKILLS.ATK_DEF_BOND_3.id + "_SEAL"]),
@@ -30,7 +30,7 @@ const team2 = [
   createBuild(UNIT.PALLA.id, [SKILLS.WHITEWING_BLADE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.FURY_3.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.WARD_FLIERS.id, SKILLS.ATK_SPD_BOND_3.id + "_SEAL"])
 ];
 
-const team3 = [
+const armours = [
   createBuild(UNIT.AZAMA.id, [SKILLS.EARTH_RENDERING.id, SKILLS.PAIN_PLUS.id + "_REFINE_WRATHFUL", SKILLS.MARTYR_PLUS.id, SKILLS.MIRACLE.id, SKILLS.FORTRESS_DEF_3.id, SKILLS.DAZZLING_STAFF.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.SAVAGE_BLOW_3.id + "_SEAL"]),
   createBuild(UNIT.FAE.id, [SKILLS.ETERNAL_BREATH.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.GLIMMER.id, SKILLS.CLOSE_DEF_3.id, SKILLS.GUARD_3.id, SKILLS.PANIC_PLOY_3.id, SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]),
   createBuild(UNIT.GWENDOLYN.id, [SKILLS.WEIGHTED_LANCE.id + "_REFINE_EFF", SKILLS.SWAP.id, SKILLS.BONFIRE.id, SKILLS.DISTANT_COUNTER.id, SKILLS.QUICK_RIPOSTE_3.id, SKILLS.WARD_ARMOUR.id, SKILLS.STEADY_BREATH.id + "_SEAL"]),
@@ -40,24 +40,38 @@ const team3 = [
 
 const SD_LEVELS = [
   {
-    id: "sd_whitewings",
-    name: "Whitewings Unite",
+    id: "sd_fliers",
+    name: "Flier Practice",
     description: "Defeat the Whitewings squad.",
     battles: [
-      {
-        map: MAPS.SD15,
-        enemyTeam: team2,
-      },
-    ],
+      { map: MAPS.SD15, enemyTeam: fliers }
+    ]
   },
   {
-    id: "sd_armor_gauntlet",
+    id: "sd_armour",
     name: "Fortress March",
-    description: "Survive the wall of armor units.",
+    description: "Survive the wall of armour units.",
     battles: [
-      { map: MAPS.SD7, enemyTeam: team3 },
-      { map: MAPS.SD7, enemyTeam: team1 },
-    ],
+      { map: MAPS.SD7, enemyTeam: armours }
+    ]
+  },
+  {
+    id: "sd_cavs",
+    name: "Cavalry Training",
+    description: "Be careful of their mighty range!",
+    battles: [
+      { map: MAPS.SD9, enemyTeam: cavs }
+    ]
+  },
+  {
+    id: "sd_emblem_gauntlet",
+    name: "Emblem Gauntlet",
+    description: "Face of against all the movement types.",
+    battles: [
+      { map: MAPS.SD15, enemyTeam: fliers },
+      { map: MAPS.SD7, enemyTeam: armours },
+      { map: MAPS.SD9, enemyTeam: cavs },
+    ]
   },
 ];
 
@@ -83,7 +97,7 @@ const SDAssault = ({ onExit }) => {
     const isLastBattle = battleIndex >= level.battles.length - 1;
     if (result === "lose" || isLastBattle) {
       setTimeout(() => {
-      setScreen("result");
+        setScreen("result");
         setGameResult(result);
       }, 1000);
     } else {

@@ -1145,6 +1145,17 @@ function Engine() {
     return xDistance + yDistance;
   }
 
+  function getCaptureStrength(gameState, teamIndex) {
+    return gameState.teams[teamIndex].reduce((count, unit) => {
+      if (distanceFromCaptureArea(gameState, unit.pos) === 0) {
+        let value = 1;
+        if (unit.skills.includes(SKILLS.TURMOIL.id) && unit.id === gameState.duelState[0].captain) value = 2;
+        return count + value;
+      }
+      return count;
+    }, 0);
+  }
+
   function endTurn(gameState, sequence = []) {
     gameState.teams[gameState.currentTurn].forEach(unit => {
       if (unit.hasAction) {
@@ -1176,11 +1187,11 @@ function Engine() {
       gameState.duelState[gameState.currentTurn].endedTurn = true;
       hashEndedTurn(gameState, gameState.currentTurn);
       if (gameState.duelState.every(x => x.endedTurn)) {
-        const team1UnitsInArea = gameState.teams[0].filter(unit => distanceFromCaptureArea(gameState, unit.pos) === 0).length;
-        const team2UnitsInArea = gameState.teams[1].filter(unit => distanceFromCaptureArea(gameState, unit.pos) === 0).length;
-        if (team1UnitsInArea >= team2UnitsInArea + 2) {
+        const team1Strength = getCaptureStrength(gameState, 0);
+        const team2Strength = getCaptureStrength(gameState, 1);
+        if (team1Strength >= team2Strength + 2) {
           gameState.duelState[0].captureScore += 2;
-        } else if (team2UnitsInArea >= team1UnitsInArea + 2) {
+        } else if (team2Strength >= team1Strength + 2) {
           gameState.duelState[1].captureScore += 2;
         }
         if (gameState.turnCount === 5) {
@@ -1965,11 +1976,7 @@ function Engine() {
       case EFFECT_CONDITION.FIRST_COMBAT_IN_PHASE:
         return unit.combatsInPhase === 0;
       case EFFECT_CONDITION.UNIT_IN_CAPTURE_AREA:
-        return (
-          unit.pos.x >= context.gameState.captureArea.x &&
-          unit.pos.x < context.gameState.captureArea.x + context.gameState.captureArea.w &&
-          unit.pos.y >= context.gameState.captureArea.y &&
-          unit.pos.y < context.gameState.captureArea.y + context.gameState.captureArea.h);
+        return distanceFromCaptureArea(context.gameState, unit.pos) === 0;
 
       default:
         return false;

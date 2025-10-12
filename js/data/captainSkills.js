@@ -94,6 +94,18 @@ const CAPTAIN_SKILLS = {
       EFFECT.distantCloseCounter() // come back when savior skills implemented
     ]
   },
+  TURMOIL: {
+    name: "Turmoil",
+    description: "At the start of the turn, captain can move 1 extra space. (That turn only. Does not stack.)\nCaptain counts as two Heroes for scoring purposes while in the Capture Area.",
+    img: "assets/captainskills/Turmoil.webp",
+    type: SKILL_TYPE.CAPTAIN,
+    effects: [
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        actions: [{ type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.MOBILITY_INCREASED.id, target: { type: EFFECT_TARGET.SELF } }]
+      }
+    ]
+  },
 }
 
 Object.entries(CAPTAIN_SKILLS).forEach(([key, value]) => CAPTAIN_SKILLS[key] = { id: key, ...value });
