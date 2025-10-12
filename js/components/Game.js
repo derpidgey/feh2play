@@ -1,4 +1,4 @@
-import { html, useState, useEffect, useCallback } from "https://esm.sh/htm/preact/standalone";
+import { html, useState, useEffect } from "https://esm.sh/htm/preact/standalone";
 import SidePanel from "./SidePanel.js";
 import Board from "./Board.js";
 import InfoPanel from "./InfoPanel.js";
@@ -7,6 +7,7 @@ import StatusBar from "./StatusBar.js";
 import Engine from "../engine.js";
 import useResizeListener from "../hooks/useResizeListener.js";
 import useGameLogic from "../hooks/useGameLogic.js";
+import UNIT from "../data/units.js";
 
 const engine = Engine();
 const DOUBLE_CLICK_THRESHOLD_MS = 200;
@@ -36,11 +37,9 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   useResizeListener(() => setIsWideScreen(window.innerWidth >= window.innerHeight * 3 / 2));
 
   if (gameState.mode === "duel") {
-    useEffect(() => {
+    useEffect(async () => {
       if (gameState.currentTurn !== playingAs && !gameState.isSwapPhase && !gameState.gameOver) {
-        setTimeout(() => {
-          handleAction(getAiMove());
-        }, 50);
+        handleAction(await getAiMove());
       }
     }, [
       gameState.currentTurn,

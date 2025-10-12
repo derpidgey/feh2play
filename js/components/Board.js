@@ -281,7 +281,7 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
     } else {
       const lastClickedUnit = gameState.teams[0].concat(gameState.teams[1])
         .find(unit => unit.pos.x === lastClick.tile.x && unit.pos.y === lastClick.tile.y);
-      if (lastClickedUnit && (lastClickedUnit.team !== playingAs || !lastClickedUnit.hasAction)) {
+      if (lastClickedUnit && (lastClickedUnit.team !== playingAs || !lastClickedUnit.hasAction || gameState.currentTurn !== playingAs)) {
         engine.calculateThreatRange(gameState, lastClickedUnit, false)
           .forEach(({ x, y }) => highlightedTiles[y * boardWidth + x].colour = "rgba(255, 0, 0, 0.3)");
         engine.calculateMovementRange(gameState, lastClickedUnit, false)

@@ -1,11 +1,19 @@
-import { useState } from "https://esm.sh/htm/preact/standalone";
+import { useState, useRef, useEffect } from "https://esm.sh/htm/preact/standalone";
 import Engine from "../engine.js";
 import { deepClone } from "../utils.js";
 
 const engine = Engine();
 
 const useGameLogic = (initialGameState) => {
+  const workerRef = useRef(null);
   const [gameState, setGameState] = useState(initialGameState);
+
+  useEffect(() => {
+    workerRef.current = new Worker("js/aiWorker.js", { type: "module" });
+    return () => {
+      workerRef.current.terminate();
+    }
+  }, []);
 
   const executeAction = action => {
     if (!engine.isValidAction(gameState, action)) {
@@ -39,8 +47,13 @@ const useGameLogic = (initialGameState) => {
   }
 
   const getAiMove = () => {
-    const info = engine.search(gameState, 5);
-    return info.best;
+    return new Promise((resolve) => {
+      const worker = workerRef.current;
+      worker.onmessage = (e) => {
+        resolve(e.data.best);
+      };
+      worker.postMessage({ gameState, depth: 5 });
+    });
   }
 
   return {
