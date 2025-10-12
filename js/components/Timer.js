@@ -27,13 +27,13 @@ const Timer = ({ tileSize, currentTurn, playingAs }) => {
     top: `${line2}px`,
     textAlign: "center",
     fontSize: `${tileSize}px`
-  }}>${time}</span>
+  }}>${(time === "∞" || time > 0) ? time : extra}</span>
   <span style=${{
     width: "100%",
     top: `${line3}px`,
     textAlign: "center",
     fontSize: `${tileSize / 3}px`
-  }}>plus ${extra}</span>
+  }}>plus${(time === "∞" || time > 0) ? ` ${extra}` : ""}</span>
   `;
 }
 
