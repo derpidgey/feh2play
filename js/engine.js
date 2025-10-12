@@ -1594,9 +1594,11 @@ function Engine() {
       const foe = results.units[i ^ 1];
       const foeUnitInfo = UNIT[foe.unitId];
       const foeWeaponType = getWeaponType(foe);
-      if (unit.flags[COMBAT_FLAG.CANT_FOLLOW_UP] > unit.flags[COMBAT_FLAG.GUARANTEED_FOLLOW_UP]) {
+      const effectiveGuaranteedFollowUp = unit.flags[COMBAT_FLAG.NEUTRALIZE_GUARANTEED_FOLLOW_UP] > 0 ? 0 : unit.flags[COMBAT_FLAG.GUARANTEED_FOLLOW_UP];
+      const effectiveCantFollowUp = unit.flags[COMBAT_FLAG.NEUTRALIZE_CANT_FOLLOW_UP] > 0 ? 0 : unit.flags[COMBAT_FLAG.CANT_FOLLOW_UP];
+      if (effectiveCantFollowUp > effectiveGuaranteedFollowUp) {
         unit.canDouble = false;
-      } else if (unit.flags[COMBAT_FLAG.GUARANTEED_FOLLOW_UP] > unit.flags[COMBAT_FLAG.CANT_FOLLOW_UP]) {
+      } else if (effectiveGuaranteedFollowUp > effectiveCantFollowUp) {
         unit.canDouble = true;
       } else {
         unit.canDouble = totalStats[i].spd - totalStats[i ^ 1].spd >= 5;
@@ -1791,9 +1793,12 @@ function Engine() {
 
   function getEligibleEffects(phase, unit, context) {
     const effects = [
-      ...(unit.skills.flatMap(skill => SKILLS[skill].effects ?? []) ?? []),
-      ...(unit.bonuses?.flatMap(bonus => STATUS[bonus].effects) ?? []),
-      ...(unit.penalties?.flatMap(penalty => STATUS[penalty].effects) ?? [])
+      ...unit.skills.flatMap(skillId => {
+        const skill = SKILLS[skillId];
+        return (skill.effects ?? []).map(e => ({ ...e, source: skill.type }));
+      }),
+      ...(unit.bonuses?.flatMap(bonus => STATUS[bonus].effects.map(e => ({ ...e, source: 'bonus' }))) ?? []),
+      ...(unit.penalties?.flatMap(penalty => STATUS[penalty].effects.map(e => ({ ...e, source: 'penalty' }))) ?? []),
     ];
     const actions = [];
     effects
@@ -1801,6 +1806,12 @@ function Engine() {
       .forEach(effect => {
         if (evaluateCondition(effect.condition, { unit, ...context })) {
           effect.actions.forEach(action => actions.push({ action, unit }));
+          if (effect.source === SKILL_TYPE.CAPTAIN) {
+            const duelState = context.gameState.duelState[unit.team];
+            if (duelState && !duelState.captainSkillRevealed) {
+              duelState.captainSkillRevealed = true;
+            }
+          }
         }
       });
     return actions;
@@ -1935,6 +1946,7 @@ function Engine() {
       case EFFECT_CONDITION.FOES_ATTACK_CAN_TRIGGER_UNITS_SPECIAL:
         return handleFoesAttackCanTriggerUnitsSpecial(context);
       case EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE:
+      case EFFECT_CONDITION.ALLY_STAT_GREATER_THAN_FOE:
       case EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_EQUAL_TO_FOE:
       case EFFECT_CONDITION.UNIT_STAT_LESS_THAN_FOE:
       case EFFECT_CONDITION.UNIT_STAT_LESS_THAN_EQUAL_TO_FOE:
@@ -1991,15 +2003,16 @@ function Engine() {
   }
 
   function evaluateStatCondition({ unit, results }, condition) {
+    const ally = results.units.find(u => u.team === unit.team);
     const foe = results.units.find(u => u.id !== unit.id);
     let unitValue = 0;
     let foeValue = 0;
     if (!condition.statType || condition.statType === STAT_CHECK_TYPE.VISIBLE) {
       // might need to get unit from gameState (in first object) for accurate visible stat
-      unitValue = getVisibleStats(unit)[condition.unitStat];
+      unitValue = getVisibleStats(unit)[condition.unitStat ?? condition.allyStat];
       foeValue = getVisibleStats(foe)[condition.foeStat];
     } else if (condition.statType === STAT_CHECK_TYPE.IN_COMBAT) {
-      unitValue = getTotalInCombatStats(results.units.find(u => u.id === unit.id))[condition.unitStat];
+      unitValue = getTotalInCombatStats(ally)[condition.unitStat ?? condition.allyStat];
       foeValue = getTotalInCombatStats(foe)[condition.foeStat];
     }
     if (condition.unitModifier) {
@@ -2008,10 +2021,12 @@ function Engine() {
     if (condition.foeModifier) {
       foeValue += condition.foeModifier;
     }
-    unitValue += unit.phantomStats[condition.unitStat] ?? 0;
+    unitValue += unit.phantomStats[condition.unitStat ?? condition.allyStat] ?? 0;
     foeValue += foe.phantomStats[condition.foeStat] ?? 0;
     switch (condition.type) {
       case EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE:
+        return unitValue > foeValue;
+      case EFFECT_CONDITION.ALLY_STAT_GREATER_THAN_FOE:
         return unitValue > foeValue;
       case EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_EQUAL_TO_FOE:
         return unitValue >= foeValue;

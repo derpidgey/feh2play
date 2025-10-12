@@ -1,3 +1,4 @@
+import CAPTAIN_SKILLS from "./captainSkills.js";
 import { CONDITION } from "./conditions.js";
 import { ASSIST_TYPE, COMBAT_FLAG, CONDITION_OPERATOR, EFFECT_ACTION, EFFECT_CALCULATION, EFFECT_CONDITION, EFFECT_PHASE, EFFECT_TARGET, MOVE_TYPE, MOVEMENT_TYPE, MOVEMENT_FLAG, SKILL_TYPE, SPECIAL_TYPE, STATS, WEAPON_TYPE, STAT_CHECK_TYPE, NON_STAVES, MELEE, RANGED, DRAGONS, BEASTS } from "./definitions.js";
 import { EFFECT } from "./effects.js";
@@ -3651,7 +3652,7 @@ const S_SKILLS = {
   },
 };
 
-const SKILLS = { ...WEAPON_SKILLS, ...ASSIST_SKILLS, ...SPECIAL_SKILLS, ...A_SKILLS, ...B_SKILLS, ...C_SKILLS, ...S_SKILLS }
+const SKILLS = { ...CAPTAIN_SKILLS, ...WEAPON_SKILLS, ...ASSIST_SKILLS, ...SPECIAL_SKILLS, ...A_SKILLS, ...B_SKILLS, ...C_SKILLS, ...S_SKILLS }
 
 console.log(`${Object.keys(ASSIST_SKILLS).length} assist skills
 ${Object.keys(SPECIAL_SKILLS).length} special skills

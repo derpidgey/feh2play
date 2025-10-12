@@ -1232,7 +1232,7 @@ const EXCLUSIVE_WEAPONS = {
       effects: [
         {
           phase: EFFECT_PHASE.START_OF_COMBAT,
-          condition: { type: EFFECT_CONDITION.UNIT_STAT_LESS_THAN_EQUAL_TO_FOE, unitModifier: 3 },
+          condition: { type: EFFECT_CONDITION.UNIT_STAT_LESS_THAN_EQUAL_TO_FOE, unitStat: STATS.ATK, foeStat: STATS.ATK, unitModifier: 3, statType: STAT_CHECK_TYPE.VISIBLE },
           actions: [
             { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: -6, target: { type: EFFECT_TARGET.FOE } },
             { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: -6, target: { type: EFFECT_TARGET.FOE } },

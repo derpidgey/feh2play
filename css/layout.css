@@ -49,8 +49,12 @@
   padding: 0 3%;
 }
 
-.score-bar img {
+.score-bar .score img {
   height: 60%;
+}
+
+.captain-skill img {
+  height: 100%;
 }
 
 .score {
@@ -77,6 +81,8 @@
   aspect-ratio: 1;
   background-color: grey;
   border-radius: 50%;
+  display: flex;
+  align-items: center;
 }
 
 .side-panel {

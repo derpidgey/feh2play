@@ -64,6 +64,18 @@ const STATUS = {
       }
     ]
   },
+  SPECIAL_CHARGES: {
+    name: "Special Charges",
+    description: "Special cooldown charge +1 per attack. (Only highest value applied. Does not stack.)",
+    img: "assets/status/Status_Effect_Special_Cooldown_Charge_1.webp",
+    type: STATUS_TYPE.POSITIVE,
+    effects: [
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK, target: { type: EFFECT_TARGET.SELF } }]
+      }
+    ]
+  },
 }
 
 Object.entries(STATUS).forEach(([key, value]) => STATUS[key] = { id: key, ...value });
