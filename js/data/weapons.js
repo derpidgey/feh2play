@@ -360,7 +360,8 @@ const INHERITABLE_WEAPONS = {
     effectRefine: {
       description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.ARMOURED.id)]
-    }
+    },
+    refineImg: "assets/refines/Dull_Armour_W.webp",
   },
   SLAYING_SPEAR_PLUS: {
     name: "Slaying Spear+",
@@ -374,7 +375,8 @@ const INHERITABLE_WEAPONS = {
     effectRefine: {
       description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.ARMOURED.id)]
-    }
+    },
+    refineImg: "assets/refines/Dull_Armour_W.webp",
   },
   SLAYING_HAMMER_PLUS: {
     name: "Slaying Hammer+",
@@ -388,7 +390,8 @@ const INHERITABLE_WEAPONS = {
     effectRefine: {
       description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.ARMOURED.id)]
-    }
+    },
+    refineImg: "assets/refines/Dull_Armour_W.webp",
   },
   ZANBATO_PLUS: {
     name: "Zanbato+",
@@ -402,7 +405,8 @@ const INHERITABLE_WEAPONS = {
     effectRefine: {
       description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
-    }
+    },
+    refineImg: "assets/refines/Dull_Cavalry_W.webp",
   },
   RIDERSBANE_PLUS: {
     name: "Ridersbane+",
@@ -416,7 +420,8 @@ const INHERITABLE_WEAPONS = {
     effectRefine: {
       description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
-    }
+    },
+    refineImg: "assets/refines/Dull_Cavalry_W.webp",
   },
   POLEAXE_PLUS: {
     name: "Poleaxe+",
@@ -430,7 +435,8 @@ const INHERITABLE_WEAPONS = {
     effectRefine: {
       description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
-    }
+    },
+    refineImg: "assets/refines/Dull_Cavalry_W.webp",
   },
   KEEN_RAUDRWOLF_PLUS: {
     name: "Keen Rauðrwolf+",
@@ -444,7 +450,8 @@ const INHERITABLE_WEAPONS = {
     effectRefine: {
       description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
-    }
+    },
+    refineImg: "assets/refines/Dull_Cavalry_W.webp",
   },
   KEEN_BLARWOLF_PLUS: {
     name: "Keen Blárwolf+",
@@ -458,7 +465,8 @@ const INHERITABLE_WEAPONS = {
     effectRefine: {
       description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
-    }
+    },
+    refineImg: "assets/refines/Dull_Cavalry_W.webp",
   },
   KEEN_GRONNWOLF_PLUS: {
     name: "Keen Gronnwolf+",
@@ -472,7 +480,8 @@ const INHERITABLE_WEAPONS = {
     effectRefine: {
       description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
-    }
+    },
+    refineImg: "assets/refines/Dull_Cavalry_W.webp",
   },
   RUBY_SWORD_PLUS: {
     name: "Ruby Sword+",
