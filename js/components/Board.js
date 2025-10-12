@@ -8,6 +8,8 @@ import ActionTracker from "./ActionTracker.js";
 
 const engine = Engine();
 const FPS = 1000 / 30;
+const blockSheet = new Image();
+blockSheet.src = "assets/maps/common/Wallpattern.webp";
 
 const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs }) => {
   const [tileSize, setTileSize] = useState(50);
@@ -150,8 +152,6 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
     context.stroke();
   }, [potentialAction]);
 
-  const blockSheet = useRef(null);
-
   const ATLAS_TILE = 182;
   const PILLAR_COL = 9;
 
@@ -241,20 +241,10 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
   }
 
   useEffect(() => {
-    blockSheet.current = new Image();
-    blockSheet.current.src = "assets/maps/common/Wallpattern.webp";
-
-    blockSheet.current.onload = () => {
-      const ctx = blockCanvasRef.current.getContext("2d");
-      renderBlocks(ctx, blockSheet.current, gameState.map.blocks, tileSize, boardWidth, boardHeight);
-    };
-  }, [gameState.map, tileSize]);
-
-  useEffect(() => {
-    if (!blockCanvasRef.current || !blockSheet.current) return;
+    if (!blockCanvasRef.current) return;
     const ctx = blockCanvasRef.current.getContext("2d");
-    renderBlocks(ctx, blockSheet.current, gameState.map.blocks, tileSize, boardWidth, boardHeight);
-  }, [gameState.map.blocks]);
+    renderBlocks(ctx, blockSheet, gameState.map.blocks, tileSize, boardWidth, boardHeight);
+  }, [gameState.map, gameState.map.blocks, tileSize]);
 
   const calculateHighlightedTiles = () => {
     const highlightedTiles = Array.from({ length: boardWidth * boardHeight }, (_, i) => ({

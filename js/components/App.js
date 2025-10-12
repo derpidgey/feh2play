@@ -51,7 +51,7 @@ const App = () => {
         <div class="screen menu">
           <div>
             <h1>feh2play</h1>
-            <button onClick=${() => setScreen("demo")}>Summoner Duels (Demo)</button><br/>
+            <button onClick=${() => setScreen("demo")}>SD Demo</button><br/>
             <button onClick=${() => setScreen("teamBuilder")}>Team Builder</button><br/>
             <button onClick=${() => setScreen("sdAssault")}>SD Assault</button><br/>
           </div>
