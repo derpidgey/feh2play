@@ -2261,7 +2261,10 @@ const B_SKILLS = {
         condition: { type: EFFECT_CONDITION.FOE_HAS_X_RANGE, range: 1 },
         actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_BONUSES, target: { type: EFFECT_TARGET.FOE } }]
       }
-    ]
+    ],
+    canUse: {
+      weaponType: MELEE
+    }
   },
   WINGS_OF_MERCY_3: {
     name: "Wings of Mercy 3",
