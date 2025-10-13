@@ -83,7 +83,8 @@ const SDAssault = ({ onExit }) => {
   const [battleIndex, setBattleIndex] = useState(0);
   const [gameResult, setGameResult] = useState("suck");
 
-  const savedTeams = JSON.parse(localStorage.getItem("teams") || "[]");
+  const savedTeams = JSON.parse(localStorage.getItem("teams") || "[]")
+    .filter(team => team.mode === "sd");
 
   const startLevel = () => {
     if (!selectedTeam) return alert("Please select a team first!");
@@ -153,7 +154,7 @@ const SDAssault = ({ onExit }) => {
             <label>Select Your Team:</label><br/>
             <select onChange=${e => setSelectedTeam(savedTeams[e.target.value])}>
               <option value="">-- Select --</option>
-              ${savedTeams.map((t, i) => html`<option value=${i}>Team ${i + 1}</option>`)}
+              ${savedTeams.map((team, i) => html`<option value=${i}>${team.name}</option>`)}
             </select>
           </div>
 
