@@ -136,7 +136,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
     </div>
 
     ${teamData.mode === "sd" && html`
-      <div style="margin-top: 24px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
+      <div style="margin-bottom: 16px; padding: 8px; border: 1px solid #ccc; border-radius: 4px;">
         <div class="input-row" style="gap: 10px;">
           <${Dropdown}
             options=${[

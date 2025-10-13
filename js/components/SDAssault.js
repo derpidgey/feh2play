@@ -41,16 +41,16 @@ const armours = [
 const SD_LEVELS = [
   {
     id: "sd_fliers",
-    name: "Flier Practice",
-    description: "Defeat the Whitewings squad.",
+    name: "Sky Attack",
+    description: "Engage in a battle for air superiority",
     battles: [
       { map: MAPS.SD15, enemyTeam: fliers }
     ]
   },
   {
     id: "sd_armour",
-    name: "Fortress March",
-    description: "Survive the wall of armour units.",
+    name: "Iron Wall",
+    description: "Break through the phalanx.",
     battles: [
       { map: MAPS.SD7, enemyTeam: armours }
     ]
@@ -58,15 +58,15 @@ const SD_LEVELS = [
   {
     id: "sd_cavs",
     name: "Cavalry Training",
-    description: "Be careful of their mighty range!",
+    description: "Endure their relentless advance.",
     battles: [
       { map: MAPS.SD9, enemyTeam: cavs }
     ]
   },
   {
     id: "sd_emblem_gauntlet",
-    name: "Emblem Gauntlet",
-    description: "Face of against all the movement types.",
+    name: "Trial of Emblems",
+    description: "Face of against the triple threat.",
     battles: [
       { map: MAPS.SD15, enemyTeam: fliers },
       { map: MAPS.SD7, enemyTeam: armours },
