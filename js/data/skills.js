@@ -3256,7 +3256,7 @@ const C_SKILLS = {
       {
         phase: EFFECT_PHASE.START_OF_TURN,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES, spaces: 2 } }]
-      },
+      }
     ]
   },
   THREATEN_SPD_3: {
@@ -3269,7 +3269,7 @@ const C_SKILLS = {
       {
         phase: EFFECT_PHASE.START_OF_TURN,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.SPD, value: 5, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES, spaces: 2 } }]
-      },
+      }
     ]
   },
   THREATEN_DEF_3: {
@@ -3282,7 +3282,7 @@ const C_SKILLS = {
       {
         phase: EFFECT_PHASE.START_OF_TURN,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.DEF, value: 5, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES, spaces: 2 } }]
-      },
+      }
     ]
   },
   THREATEN_RES_3: {
@@ -3295,7 +3295,7 @@ const C_SKILLS = {
       {
         phase: EFFECT_PHASE.START_OF_TURN,
         actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.RES, value: 5, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES, spaces: 2 } }]
-      },
+      }
     ]
   },
   GUIDANCE_3: {
@@ -3606,7 +3606,7 @@ const S_SKILLS = {
           { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.LANCE.id },
           { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.AXE.id }
         ),
-        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CONSECUTIVE_HIT_DAMAGE_REDUCTION, percent: 80, target: { type: EFFECT_TARGET.SELF } }]
+        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CONSECUTIVE_ATTACK_DAMAGE_REDUCTION, percent: 80, target: { type: EFFECT_TARGET.SELF } }]
       }
     ],
     canUse: {
@@ -3631,7 +3631,7 @@ const S_SKILLS = {
           { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.GREEN_DAGGER.id },
           { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.C_DAGGER.id }
         ),
-        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CONSECUTIVE_HIT_DAMAGE_REDUCTION, percent: 80, target: { type: EFFECT_TARGET.SELF } }]
+        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CONSECUTIVE_ATTACK_DAMAGE_REDUCTION, percent: 80, target: { type: EFFECT_TARGET.SELF } }]
       }
     ]
   },
@@ -3649,7 +3649,7 @@ const S_SKILLS = {
           { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.GREEN_TOME.id },
           { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.C_TOME.id }
         ),
-        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CONSECUTIVE_HIT_DAMAGE_REDUCTION, percent: 80, target: { type: EFFECT_TARGET.SELF } }]
+        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CONSECUTIVE_ATTACK_DAMAGE_REDUCTION, percent: 80, target: { type: EFFECT_TARGET.SELF } }]
       }
     ]
   },

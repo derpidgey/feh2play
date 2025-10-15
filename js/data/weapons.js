@@ -553,6 +553,49 @@ const INHERITABLE_WEAPONS = {
     effects: [EFFECT.visibleStats({ atk: 11 }), EFFECT.unitCantCounterattack(), EFFECT.foeCantCounterattack()],
     canBeRefined: false
   },
+  ASSASSINS_BOW_PLUS: {
+    name: "Assassin's Bow+",
+    description: "Effective against flying foes.\nIn combat against a colorless dagger foe, unit makes a guaranteed follow-up attack and foe cannot make a follow-up attack.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BOW.id,
+    might: 13,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 13 }),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.C_DAGGER.id },
+        actions: [
+          { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.GUARANTEED_FOLLOW_UP, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }
+        ]
+      }
+    ],
+    canBeRefined: false
+  },
+  GUARD_BOW_PLUS: {
+    name: "Assassin's Bow+",
+    description: "Effective against flying foes.\nIf foe initiates combat and uses bow, dagger, magic, or staff, grants Def/Res+6 to unit during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BOW.id,
+    might: 13,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 13 }),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: CONDITION.and(
+          { type: EFFECT_CONDITION.FOE_INITIATES_COMBAT },
+          { type: EFFECT_CONDITION.FOE_HAS_X_RANGE, range: 2 }
+        ),
+        actions: [
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.SELF } }
+        ]
+      }
+    ],
+    canBeRefined: true
+  },
   RAUDRBLADE_PLUS: {
     name: "Rauðrblade+",
     description: "Slows Special trigger (cooldown count+1). Grants bonus to unit’s Atk = total bonuses on unit during combat.",
@@ -1048,6 +1091,24 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.ARTHUR.id]
     }
   },
+  BASILIKOS: {
+    name: "Basilikos",
+    description: "Accelerates Special trigger (cooldown count-1).",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.AXE.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.slaying()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Grants Atk/Spd+5. Inflicts Def/Res-5.",
+      effects: [EFFECT.visibleStats({ atk: 5, spd: 5, def: -5, res: -5 })]
+    },
+    refineImg: "assets/refines/Life_and_Death_W.webp",
+    canUse: {
+      unit: [UNIT.MINERVA.id]
+    }
+  },
   BERUKAS_AXE: {
     name: "Beruka's Axe",
     description: "Accelerates Special trigger (cooldown count-1).",
@@ -1076,6 +1137,44 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Berukas_Axe_W.webp",
     canUse: {
       unit: [UNIT.BERUKA.id]
+    }
+  },
+  BINDING_BLADE: {
+    name: "Binding Blade",
+    description: "If foe initiates combat, grants Def/Res+2 during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.enemyPhaseStats({ def: 2, res: 2 })],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "Effective against dragon foes. If foe initiates combat, grants Def/Res+4 during combat.",
+      effects: [
+        EFFECT.visibleStats({ atk: 16 }),
+        EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.RED_BREATH.id),
+        EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.BLUE_BREATH.id),
+        EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.GREEN_BREATH.id),
+        EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.C_BREATH.id),
+        EFFECT.enemyPhaseStats({ def: 4, res: 4 })
+      ]
+    },
+    effectRefine: {
+      description: "If unit's HP ≥ 50% and foe initiates combat, unit makes a guaranteed follow-up attack.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.and(
+            { type: EFFECT_CONDITION.UNIT_HP_GREATER_THAN_EQUAL_TO, percent: 50 },
+            { type: EFFECT_CONDITION.FOE_INITIATES_COMBAT }
+          ),
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.GUARANTEED_FOLLOW_UP, target: { type: EFFECT_TARGET.SELF } }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Quick_Riposte_W.webp",
+    canUse: {
+      unit: [UNIT.ROY.id]
     }
   },
   BULL_BLADE: {
@@ -1255,6 +1354,37 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.HENRY.id]
     }
   },
+  CRIMSON_AXE: {
+    name: "Crimson Axe",
+    description: "Accelerates Special trigger (cooldown count-1).",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.AXE.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.slaying()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If foe initiates combat or if foe's HP = 100% at start of combat, grants Atk/Def+5 to unit during combat and inflicts Special cooldown charge -1 on foe per attack. (Only highest value applied. Does not stack.)",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.or(
+            { type: EFFECT_CONDITION.FOE_INITIATES_COMBAT },
+            { type: EFFECT_CONDITION.FOE_HP_IS_MAX_HP }
+          ),
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 5, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.GUARD, target: { type: EFFECT_TARGET.FOE } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Crimson_Axe_W.webp",
+    canUse: {
+      unit: [UNIT.SHEENA.id]
+    }
+  },
   DEVIL_AXE: {
     name: "Devil Axe",
     description: "Grants Atk/Spd/Def/Res+4 during combat, but if unit attacked, deals 4 damage to unit after combat.",
@@ -1297,7 +1427,7 @@ const EXCLUSIVE_WEAPONS = {
     },
     refineImg: "assets/refines/Wrath_W.webp",
     canUse: {
-      unit: [UNIT.BARST.id]
+      unit: [UNIT.SHARENA.id]
     }
   },
   DURANDAL: {
@@ -1402,9 +1532,27 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.FAE.id]
     }
   },
+  ETERNAL_TOME: {
+    name: "Eternal Tome",
+    description: "Grants weapon-triangle advantage against colorless foes, and inflicts weapon-triangle disadvantage on colorless foes during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.raven()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If foe initiates combat, grants Def/Res+4 during combat.",
+      effects: [EFFECT.enemyPhaseStats({ def: 4, res: 4 })]
+    },
+    refineImg: "assets/refines/Bracing_Stance_W.webp",
+    canUse: {
+      unit: [UNIT.SOPHIA.id]
+    }
+  },
   FALCHION_AWAKENING: {
     name: "Falchion",
-    description: "	Effective against dragon foes. At the start of every third turn, restores 10 HP.",
+    description: "Effective against dragon foes. At the start of every third turn, restores 10 HP.",
     type: SKILL_TYPE.WEAPON,
     weaponType: WEAPON_TYPE.SWORD.id,
     might: 16,
@@ -1454,7 +1602,62 @@ const EXCLUSIVE_WEAPONS = {
     },
     refineImg: "assets/refines/Falchion_Awakening_W.webp",
     canUse: {
-      unit: [] // Lucina, masked marth, exalted chrom
+      unit: [UNIT.LUCINA.id] // masked marth, exalted chrom
+    }
+  },
+  FALCHION_AWAKENING: {
+    name: "Falchion",
+    description: "Effective against dragon foes. At the start of every third turn, restores 10 HP.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 16 }),
+      EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.RED_BREATH.id),
+      EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.BLUE_BREATH.id),
+      EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.GREEN_BREATH.id),
+      EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.C_BREATH.id),
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        condition: { type: EFFECT_CONDITION.EVERY_THIRD_TURN },
+        actions: [{ type: EFFECT_ACTION.RESTORE_HP, value: 10, target: { type: EFFECT_TARGET.SELF } }]
+      }
+    ],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "Effective against dragon foes. At start of odd-numbered turns, restores 10 HP.",
+      effects: [
+        EFFECT.visibleStats({ atk: 16 }),
+        EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.RED_BREATH.id),
+        EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.BLUE_BREATH.id),
+        EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.GREEN_BREATH.id),
+        EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.C_BREATH.id),
+        {
+          phase: EFFECT_PHASE.START_OF_TURN,
+          condition: { type: EFFECT_CONDITION.IS_ODD_TURN },
+          actions: [{ type: EFFECT_ACTION.RESTORE_HP, value: 10, target: { type: EFFECT_TARGET.SELF } }]
+        }
+      ]
+    },
+    effectRefine: {
+      description: "Grants Atk/Spd/Def/Res+2 to allies within 2 spaces during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
+          condition: { type: EFFECT_CONDITION.ALLY_IN_COMBAT_WITHIN_X_SPACES_OF_UNIT, spaces: 2 },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 2, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 2, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 2, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 2, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Falchion_Mystery_W.webp",
+    canUse: {
+      unit: [UNIT.MARTH.id]
     }
   },
   FELICIAS_PLATE: {
@@ -1491,6 +1694,49 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Felicias_Plate_W.webp",
     canUse: {
       unit: [UNIT.FELICIA.id]
+    }
+  },
+  FENSALIR: {
+    name: "Fensalir",
+    description: "At start of turn, inflicts Atk-4 on foes within 2 spaces through their next actions.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 16 }),
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES, spaces: 2 } }]
+      }
+    ],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "Neutralizes foes' bonuses (from skills like Fortify, Rally, etc.) during combat",
+      effects: [
+        EFFECT.visibleStats({ atk: 16 }),
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_BONUSES, target: { type: EFFECT_TARGET.FOE } }]
+        }
+      ]
+    },
+    effectRefine: {
+      description: "If unit is adjacent to an ally, grants Spd/Def+5 during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_IS_ADJACENT_TO_ALLY },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 5, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 5, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Spd_Def_Bond_W.webp",
+    canUse: {
+      unit: [UNIT.SHARENA.id]
     }
   },
   FLORINAS_LANCE: {
@@ -1584,6 +1830,43 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.FREDERICK.id]
     }
   },
+  GLADIATORS_BLADE: {
+    name: "Gladiator's Blade",
+    description: "If unit’s Atk > foe’s Atk, grants Special cooldown charge +1 per unit's attack. (Only highest value applied. Does not stack.)",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 16 }),
+      {
+        phase: EFFECT_PHASE.DURING_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE, unitStat: STATS.ATK, foeStat: STATS.ATK, statType: STAT_CHECK_TYPE.IN_COMBAT },
+        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_UNIT_ATTACK, target: { type: EFFECT_TARGET.SELF } }]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit is within 2 spaces of a flying or infantry ally, grants Atk/Spd+4 during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.or(
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, moveType: MOVE_TYPE.INFANTRY.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, moveType: MOVE_TYPE.FLIER.id }
+          ),
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Gladiators_Blade_W.webp",
+    canUse: {
+      unit: [UNIT.OGMA.id]
+    }
+  },
   GUARDIANS_AXE: {
     name: "Guardian's Axe",
     description: "Accelerates Special trigger (cooldown count-1).",
@@ -1628,6 +1911,24 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Swift_Sparrow_W.webp",
     canUse: {
       unit: [UNIT.HANA.id]
+    }
+  },
+  HAUTECLERE: {
+    name: "Hauteclere",
+    description: "Accelerates Special trigger (cooldown count-1).",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.AXE.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.slaying()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Deals +10 damage when Special triggers.",
+      effects: [EFFECT.damageOnSpecialTrigger(10)]
+    },
+    refineImg: "assets/refines/Special_Damage_W.webp",
+    canUse: {
+      unit: [UNIT.MINERVA.id]
     }
   },
   HEWN_LANCE: {
@@ -1788,10 +2089,7 @@ const EXCLUSIVE_WEAPONS = {
     weaponType: WEAPON_TYPE.SWORD.id,
     might: 16,
     range: 1,
-    effects: [
-      EFFECT.visibleStats({ atk: 16 }),
-      EFFECT.slaying()
-    ],
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.slaying()],
     canBeRefined: true,
     effectRefine: {
       description: "Deals +10 damage when Special triggers.",
@@ -1844,6 +2142,36 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.ANNA.id]
     }
   },
+  OBOROS_SPEAR: {
+    name: "Oboro's Spear",
+    description: "Effective against armoured foes.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.ARMOURED.id)],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If foe initiates combat and uses sword, lance, axe, dragonstone, or beast damage, grants Def/Res+6 during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.and(
+            { type: EFFECT_CONDITION.FOE_INITIATES_COMBAT },
+            { type: EFFECT_CONDITION.FOE_HAS_X_RANGE, range: 1 }
+          ),
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Close_Def_W.webp",
+    canUse: {
+      unit: [UNIT.OBORO.id]
+    }
+  },
   PANTHER_LANCE: {
     name: "Panther Lance",
     description: "During combat, boosts unit's Atk/Def by number of allies within 2 spaces × 2. (Maximum bonus of +6 to each stat.)",
@@ -1891,6 +2219,113 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.ABEL.id]
     }
   },
+  PANTHER_SWORD: {
+    name: "Panther Sword",
+    description: "If unit has weapon-triangle advantage, boosts Atk by 20%. If unit has weapon-triangle disadvantage, reduces Atk by 20%.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.triangleAdept()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If cavalry allies within 2 spaces use sword, lance, or axe and foe initiates combat, unit attacks twice.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.and(
+            { type: EFFECT_CONDITION.FOE_INITIATES_COMBAT },
+            CONDITION.or(
+              { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, moveType: MOVE_TYPE.CAVALRY.id, weaponType: WEAPON_TYPE.SWORD.id },
+              { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, moveType: MOVE_TYPE.CAVALRY.id, weaponType: WEAPON_TYPE.LANCE.id },
+              { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, moveType: MOVE_TYPE.CAVALRY.id, weaponType: WEAPON_TYPE.AXE.id })
+          ),
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.ATTACKS_TWICE, target: { type: EFFECT_TARGET.SELF } }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Def_Side_Consecutive_Atk_RG_W.webp",
+    canUse: {
+      unit: [UNIT.STAHL.id]
+    }
+  },
+  PARTHIA: {
+    name: "Parthia",
+    description: "Effective against flying foes.\nIf unit initiates combat, grants Res+4 during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BOW.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id),
+      EFFECT.playerPhaseStats({ res: 4 })
+    ],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "Effective against flying foes.\nReduces damage from magic foe's first attack by 30%.",
+      effects: [
+        EFFECT.visibleStats({ atk: 14 }),
+        EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id),
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.or(
+            { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.RED_TOME.id },
+            { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.BLUE_TOME.id },
+            { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.GREEN_TOME.id },
+            { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.C_TOME.id }
+          ),
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.FIRST_ATTACK_DAMAGE_REDUCTION, percent: 30, target: { type: EFFECT_TARGET.SELF } }]
+        }
+      ]
+    },
+    effectRefine: {
+      description: "If foe uses bow, dagger, magic, or staff, grants Atk+6 during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.FOE_HAS_X_RANGE, range: 2 },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.SELF } },
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Parthia_W.webp",
+    canUse: {
+      unit: [UNIT.JEORGE.id]
+    }
+  },
+  PERIS_LANCE: {
+    name: "Peri's Lance",
+    description: "Accelerates Special trigger (cooldown count-1).",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.slaying()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "At start of combat, if unit's HP < 100%, grants Atk/Spd/Def/Res+4 during combat.",
+      effects: [
+        EFFECT.damageOnSpecialTrigger(10),
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_HP_LESS_THAN, percent: 100 },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Peris_Lance_W.webp",
+    canUse: {
+      unit: [UNIT.PERI.id]
+    }
+  },
   PURIFYING_BREATH: {
     name: "Purifying Breath",
     description: "Slows Special trigger (cooldown count+1). Unit can counterattack regardless of foe's range. If foe's Range = 2, calculates damage using the lower of foe's Def or Res.",
@@ -1920,6 +2355,131 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Purifying_Breath_W.webp",
     canUse: {
       unit: [UNIT.NOWI.id]
+    }
+  },
+  RAIJINTO: {
+    name: "Raijinto",
+    description: "Unit can counterattack regardless of foe's range.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.distantCloseCounter()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit initiates combat or if unit is within 2 spaces of an ally, grants Atk/Spd/Def/Res+4 during combat and neutralizes effects that guarantee foe's follow-up attacks and effects that prevent unit's follow-up attacks during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.or(
+            { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2 }
+          ),
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_GUARANTEED_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } },
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Raijinto_W.webp",
+    canUse: {
+      unit: [UNIT.RYOMA.id]
+    }
+  },
+  SELENAS_BLADE: {
+    name: "Selena's Blade",
+    description: "Effective against armored foes. At start of combat, if foe's Atk ≥ unit's Atk+3, grants Atk/Spd/Def/Res+3 during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 16 }),
+      EFFECT.effectiveAgainstMoveType(MOVE_TYPE.ARMOURED.id),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_STAT_LESS_THAN_EQUAL_TO_FOE, unitStat: STATS.ATK, foeStat: STATS.ATK, unitModifier: 3, statType: STAT_CHECK_TYPE.VISIBLE },
+        actions: [
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 3, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 3, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 3, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 3, target: { type: EFFECT_TARGET.SELF } }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Deals +10 damage when Special triggers.",
+      effects: [EFFECT.damageOnSpecialTrigger(10)]
+    },
+    refineImg: "assets/refines/Special_Damage_W.webp",
+    canUse: {
+      unit: [UNIT.SELENA.id]
+    }
+  },
+  SETSUNAS_YUMI: {
+    name: "Setsuna's Yumi",
+    description: "Effective against flying foes. If foe uses bow, dagger, magic, or staff, grants Atk/Spd/Def/Res+4 during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BOW.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: { type: EFFECT_CONDITION.FOE_HAS_X_RANGE, range: 2 },
+        actions: [
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.SELF } }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If【Bonus】is active on unit, grants Atk/Spd+5 and neutralizes unit's penalties to Atk/Spd during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.BONUS_ACTIVE_ON_UNIT },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 5, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_SPECIFIC_PENALTIES, stat: STATS.ATK, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_SPECIFIC_PENALTIES, stat: STATS.SPD, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Setsunas_Yumi_W.webp",
+    canUse: {
+      unit: [UNIT.SETSUNA.id]
+    }
+  },
+  SHANNAS_LANCE: {
+    name: "Shanna's Lance",
+    description: "Accelerates Special trigger (cooldown count-1).",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.slaying()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Deals +10 damage when Special triggers.",
+      effects: [EFFECT.damageOnSpecialTrigger(10)]
+    },
+    refineImg: "assets/refines/Special_Damage_W.webp",
+    canUse: {
+      unit: [UNIT.SHANNA.id]
     }
   },
   SOL_KATTI: {

@@ -1498,7 +1498,8 @@ function Engine() {
     combatFlags[COMBAT_FLAG.EFFECTIVE_AGAINST_WEAPON_TYPE] = [];
     combatFlags[COMBAT_FLAG.NEUTRALIZE_EFFECTIVE_AGAINST_MOVE_TYPE] = [];
     combatFlags[COMBAT_FLAG.NEUTRALIZE_EFFECTIVE_AGAINST_WEAPON_TYPE] = [];
-    combatFlags[COMBAT_FLAG.CONSECUTIVE_HIT_DAMAGE_REDUCTION] = [];
+    combatFlags[COMBAT_FLAG.CONSECUTIVE_ATTACK_DAMAGE_REDUCTION] = [];
+    combatFlags[COMBAT_FLAG.FIRST_ATTACK_DAMAGE_REDUCTION] = [];
 
     combatUnit.flags = combatFlags;
 
@@ -1739,8 +1740,11 @@ function Engine() {
 
     const percentReductions = [];
     percentReductions.push(...specialFlags.percentReductions);
+    if (attacker.timesAttacked === 0) {
+      percentReductions.push(...defender.flags[COMBAT_FLAG.FIRST_ATTACK_DAMAGE_REDUCTION]);
+    }
     if (isConsecutiveAttack) {
-      percentReductions.push(...defender.flags[COMBAT_FLAG.CONSECUTIVE_HIT_DAMAGE_REDUCTION]);
+      percentReductions.push(...defender.flags[COMBAT_FLAG.CONSECUTIVE_ATTACK_DAMAGE_REDUCTION]);
     }
     const situationalFixedDamage = specialFlags.situationalFixedDamage;
     const percentReduction = calculateTotalPercentReduction(percentReductions);

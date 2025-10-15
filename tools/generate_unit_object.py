@@ -4,7 +4,7 @@ import json
 import re
 
 # Define the URL for the unit's wiki page
-url = "https://feheroes.fandom.com/wiki/Lyn:_Lady_of_the_Plains"
+url = "https://feheroes.fandom.com/wiki/Stahl:_Viridian_Knight"
 
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -12,13 +12,14 @@ soup = BeautifulSoup(response.text, 'html.parser')
 def parse_hero_data(soup):
     img_title = url.split("/")[-1].replace(":", "").replace("%27","")
     entry = get_td_value(soup, "Entry")
+    book_num = get_td_value(soup, "Version")[:1]
     return {
         "name": soup.select_one(".page-header__title").text.split(":")[0].strip(),
         "subtitle": soup.select_one(".page-header__title").text.split(":")[1].strip(),
-        "imgFace": f"assets/face/book1/{img_title}_Face_FC.webp",
-        "imgSprite": f"assets/sprites/book1/{img_title}_Mini_Unit_Idle.webp",
+        "imgFace": f"assets/face/book{book_num}/{img_title}_Face_FC.webp",
+        "imgSprite": f"assets/sprites/book{book_num}/{img_title}_Mini_Unit_Idle.webp",
         "rarity": f"RARITY.{map_rarity(get_td_value(soup, "Rarities"))}",
-        "weaponType": f"WEAPON_TYPE.{get_td_value(soup, "Weapon Type").upper()}.id",
+        "weaponType": f"WEAPON_TYPE.{get_td_value(soup, "Weapon Type").replace(" ", "_").upper()}.id",
         "moveType": f"MOVE_TYPE.{get_td_value(soup, "Move Type").upper().replace("OR", "OUR")}.id",
         "entry": map_entry(get_td_value(soup, "Entries") if entry is None else entry),
         "releaseDate": get_td_value(soup, "Release Date"),
@@ -142,16 +143,42 @@ def find_supers(soup, variant="boon"):
 
     return result
 
+def format_js_object(hero_name, hero_data):
+    js_object = f"{hero_name}: {json.dumps(hero_data, indent=2)}"
+
+    # Remove quotes around JS-style keys
+    js_object = re.sub(r'"(\w+)"\s*:', r'\1:', js_object)
+
+    # Remove quotes around constant-like values (RARITY.FIVE_STAR etc.)
+    js_object = re.sub(r'"([A-Z_][A-Z0-9_]*(?:\.[A-Z0-9_]+)*(\.id)?)"', r'\1', js_object)
+
+    # --- Compress simple arrays ---
+    def compress_array(match):
+        arr = match.group(0)
+        arr = re.sub(r'\s+', ' ', arr)
+        arr = re.sub(r'\[\s+', '[ ', arr)
+        arr = re.sub(r'\s+\]', ' ]', arr)
+        return arr.strip()
+
+    js_object = re.sub(r'\[\s*\n(?:[^\[\]\{\}\n]+\n)+\s*\]', compress_array, js_object)
+
+    # --- Compress simple nested objects ---
+    def compress_object(match):
+        obj = match.group(0)
+        # Skip objects with nested braces/brackets
+        if re.search(r'[\[\{]', obj[1:-1]):
+            return obj  # leave as is
+        obj = re.sub(r'\s+', ' ', obj)
+        obj = re.sub(r'\{\s+', '{ ', obj)
+        obj = re.sub(r'\s+\}', ' }', obj)
+        return obj.strip()
+
+    js_object = re.sub(r'\{\s*\n(?:[^\{\}\n]+\n)+\s*\}', compress_object, js_object)
+
+    return js_object
+
 # Extract data and convert to JavaScript
 hero_data = parse_hero_data(soup)
 hero_name = hero_data['name'].upper()  # Format name in uppercase for object key
 
-# Create JavaScript string
-js_object = f"{hero_name}: {json.dumps(hero_data, indent=2)}"
-js_object = re.sub(r'"(\w+)"\s*:', r'\1:', js_object)
-js_object = re.sub(r'"([A-Z_][A-Z0-9_]*(?:\.[A-Z0-9_]+)*(\.id)?)"', r'\1', js_object)
-
-# with open("heroes_data.js", "w") as file:
-#     file.write(js_object)
-
-print(js_object)
+print(format_js_object(hero_name, hero_data))

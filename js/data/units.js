@@ -12,20 +12,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 7,
-      spd: 8,
-      def: 8,
-      res: 6
-    },
-    level40Stats: {
-      hp: 39,
-      atk: 33,
-      spd: 32,
-      def: 25,
-      res: 25
-    },
+    level1Stats: { hp: 17, atk: 7, spd: 8, def: 8, res: 6 },
+    level40Stats: { hp: 39, atk: 33, spd: 32, def: 25, res: 25 },
     superboons: [STATS.RES],
     superbanes: [],
   },
@@ -40,20 +28,8 @@ const UNIT = {
     entry: [ENTRY.HEROES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 19,
-      atk: 9,
-      spd: 6,
-      def: 8,
-      res: 5
-    },
-    level40Stats: {
-      hp: 43,
-      atk: 35,
-      spd: 25,
-      def: 32,
-      res: 22
-    },
+    level1Stats: { hp: 19, atk: 9, spd: 6, def: 8, res: 5 },
+    level40Stats: { hp: 43, atk: 35, spd: 25, def: 32, res: 22 },
     superboons: [STATS.SPD],
     superbanes: [STATS.DEF],
   },
@@ -68,20 +44,8 @@ const UNIT = {
     entry: [ENTRY.HEROES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 19,
-      atk: 7,
-      spd: 10,
-      def: 5,
-      res: 6
-    },
-    level40Stats: {
-      hp: 41,
-      atk: 29,
-      spd: 38,
-      def: 22,
-      res: 31
-    },
+    level1Stats: { hp: 19, atk: 7, spd: 10, def: 5, res: 6 },
+    level40Stats: { hp: 41, atk: 29, spd: 38, def: 22, res: 31 },
     superboons: [STATS.SPD],
     superbanes: [STATS.HP, STATS.RES],
   },
@@ -96,20 +60,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 19,
-      atk: 8,
-      spd: 7,
-      def: 8,
-      res: 5
-    },
-    level40Stats: {
-      hp: 43,
-      atk: 32,
-      spd: 29,
-      def: 30,
-      res: 24
-    },
+    level1Stats: { hp: 19, atk: 8, spd: 7, def: 8, res: 5 },
+    level40Stats: { hp: 43, atk: 32, spd: 29, def: 30, res: 24 },
     superboons: [STATS.RES],
     superbanes: [STATS.SPD, STATS.DEF],
   },
@@ -124,20 +76,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 19,
-      atk: 4,
-      spd: 7,
-      def: 8,
-      res: 6
-    },
-    level40Stats: {
-      hp: 43,
-      atk: 21,
-      spd: 26,
-      def: 32,
-      res: 35
-    },
+    level1Stats: { hp: 19, atk: 4, spd: 7, def: 8, res: 6 },
+    level40Stats: { hp: 43, atk: 21, spd: 26, def: 32, res: 35 },
     superboons: [STATS.SPD, STATS.RES],
     superbanes: [],
   },
@@ -152,20 +92,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 5,
-      spd: 7,
-      def: 4,
-      res: 6
-    },
-    level40Stats: {
-      hp: 36,
-      atk: 31,
-      spd: 33,
-      def: 21,
-      res: 28
-    },
+    level1Stats: { hp: 17, atk: 5, spd: 7, def: 4, res: 6 },
+    level40Stats: { hp: 36, atk: 31, spd: 33, def: 21, res: 28 },
     superboons: [STATS.HP],
     superbanes: [STATS.RES],
   },
@@ -180,20 +108,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 20,
-      atk: 9,
-      spd: 8,
-      def: 6,
-      res: 4
-    },
-    level40Stats: {
-      hp: 46,
-      atk: 33,
-      spd: 32,
-      def: 30,
-      res: 17
-    },
+    level1Stats: { hp: 20, atk: 9, spd: 8, def: 6, res: 4 },
+    level40Stats: { hp: 46, atk: 33, spd: 32, def: 30, res: 17 },
     superboons: [],
     superbanes: [STATS.RES],
   },
@@ -208,20 +124,8 @@ const UNIT = {
     entry: [ENTRY.BINDING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 21,
-      atk: 10,
-      spd: 6,
-      def: 7,
-      res: 3
-    },
-    level40Stats: {
-      hp: 49,
-      atk: 36,
-      spd: 25,
-      def: 33,
-      res: 13
-    },
+    level1Stats: { hp: 21, atk: 10, spd: 6, def: 7, res: 3 },
+    level40Stats: { hp: 49, atk: 36, spd: 25, def: 33, res: 13 },
     superboons: [STATS.SPD, STATS.RES],
     superbanes: [],
   },
@@ -236,20 +140,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 20,
-      atk: 7,
-      spd: 6,
-      def: 9,
-      res: 5
-    },
-    level40Stats: {
-      hp: 46,
-      atk: 29,
-      spd: 23,
-      def: 37,
-      res: 22
-    },
+    level1Stats: { hp: 20, atk: 7, spd: 6, def: 9, res: 5 },
+    level40Stats: { hp: 46, atk: 29, spd: 23, def: 37, res: 22 },
     superboons: [],
     superbanes: [STATS.ATK],
   },
@@ -264,20 +156,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 6,
-      spd: 9,
-      def: 5,
-      res: 10
-    },
-    level40Stats: {
-      hp: 36,
-      atk: 25,
-      spd: 37,
-      def: 24,
-      res: 34
-    },
+    level1Stats: { hp: 17, atk: 6, spd: 9, def: 5, res: 10 },
+    level40Stats: { hp: 36, atk: 25, spd: 37, def: 24, res: 34 },
     superboons: [STATS.HP, STATS.ATK, STATS.DEF],
     superbanes: [],
   },
@@ -292,20 +172,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 18,
-      atk: 8,
-      spd: 6,
-      def: 8,
-      res: 6
-    },
-    level40Stats: {
-      hp: 42,
-      atk: 32,
-      spd: 32,
-      def: 27,
-      res: 24
-    },
+    level1Stats: { hp: 18, atk: 8, spd: 6, def: 8, res: 6 },
+    level40Stats: { hp: 42, atk: 32, spd: 32, def: 27, res: 24 },
     superboons: [STATS.DEF],
     superbanes: [],
   },
@@ -320,20 +188,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 18,
-      atk: 8,
-      spd: 8,
-      def: 6,
-      res: 7
-    },
-    level40Stats: {
-      hp: 37,
-      atk: 30,
-      spd: 32,
-      def: 28,
-      res: 31
-    },
+    level1Stats: { hp: 18, atk: 8, spd: 8, def: 6, res: 7 },
+    level40Stats: { hp: 37, atk: 30, spd: 32, def: 28, res: 31 },
     superboons: [STATS.HP],
     superbanes: [STATS.ATK, STATS.DEF],
   },
@@ -348,20 +204,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 7,
-      spd: 10,
-      def: 7,
-      res: 6
-    },
-    level40Stats: {
-      hp: 39,
-      atk: 31,
-      spd: 34,
-      def: 29,
-      res: 25
-    },
+    level1Stats: { hp: 17, atk: 7, spd: 10, def: 7, res: 6 },
+    level40Stats: { hp: 39, atk: 31, spd: 34, def: 29, res: 25 },
     superboons: [STATS.RES],
     superbanes: [STATS.HP, STATS.DEF],
   },
@@ -376,20 +220,8 @@ const UNIT = {
     entry: [ENTRY.BINDING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 8,
-      spd: 6,
-      def: 5,
-      res: 7
-    },
-    level40Stats: {
-      hp: 36,
-      atk: 32,
-      spd: 25,
-      def: 22,
-      res: 29
-    },
+    level1Stats: { hp: 17, atk: 8, spd: 6, def: 5, res: 7 },
+    level40Stats: { hp: 36, atk: 32, spd: 25, def: 22, res: 29 },
     superboons: [STATS.HP, STATS.SPD],
     superbanes: [STATS.RES],
   },
@@ -404,20 +236,8 @@ const UNIT = {
     entry: [ENTRY.AWAKENING],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 20,
-      atk: 10,
-      spd: 6,
-      def: 8,
-      res: 3
-    },
-    level40Stats: {
-      hp: 46,
-      atk: 38,
-      spd: 25,
-      def: 32,
-      res: 16
-    },
+    level1Stats: { hp: 20, atk: 10, spd: 6, def: 8, res: 3 },
+    level40Stats: { hp: 46, atk: 38, spd: 25, def: 32, res: 16 },
     superboons: [STATS.SPD],
     superbanes: [STATS.RES],
   },
@@ -432,20 +252,8 @@ const UNIT = {
     entry: [ENTRY.AWAKENING],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 21,
-      atk: 9,
-      spd: 6,
-      def: 7,
-      res: 4
-    },
-    level40Stats: {
-      hp: 47,
-      atk: 37,
-      spd: 25,
-      def: 31,
-      res: 17
-    },
+    level1Stats: { hp: 21, atk: 9, spd: 6, def: 7, res: 4 },
+    level40Stats: { hp: 47, atk: 37, spd: 25, def: 31, res: 17 },
     superboons: [STATS.SPD],
     superbanes: [STATS.RES],
   },
@@ -460,20 +268,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 7,
-      spd: 10,
-      def: 7,
-      res: 6
-    },
-    level40Stats: {
-      hp: 39,
-      atk: 31,
-      spd: 34,
-      def: 29,
-      res: 25
-    },
+    level1Stats: { hp: 17, atk: 7, spd: 10, def: 7, res: 6 },
+    level40Stats: { hp: 39, atk: 31, spd: 34, def: 29, res: 25 },
     superboons: [STATS.RES],
     superbanes: [STATS.HP, STATS.DEF],
   },
@@ -488,20 +284,8 @@ const UNIT = {
     entry: [ENTRY.BINDING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 16,
-      atk: 6,
-      spd: 9,
-      def: 5,
-      res: 7
-    },
-    level40Stats: {
-      hp: 35,
-      atk: 25,
-      spd: 33,
-      def: 22,
-      res: 29
-    },
+    level1Stats: { hp: 16, atk: 6, spd: 9, def: 5, res: 7 },
+    level40Stats: { hp: 35, atk: 25, spd: 33, def: 22, res: 29 },
     superboons: [STATS.HP, STATS.ATK],
     superbanes: [STATS.RES],
   },
@@ -516,20 +300,8 @@ const UNIT = {
     entry: [ENTRY.AWAKENING],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 18,
-      atk: 9,
-      spd: 9,
-      def: 5,
-      res: 6
-    },
-    level40Stats: {
-      hp: 40,
-      atk: 35,
-      spd: 35,
-      def: 22,
-      res: 25
-    },
+    level1Stats: { hp: 18, atk: 9, spd: 9, def: 5, res: 6 },
+    level40Stats: { hp: 40, atk: 35, spd: 35, def: 22, res: 25 },
     superboons: [STATS.HP],
     superbanes: [STATS.RES],
   },
@@ -544,20 +316,8 @@ const UNIT = {
     entry: [ENTRY.AWAKENING],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 7,
-      spd: 5,
-      def: 6,
-      res: 4
-    },
-    level40Stats: {
-      hp: 43,
-      atk: 35,
-      spd: 29,
-      def: 32,
-      res: 23
-    },
+    level1Stats: { hp: 17, atk: 7, spd: 5, def: 6, res: 4 },
+    level40Stats: { hp: 43, atk: 35, spd: 29, def: 32, res: 23 },
     superboons: [STATS.RES],
     superbanes: [],
   },
@@ -572,20 +332,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 24,
-      atk: 8,
-      spd: 6,
-      def: 13,
-      res: 3
-    },
-    level40Stats: {
-      hp: 50,
-      atk: 30,
-      spd: 32,
-      def: 39,
-      res: 18
-    },
+    level1Stats: { hp: 24, atk: 8, spd: 6, def: 13, res: 3 },
+    level40Stats: { hp: 50, atk: 30, spd: 32, def: 39, res: 18 },
     superboons: [],
     superbanes: [STATS.ATK],
   },
@@ -600,20 +348,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 22,
-      atk: 12,
-      spd: 5,
-      def: 11,
-      res: 4
-    },
-    level40Stats: {
-      hp: 50,
-      atk: 40,
-      spd: 22,
-      def: 33,
-      res: 23
-    },
+    level1Stats: { hp: 22, atk: 12, spd: 5, def: 11, res: 4 },
+    level40Stats: { hp: 50, atk: 40, spd: 22, def: 33, res: 23 },
     superboons: [STATS.RES],
     superbanes: [STATS.DEF],
   },
@@ -628,20 +364,8 @@ const UNIT = {
     entry: [ENTRY.BLAZING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 7,
-      spd: 8,
-      def: 6,
-      res: 8
-    },
-    level40Stats: {
-      hp: 39,
-      atk: 31,
-      spd: 30,
-      def: 23,
-      res: 32
-    },
+    level1Stats: { hp: 17, atk: 7, spd: 8, def: 6, res: 8 },
+    level40Stats: { hp: 39, atk: 31, spd: 30, def: 23, res: 32 },
     superboons: [],
     superbanes: [STATS.HP, STATS.SPD],
   },
@@ -656,20 +380,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 9,
-      spd: 8,
-      def: 5,
-      res: 8
-    },
-    level40Stats: {
-      hp: 36,
-      atk: 35,
-      spd: 30,
-      def: 24,
-      res: 32
-    },
+    level1Stats: { hp: 17, atk: 9, spd: 8, def: 5, res: 8 },
+    level40Stats: { hp: 36, atk: 35, spd: 30, def: 24, res: 32 },
     superboons: [STATS.HP, STATS.DEF],
     superbanes: [STATS.SPD],
   },
@@ -684,20 +396,8 @@ const UNIT = {
     entry: [ENTRY.BINDING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 16,
-      atk: 5,
-      spd: 4,
-      def: 6,
-      res: 8
-    },
-    level40Stats: {
-      hp: 46,
-      atk: 33,
-      spd: 28,
-      def: 25,
-      res: 30
-    },
+    level1Stats: { hp: 16, atk: 5, spd: 4, def: 6, res: 8 },
+    level40Stats: { hp: 46, atk: 33, spd: 28, def: 25, res: 30 },
     superboons: [STATS.HP, STATS.DEF],
     superbanes: [STATS.RES],
   },
@@ -712,20 +412,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 15,
-      atk: 6,
-      spd: 11,
-      def: 3,
-      res: 9
-    },
-    level40Stats: {
-      hp: 34,
-      atk: 23,
-      spd: 37,
-      def: 18,
-      res: 35
-    },
+    level1Stats: { hp: 15, atk: 6, spd: 11, def: 3, res: 9 },
+    level40Stats: { hp: 34, atk: 23, spd: 37, def: 18, res: 35 },
     superboons: [STATS.HP],
     superbanes: [],
   },
@@ -740,20 +428,8 @@ const UNIT = {
     entry: [ENTRY.BINDING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 19,
-      atk: 6,
-      spd: 10,
-      def: 5,
-      res: 7
-    },
-    level40Stats: {
-      hp: 41,
-      atk: 25,
-      spd: 36,
-      def: 24,
-      res: 31
-    },
+    level1Stats: { hp: 19, atk: 6, spd: 10, def: 5, res: 7 },
+    level40Stats: { hp: 41, atk: 25, spd: 36, def: 24, res: 31 },
     superboons: [STATS.ATK, STATS.DEF],
     superbanes: [STATS.HP],
   },
@@ -768,20 +444,8 @@ const UNIT = {
     entry: [ENTRY.BLAZING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 18,
-      atk: 7,
-      spd: 8,
-      def: 6,
-      res: 8
-    },
-    level40Stats: {
-      hp: 42,
-      atk: 29,
-      spd: 27,
-      def: 25,
-      res: 34
-    },
+    level1Stats: { hp: 18, atk: 7, spd: 8, def: 6, res: 8 },
+    level40Stats: { hp: 42, atk: 29, spd: 27, def: 25, res: 34 },
     superboons: [STATS.SPD, STATS.DEF],
     superbanes: [STATS.ATK],
   },
@@ -796,20 +460,8 @@ const UNIT = {
     entry: [ENTRY.AWAKENING],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 19,
-      atk: 9,
-      spd: 6,
-      def: 8,
-      res: 4
-    },
-    level40Stats: {
-      hp: 43,
-      atk: 35,
-      spd: 25,
-      def: 36,
-      res: 14
-    },
+    level1Stats: { hp: 19, atk: 9, spd: 6, def: 8, res: 4 },
+    level40Stats: { hp: 43, atk: 35, spd: 25, def: 36, res: 14 },
     superboons: [STATS.SPD, STATS.RES],
     superbanes: [],
   },
@@ -824,20 +476,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 21,
-      atk: 10,
-      spd: 7,
-      def: 11,
-      res: 5
-    },
-    level40Stats: {
-      hp: 43,
-      atk: 32,
-      spd: 24,
-      def: 33,
-      res: 18
-    },
+    level1Stats: { hp: 21, atk: 10, spd: 7, def: 11, res: 5 },
+    level40Stats: { hp: 43, atk: 32, spd: 24, def: 33, res: 18 },
     superboons: [],
     superbanes: [STATS.HP, STATS.ATK, STATS.DEF, STATS.RES],
   },
@@ -852,20 +492,8 @@ const UNIT = {
     entry: [ENTRY.BINDING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 23,
-      atk: 8,
-      spd: 5,
-      def: 12,
-      res: 6
-    },
-    level40Stats: {
-      hp: 49,
-      atk: 30,
-      spd: 24,
-      def: 38,
-      res: 28
-    },
+    level1Stats: { hp: 23, atk: 8, spd: 5, def: 12, res: 6 },
+    level40Stats: { hp: 49, atk: 30, spd: 24, def: 38, res: 28 },
     superboons: [STATS.SPD],
     superbanes: [STATS.ATK, STATS.RES],
   },
@@ -880,20 +508,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 18,
-      atk: 9,
-      spd: 10,
-      def: 5,
-      res: 4
-    },
-    level40Stats: {
-      hp: 37,
-      atk: 35,
-      spd: 36,
-      def: 23,
-      res: 26
-    },
+    level1Stats: { hp: 18, atk: 9, spd: 10, def: 5, res: 4 },
+    level40Stats: { hp: 37, atk: 35, spd: 36, def: 23, res: 26 },
     superboons: [STATS.HP],
     superbanes: [STATS.RES],
   },
@@ -908,20 +524,8 @@ const UNIT = {
     entry: [ENTRY.BLAZING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 21,
-      atk: 9,
-      spd: 5,
-      def: 6,
-      res: 6
-    },
-    level40Stats: {
-      hp: 45,
-      atk: 33,
-      spd: 22,
-      def: 28,
-      res: 30
-    },
+    level1Stats: { hp: 21, atk: 9, spd: 5, def: 6, res: 6 },
+    level40Stats: { hp: 45, atk: 33, spd: 22, def: 28, res: 30 },
     superboons: [],
     superbanes: [STATS.DEF]
   },
@@ -936,20 +540,8 @@ const UNIT = {
     entry: [ENTRY.BLAZING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 24,
-      atk: 10,
-      spd: 5,
-      def: 11,
-      res: 4
-    },
-    level40Stats: {
-      hp: 52,
-      atk: 36,
-      spd: 24,
-      def: 37,
-      res: 19
-    },
+    level1Stats: { hp: 24, atk: 10, spd: 5, def: 11, res: 4 },
+    level40Stats: { hp: 52, atk: 36, spd: 24, def: 37, res: 19 },
     superboons: [STATS.SPD],
     superbanes: [],
   },
@@ -964,20 +556,8 @@ const UNIT = {
     entry: [ENTRY.AWAKENING],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 19,
-      atk: 6,
-      spd: 5,
-      def: 8,
-      res: 6
-    },
-    level40Stats: {
-      hp: 45,
-      atk: 23,
-      spd: 22,
-      def: 32,
-      res: 25
-    },
+    level1Stats: { hp: 19, atk: 6, spd: 5, def: 8, res: 6 },
+    level40Stats: { hp: 45, atk: 23, spd: 22, def: 32, res: 25 },
     superboons: [STATS.RES],
     superbanes: [],
   },
@@ -992,20 +572,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 21,
-      atk: 8,
-      spd: 5,
-      def: 10,
-      res: 3
-    },
-    level40Stats: {
-      hp: 47,
-      atk: 32,
-      spd: 24,
-      def: 36,
-      res: 18
-    },
+    level1Stats: { hp: 21, atk: 8, spd: 5, def: 10, res: 3 },
+    level40Stats: { hp: 47, atk: 32, spd: 24, def: 36, res: 18 },
     superboons: [STATS.SPD],
     superbanes: []
   },
@@ -1020,20 +588,8 @@ const UNIT = {
     entry: [ENTRY.FATES],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 19,
-      atk: 7,
-      spd: 8,
-      def: 6,
-      res: 7
-    },
-    level40Stats: {
-      hp: 41,
-      atk: 35,
-      spd: 32,
-      def: 25,
-      res: 24
-    },
+    level1Stats: { hp: 19, atk: 7, spd: 8, def: 6, res: 7 },
+    level40Stats: { hp: 41, atk: 35, spd: 32, def: 25, res: 24 },
     superboons: [STATS.DEF],
     superbanes: [STATS.HP],
   },
@@ -1048,22 +604,26 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 18,
-      atk: 8,
-      spd: 8,
-      def: 8,
-      res: 8
-    },
-    level40Stats: {
-      hp: 37,
-      atk: 32,
-      spd: 32,
-      def: 24,
-      res: 22
-    },
+    level1Stats: { hp: 18, atk: 8, spd: 8, def: 8, res: 8 },
+    level40Stats: { hp: 37, atk: 32, spd: 32, def: 24, res: 22 },
     superboons: [STATS.HP, STATS.DEF],
     superbanes: [],
+  },
+  LISSA: {
+    name: "Lissa",
+    subtitle: "Sprightly Cleric",
+    imgFace: "assets/face/book1/Lissa_Sprightly_Cleric_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Lissa_Sprightly_Cleric_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.STAFF.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.AWAKENING],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 17, atk: 7, spd: 6, def: 6, res: 8 },
+    level40Stats: { hp: 39, atk: 26, spd: 25, def: 28, res: 30 },
+    superboons: [STATS.ATK, STATS.SPD],
+    superbanes: [STATS.HP, STATS.DEF, STATS.RES]
   },
   LONQU: {
     name: "Lon'qu",
@@ -1076,22 +636,26 @@ const UNIT = {
     entry: [ENTRY.AWAKENING],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 19,
-      atk: 7,
-      spd: 11,
-      def: 5,
-      res: 5
-    },
-    level40Stats: {
-      hp: 45,
-      atk: 29,
-      spd: 39,
-      def: 22,
-      res: 22
-    },
+    level1Stats: { hp: 19, atk: 7, spd: 11, def: 5, res: 5 },
+    level40Stats: { hp: 45, atk: 29, spd: 39, def: 22, res: 22 },
     superboons: [],
     superbanes: [STATS.ATK]
+  },
+  LUCINA: {
+    name: "Lucina",
+    subtitle: "Future Witness",
+    imgFace: "assets/face/book1/Lucina_Future_Witness_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Lucina_Future_Witness_Mini_Unit_Idle.webp",
+    rarity: RARITY.FIVE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.AWAKENING],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 19, atk: 8, spd: 10, def: 6, res: 4 },
+    level40Stats: { hp: 43, atk: 34, spd: 36, def: 25, res: 19 },
+    superboons: [STATS.DEF],
+    superbanes: []
   },
   LYN: {
     name: "Lyn",
@@ -1104,22 +668,58 @@ const UNIT = {
     entry: [ENTRY.BLAZING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 18,
-      atk: 6,
-      spd: 11,
-      def: 7,
-      res: 5
-    },
-    level40Stats: {
-      hp: 37,
-      atk: 28,
-      spd: 37,
-      def: 26,
-      res: 29
-    },
+    level1Stats: { hp: 18, atk: 6, spd: 11, def: 7, res: 5 },
+    level40Stats: { hp: 37, atk: 28, spd: 37, def: 26, res: 29 },
     superboons: [STATS.HP, STATS.DEF],
     superbanes: [STATS.ATK]
+  },
+  MARIA: {
+    name: "Maria",
+    subtitle: "Minerva's Sister",
+    imgFace: "assets/face/book1/Maria_Minervas_Sister_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Maria_Minervas_Sister_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.STAFF.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 17, atk: 5, spd: 8, def: 4, res: 10 },
+    level40Stats: { hp: 36, atk: 27, spd: 34, def: 19, res: 32 },
+    superboons: [STATS.HP],
+    superbanes: [STATS.ATK, STATS.RES]
+  },
+  MARTH: {
+    name: "Marth",
+    subtitle: "Altean Prince",
+    imgFace: "assets/face/book1/Marth_Altean_Prince_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Marth_Altean_Prince_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 19, atk: 7, spd: 8, def: 7, res: 6 },
+    level40Stats: { hp: 41, atk: 31, spd: 34, def: 29, res: 23 },
+    superboons: [],
+    superbanes: [STATS.HP, STATS.DEF]
+  },
+  MINERVA: {
+    name: "Minerva",
+    subtitle: "Red Dragoon",
+    imgFace: "assets/face/book1/Minerva_Red_Dragoon_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Minerva_Red_Dragoon_Mini_Unit_Idle.webp",
+    rarity: RARITY.FIVE_STAR,
+    weaponType: WEAPON_TYPE.AXE.id,
+    moveType: MOVE_TYPE.FLYING.id,
+    entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 18, atk: 7, spd: 9, def: 8, res: 5 },
+    level40Stats: { hp: 40, atk: 31, spd: 33, def: 32, res: 22 },
+    superboons: [],
+    superbanes: [STATS.HP]
   },
   NINO: {
     name: "Nino",
@@ -1132,20 +732,8 @@ const UNIT = {
     entry: [ENTRY.BLAZING_BLADE],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 16,
-      atk: 7,
-      spd: 10,
-      def: 4,
-      res: 7
-    },
-    level40Stats: {
-      hp: 33,
-      atk: 33,
-      spd: 36,
-      def: 19,
-      res: 30
-    },
+    level1Stats: { hp: 16, atk: 7, spd: 10, def: 4, res: 7 },
+    level40Stats: { hp: 33, atk: 33, spd: 36, def: 19, res: 30 },
     superboons: [STATS.HP, STATS.RES],
     superbanes: [],
   },
@@ -1160,22 +748,42 @@ const UNIT = {
     entry: [ENTRY.AWAKENING],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 6,
-      spd: 5,
-      def: 6,
-      res: 5
-    },
-    level40Stats: {
-      hp: 45,
-      atk: 34,
-      spd: 27,
-      def: 30,
-      res: 27
-    },
+    level1Stats: { hp: 17, atk: 6, spd: 5, def: 6, res: 5 },
+    level40Stats: { hp: 45, atk: 34, spd: 27, def: 30, res: 27 },
     superboons: [],
     superbanes: [STATS.SPD, STATS.RES],
+  },
+  OBORO: {
+    name: "Oboro",
+    subtitle: "Fierce Fighter",
+    imgFace: "assets/face/book1/Oboro_Fierce_Fighter_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Oboro_Fierce_Fighter_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 18, atk: 8, spd: 7, def: 9, res: 5 },
+    level40Stats: { hp: 40, atk: 32, spd: 26, def: 35, res: 24 },
+    superboons: [STATS.SPD, STATS.RES],
+    superbanes: [STATS.HP]
+  },
+  OGMA: {
+    name: "Ogma",
+    subtitle: "Loyal Blade",
+    imgFace: "assets/face/book1/Ogma_Loyal_Blade_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Ogma_Loyal_Blade_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 21, atk: 7, spd: 10, def: 6, res: 3 },
+    level40Stats: { hp: 47, atk: 35, spd: 34, def: 28, res: 13 },
+    superboons: [STATS.RES],
+    superbanes: [STATS.DEF]
   },
   OLIVIA: {
     name: "Olivia",
@@ -1188,20 +796,8 @@ const UNIT = {
     entry: [ENTRY.AWAKENING],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 17,
-      atk: 6,
-      spd: 7,
-      def: 5,
-      res: 4
-    },
-    level40Stats: {
-      hp: 36,
-      atk: 28,
-      spd: 33,
-      def: 27,
-      res: 26
-    },
+    level1Stats: { hp: 17, atk: 6, spd: 7, def: 5, res: 4 },
+    level40Stats: { hp: 36, atk: 28, spd: 33, def: 27, res: 26 },
     superboons: [STATS.HP],
     superbanes: [STATS.ATK, STATS.DEF, STATS.RES],
   },
@@ -1216,22 +812,218 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 18,
-      atk: 7,
-      spd: 9,
-      def: 6,
-      res: 7
-    },
-    level40Stats: {
-      hp: 42,
-      atk: 31,
-      spd: 31,
-      def: 28,
-      res: 26
-    },
+    level1Stats: { hp: 18, atk: 7, spd: 9, def: 6, res: 7 },
+    level40Stats: { hp: 42, atk: 31, spd: 31, def: 28, res: 26 },
     superboons: [STATS.RES],
     superbanes: [STATS.SPD, STATS.DEF],
+  },
+  PERI: {
+    name: "Peri",
+    subtitle: "Playful Slayer",
+    imgFace: "assets/face/book1/Peri_Playful_Slayer_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Peri_Playful_Slayer_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    moveType: MOVE_TYPE.CAVALRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 16, atk: 9, spd: 9, def: 6, res: 6 },
+    level40Stats: { hp: 35, atk: 33, spd: 33, def: 23, res: 30 },
+    superboons: [STATS.HP],
+    superbanes: []
+  },
+  RAVEN: {
+    name: "Raven",
+    subtitle: "Peerless Fighter",
+    imgFace: "assets/face/book1/Raven_Peerless_Fighter_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Raven_Peerless_Fighter_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.AXE.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.BLAZING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 19, atk: 8, spd: 9, def: 6, res: 5 },
+    level40Stats: { hp: 41, atk: 34, spd: 35, def: 25, res: 22 },
+    superboons: [STATS.DEF],
+    superbanes: [STATS.HP]
+  },
+  ROY: {
+    name: "Roy",
+    subtitle: "Young Lion",
+    imgFace: "assets/face/book1/Roy_Young_Lion_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Roy_Young_Lion_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.BINDING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 20, atk: 8, spd: 9, def: 6, res: 4 },
+    level40Stats: { hp: 44, atk: 30, spd: 31, def: 25, res: 28 },
+    superboons: [STATS.DEF],
+    superbanes: [STATS.ATK, STATS.SPD]
+  },
+  RYOMA: {
+    name: "Ryoma",
+    subtitle: "Peerless Samurai",
+    imgFace: "assets/face/book1/Ryoma_Peerless_Samurai_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Ryoma_Peerless_Samurai_Mini_Unit_Idle.webp",
+    rarity: RARITY.FIVE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 19, atk: 8, spd: 11, def: 5, res: 4 },
+    level40Stats: { hp: 41, atk: 34, spd: 35, def: 27, res: 21 },
+    superboons: [],
+    superbanes: [STATS.HP, STATS.DEF]
+  },
+  SAKURA: {
+    name: "Sakura",
+    subtitle: "Loving Priestess",
+    imgFace: "assets/face/book1/Sakura_Loving_Priestess_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Sakura_Loving_Priestess_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.STAFF.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 17, atk: 6, spd: 8, def: 5, res: 8 },
+    level40Stats: { hp: 36, atk: 28, spd: 30, def: 24, res: 30 },
+    superboons: [STATS.HP, STATS.DEF],
+    superbanes: [STATS.ATK, STATS.SPD, STATS.RES]
+  },
+  SELENA: {
+    name: "Selena",
+    subtitle: "Cutting Wit",
+    imgFace: "assets/face/book1/Selena_Cutting_Wit_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Selena_Cutting_Wit_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 18, atk: 6, spd: 9, def: 8, res: 6 },
+    level40Stats: { hp: 37, atk: 25, spd: 35, def: 32, res: 28 },
+    superboons: [STATS.HP, STATS.ATK],
+    superbanes: [STATS.RES]
+  },
+  SERRA: {
+    name: "Serra",
+    subtitle: "Outspoken Cleric",
+    imgFace: "assets/face/book1/Serra_Outspoken_Cleric_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Serra_Outspoken_Cleric_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.STAFF.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.BLAZING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 16, atk: 6, spd: 9, def: 4, res: 9 },
+    level40Stats: { hp: 33, atk: 30, spd: 31, def: 21, res: 33 },
+    superboons: [],
+    superbanes: [STATS.SPD]
+  },
+  SETSUNA: {
+    name: "Setsuna",
+    subtitle: "Absent Archer",
+    imgFace: "assets/face/book1/Setsuna_Absent_Archer_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Setsuna_Absent_Archer_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.COLORLESS_BOW.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 18, atk: 6, spd: 9, def: 5, res: 6 },
+    level40Stats: { hp: 37, atk: 28, spd: 37, def: 22, res: 23 },
+    superboons: [STATS.HP],
+    superbanes: [STATS.ATK]
+  },
+  SHANNA: {
+    name: "Shanna",
+    subtitle: "Sprightly Flier",
+    imgFace: "assets/face/book1/Shanna_Sprightly_Flier_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Shanna_Sprightly_Flier_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    moveType: MOVE_TYPE.FLYING.id,
+    entry: [ENTRY.BINDING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 17, atk: 8, spd: 9, def: 6, res: 7 },
+    level40Stats: { hp: 39, atk: 30, spd: 35, def: 25, res: 29 },
+    superboons: [STATS.DEF],
+    superbanes: [STATS.HP, STATS.ATK, STATS.RES]
+  },
+  SHARENA: {
+    name: "Sharena",
+    subtitle: "Princess of Askr",
+    imgFace: "assets/face/book1/Sharena_Princess_of_Askr_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Sharena_Princess_of_Askr_Mini_Unit_Idle.webp",
+    rarity: RARITY.STORY,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.HEROES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 19, atk: 8, spd: 8, def: 7, res: 5 },
+    level40Stats: { hp: 43, atk: 32, spd: 32, def: 29, res: 22 },
+    superboons: [],
+    superbanes: [STATS.DEF]
+  },
+  SHEENA: {
+    name: "Sheena",
+    subtitle: "Princess of Gra",
+    imgFace: "assets/face/book1/Sheena_Princess_of_Gra_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Sheena_Princess_of_Gra_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.AXE.id,
+    moveType: MOVE_TYPE.ARMOURED.id,
+    entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 21, atk: 8, spd: 6, def: 12, res: 7 },
+    level40Stats: { hp: 45, atk: 30, spd: 25, def: 36, res: 33 },
+    superboons: [STATS.SPD],
+    superbanes: [STATS.ATK]
+  },
+  SOPHIA: {
+    name: "Sophia",
+    subtitle: "Nabata Prophet",
+    imgFace: "assets/face/book1/Sophia_Nabata_Prophet_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Sophia_Nabata_Prophet_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.BINDING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 18, atk: 9, spd: 4, def: 6, res: 7 },
+    level40Stats: { hp: 40, atk: 33, spd: 19, def: 28, res: 29 },
+    superboons: [],
+    superbanes: [STATS.HP, STATS.DEF, STATS.RES]
+  },
+  STAHL: {
+    name: "Stahl",
+    subtitle: "Viridian Knight",
+    imgFace: "assets/face/book1/Stahl_Viridian_Knight_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Stahl_Viridian_Knight_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    moveType: MOVE_TYPE.CAVALRY.id,
+    entry: [ENTRY.AWAKENING],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 19, atk: 7, spd: 7, def: 8, res: 5 },
+    level40Stats: { hp: 45, atk: 31, spd: 26, def: 30, res: 22 },
+    superboons: [STATS.SPD],
+    superbanes: [STATS.DEF]
   },
   WRYS: {
     name: "Wrys",
@@ -1244,20 +1036,8 @@ const UNIT = {
     entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
     releaseDate: "2017-02-02",
     version: "1.0",
-    level1Stats: {
-      hp: 18,
-      atk: 5,
-      spd: 6,
-      def: 5,
-      res: 10
-    },
-    level40Stats: {
-      hp: 42,
-      atk: 24,
-      spd: 23,
-      def: 22,
-      res: 36
-    },
+    level1Stats: { hp: 18, atk: 5, spd: 6, def: 5, res: 10 },
+    level40Stats: { hp: 42, atk: 24, spd: 23, def: 22, res: 36 },
     superboons: [STATS.ATK],
     superbanes: [],
   }
