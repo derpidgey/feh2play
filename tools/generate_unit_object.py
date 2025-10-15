@@ -4,7 +4,7 @@ import json
 import re
 
 # Define the URL for the unit's wiki page
-url = "https://feheroes.fandom.com/wiki/Stahl:_Viridian_Knight"
+url = "https://feheroes.fandom.com/wiki/Jakob:_Devoted_Servant"
 
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
@@ -19,8 +19,8 @@ def parse_hero_data(soup):
         "imgFace": f"assets/face/book{book_num}/{img_title}_Face_FC.webp",
         "imgSprite": f"assets/sprites/book{book_num}/{img_title}_Mini_Unit_Idle.webp",
         "rarity": f"RARITY.{map_rarity(get_td_value(soup, "Rarities"))}",
-        "weaponType": f"WEAPON_TYPE.{get_td_value(soup, "Weapon Type").replace(" ", "_").upper()}.id",
-        "moveType": f"MOVE_TYPE.{get_td_value(soup, "Move Type").upper().replace("OR", "OUR")}.id",
+        "weaponType": f"WEAPON_TYPE.{get_td_value(soup, "Weapon Type").replace(" ", "_").upper().replace("COLORLESS", "C")}.id",
+        "moveType": f"MOVE_TYPE.{get_td_value(soup, "Move Type").upper().replace("OR", "OUR").replace("YING", "IER")}.id",
         "entry": map_entry(get_td_value(soup, "Entries") if entry is None else entry),
         "releaseDate": get_td_value(soup, "Release Date"),
         "version": get_td_value(soup, "Version"),

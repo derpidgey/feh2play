@@ -1013,9 +1013,13 @@ function Engine() {
     } else if (assist.assistType === ASSIST_TYPE.HARSH_COMMAND) {
       Object.keys(targetUnit.debuffs).forEach(stat => {
         const penaltyValue = targetUnit.debuffs[stat];
-        if (penaltyValue > 0) { // todo hash buffs/debuffs
+        if (penaltyValue > 0) {
+          hashBuff(gameState, unit, stat);
           targetUnit.buffs[stat] = Math.max(targetUnit.buffs[stat], penaltyValue);
+          hashBuff(gameState, unit, stat);
+          hashDebuff(gameState, unit, stat);
           targetUnit.debuffs[stat] = 0;
+          hashDebuff(gameState, unit, stat);
         }
       });
     }
@@ -1369,7 +1373,10 @@ function Engine() {
         situationalFixedDamage: 0
       };
       const aoeContext = { results, gameState, specialFlags };
-      const onSpecialEffects = getEligibleEffects(EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER, results.units[0], aoeContext);
+      const onSpecialEffects = [
+        ...getEligibleEffects(EFFECT_PHASE.ON_AOE_SPECIAL_TRIGGER, results.units[0], aoeContext),
+        ...getEligibleEffects(EFFECT_PHASE.ON_OFFENSIVE_SPECIAL_TRIGGER, results.units[0], aoeContext)
+      ];
       processEffects(onSpecialEffects, aoeContext);
       getUnitsInAoe(gameState, results.units[1].team, results.units[1].pos, initiatorSpecial.aoe.shape).forEach(unit => {
         let damage = calculateAoeDamage(results.units[0], unit, initiatorSpecial.aoe.multiplier, gameState) + specialFlags.situationalFixedDamage;
@@ -1967,6 +1974,8 @@ function Engine() {
         return context.results.units[foeIndex].canAttack;
       case EFFECT_CONDITION.FOE_HAS_X_RANGE:
         return getWeaponType(foe).range === params.range;
+      case EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_FOE:
+        return handleUnitWithinSpacesOfFoe(context, params);
       case EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT:
         return context.results.units[unitIndex].timesAttacked > 0;
       case EFFECT_CONDITION.FOES_ATTACK_CAN_TRIGGER_UNITS_SPECIAL:
@@ -1987,13 +1996,26 @@ function Engine() {
     }
   }
 
-  function handleUnitWithinSpacesOfAlly({ unit, gameState }, { spaces, moveType, weaponType, count }) {
+  function handleUnitWithinSpacesOfAlly({ unit, gameState }, { spaces, moveType, weaponType, count, allyCondition }) {
     const allyUnits = gameState.teams[unit.team]
       .filter(u => u.id !== unit.id)
       .filter(u => manhattan(u.pos, unit.pos) <= spaces)
       .filter(u => !moveType || UNIT[u.unitId].moveType === moveType)
-      .filter(u => !weaponType || UNIT[u.unitId].weaponType === weaponType);
+      .filter(u => !weaponType || UNIT[u.unitId].weaponType === weaponType)
+      .filter(u => {
+        if (!allyCondition) return true;
+        if (allyCondition.type === EFFECT_CONDITION.UNIT_HP_LESS_THAN) {
+          return u.stats.hp < (u.stats.maxHp * (allyCondition.percent / 100));
+        }
+        console.warn("unhandled allyCondition", allyCondition);
+        return false;
+      });
     return count ? allyUnits.length >= count : allyUnits.length > 0;
+  }
+
+  function handleUnitWithinSpacesOfFoe({ unit, results }, { spaces, moveType, weaponType, count }) {
+    const foe = results?.units.find(u => u.team !== unit.team);
+    return manhattan(foe.pos, unit.pos) <= spaces;
   }
 
   function handleAllyInCombatWithinSpacesOfUnit({ unit, results }, { spaces, moveType, weaponType }) {
@@ -2110,6 +2132,8 @@ function Engine() {
       case EFFECT_ACTION.BASE_DAMAGE_INCREASE:
         handleBaseDamageIncrease(action, context);
         break;
+      case EFFECT_ACTION.CONSTANT_FIXED_DAMAGE:
+        handleConstantFixedDamage(action, context);
       case EFFECT_ACTION.MOVE_EXTRA_SPACES:
         context.movementFlags.extraSpaces = action.spaces;
         break;
@@ -2269,26 +2293,24 @@ function Engine() {
 
   function applyCombatStatMod(action, context) {
     const target = getTargetedUnits(context, action.target)[0];
-    const index = context.results.units.indexOf(target);
     if (action.value) {
-      context.results.units[index].tempStats[action.stat] += action.value;
+      target.tempStats[action.stat] += action.value;
     } else if (action.calculation.type === EFFECT_CALCULATION.TOTAL_BONUSES_ON_UNIT) {
-      // todo neutralize specific bonuses
-      if (context.results.units[index].flags[COMBAT_FLAG.NEUTRALIZE_BONUSES]) return;
-      if (context.results.units[index].flags[COMBAT_FLAG.PANIC]) return;
-      context.results.units[index].tempStats[action.stat] += target.buffs.atk + target.buffs.spd + target.buffs.def + target.buffs.res;
+      if (target.flags[COMBAT_FLAG.NEUTRALIZE_BONUSES]) return;
+      if (target.flags[COMBAT_FLAG.PANIC]) return;
+      target.tempStats[action.stat] += target.buffs.atk + target.buffs.spd + target.buffs.def + target.buffs.res;
+      target.flags[COMBAT_FLAG.NEUTRALIZE_SPECIFIC_BONUSES].forEach(stat => target.tempStats[action.stat] -= target.buffs[stat]);
     } else if (action.calculation.type === EFFECT_CALCULATION.NUMBER_OF_ALLIES_WITHIN_X_SPACES) {
       const { spaces, multiplier = 1, max = 99 } = action.calculation;
       const numberOfAlliesInRange = context.gameState.teams[context.unit.team]
         .filter(ally => ally.id !== context.unit.id && manhattan(ally.pos, context.unit.pos) <= spaces).length;
-      context.results.units[index].tempStats[action.stat] += Math.min(numberOfAlliesInRange * multiplier, max);
+      target.tempStats[action.stat] += Math.min(numberOfAlliesInRange * multiplier, max);
     }
   }
 
   function setCombatFlag(action, context) {
     const target = getTargetedUnits(context, action.target)[0];
-    const index = context.results.units.indexOf(target);
-    const unitFlags = context.results.units[index].flags;
+    const unitFlags = target.flags;
     if (action.percent) {
       if (unitFlags[action.flag] instanceof Array) {
         unitFlags[action.flag].push(action.percent);
@@ -2403,6 +2425,16 @@ function Engine() {
       if (action.percent) {
         context.specialFlags.baseDamagePercent += action.percent;
       }
+    }
+  }
+
+  function handleConstantFixedDamage(action, context) {
+    const target = getTargetedUnits(context, action.target)[0];
+    if (action.value) {
+      target.constantFixedDamage += action.value;
+    } else if (action.calculation?.type === EFFECT_CALCULATION.PERCENT_OF_STAT) {
+      const stats = getTotalInCombatStats(target);
+      target.constantFixedDamage += stats[action.calculation.stat] * action.calculation.percent / 100;
     }
   }
 

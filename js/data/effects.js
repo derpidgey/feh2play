@@ -16,8 +16,8 @@ export const EFFECT = {
     phase: EFFECT_PHASE.ON_EQUIP,
     actions: [{ type: EFFECT_ACTION.PHANTOM_STAT, stat, value }]
   }),
-  inCombatStats: ({ hp = 0, atk = 0, spd = 0, def = 0, res = 0 }) => {
-    const stats = { hp, atk, spd, def, res };
+  inCombatStats: ({ atk = 0, spd = 0, def = 0, res = 0 }) => {
+    const stats = { atk, spd, def, res };
 
     return {
       phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -27,8 +27,8 @@ export const EFFECT = {
         .map(([stat, value]) => ({ type: EFFECT_ACTION.COMBAT_STAT_MOD, stat, value, target: { type: EFFECT_TARGET.SELF } }))
     }
   },
-  playerPhaseStats: ({ hp = 0, atk = 0, spd = 0, def = 0, res = 0 }) => {
-    const stats = { hp, atk, spd, def, res };
+  playerPhaseStats: ({ atk = 0, spd = 0, def = 0, res = 0 }) => {
+    const stats = { atk, spd, def, res };
 
     return {
       phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -38,8 +38,8 @@ export const EFFECT = {
         .map(([stat, value]) => ({ type: EFFECT_ACTION.COMBAT_STAT_MOD, stat, value, target: { type: EFFECT_TARGET.SELF } }))
     }
   },
-  enemyPhaseStats: ({ hp = 0, atk = 0, spd = 0, def = 0, res = 0 }) => {
-    const stats = { hp, atk, spd, def, res };
+  enemyPhaseStats: ({ atk = 0, spd = 0, def = 0, res = 0 }) => {
+    const stats = { atk, spd, def, res };
 
     return {
       phase: EFFECT_PHASE.START_OF_COMBAT,
@@ -82,6 +82,14 @@ export const EFFECT = {
     phase: EFFECT_PHASE.BEFORE_COMBAT,
     condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
     actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.ATTACKS_TWICE, target: { type: EFFECT_TARGET.SELF } }]
+  }),
+  weakDagger: value => ({
+    phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
+    condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
+    actions: [
+      { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.DEF, value, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } },
+      { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.RES, value, target: { type: EFFECT_TARGET.FOE_POST_COMBAT } }
+    ]
   }),
   dagger: value => ({
     phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
@@ -173,5 +181,23 @@ export const EFFECT = {
       { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_GUARANTEED_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE_IN_COMBAT } },
       { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.ALLY_IN_COMBAT } }
     ]
-  })
+  }),
+  rein: ({ range = 2, atk = 0, spd = 0, def = 0, res = 0 }) => {
+    const stats = { atk, spd, def, res };
+    const actions = Object.entries(stats)
+      .filter(([, value]) => value !== 0)
+      .map(([stat, value]) => ({ type: EFFECT_ACTION.COMBAT_STAT_MOD, stat, value, target: { type: EFFECT_TARGET.FOE } }))
+    return [
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT, // todo possibly make phase an array
+        condition: { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_FOE, spaces: range },
+        actions
+      },
+      {
+        phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_FOE, spaces: range },
+        actions
+      }
+    ]
+  }
 };

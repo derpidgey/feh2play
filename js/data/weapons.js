@@ -141,8 +141,12 @@ const INHERITABLE_WEAPONS = {
     weaponType: WEAPON_TYPE.DAGGER.id,
     might: 10,
     range: 2,
-    effects: [EFFECT.visibleStats({ atk: 10 }), EFFECT.dagger(7)],
-    canBeRefined: true
+    effects: [EFFECT.visibleStats({ atk: 10 }), EFFECT.weakDagger(7)],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "After combat, if unit attacked, inflicts Def/Res-7 on target and foes within 2 spaces of target through their next actions.",
+      effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.dagger(7)]
+    }
   },
   BOLGANONE_PLUS: {
     name: "Bolganone+",
@@ -595,6 +599,42 @@ const INHERITABLE_WEAPONS = {
       }
     ],
     canBeRefined: true
+  },
+  ROGUE_DAGGER_PLUS: {
+    name: "Rogue Dagger+",
+    description: "After combat, if unit attacked, inflicts Def/Res-5 on foe through its next action. Grants unit Def/Res+5 for 1 turn.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.DAGGER.id,
+    might: 7,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 7 }),
+      EFFECT.weakDagger(5),
+      {
+        phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
+        condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
+        actions: [
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 5, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 5, target: { type: EFFECT_TARGET.SELF } }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "After combat, if unit attacked, inflicts Def/Res-6 on target and foes within 2 spaces of target through their next actions, and grants Def/Res+6 to unit and allies within 2 spaces for 1 turn.",
+      effects: [
+        EFFECT.visibleStats({ atk: 12 }),
+        EFFECT.dagger(6),
+        {
+          phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
+          condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
+          actions: [
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.UNIT_AND_ALLIES_WITHIN_X_SPACES, spaces: 2 } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.UNIT_AND_ALLIES_WITHIN_X_SPACES, spaces: 2 } }
+          ]
+        }
+      ]
+    }
   },
   RAUDRBLADE_PLUS: {
     name: "Rauðrblade+",
@@ -1224,6 +1264,36 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.CAIN.id]
     }
   },
+  BULL_SPEAR: {
+    name: "Bull Spear",
+    description: "If unit has weapon-triangle advantage, boosts Atk by 20%. If unit has weapon-triangle disadvantage, reduces Atk by 20%.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    might: 16,
+    range: 1,
+    effects: [EFFECT.visibleStats({ atk: 16 }), EFFECT.triangleAdept()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If cavalry allies within 2 spaces use sword, lance, or axe and foe initiates combat, unit attacks twice.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.and(
+            { type: EFFECT_CONDITION.FOE_INITIATES_COMBAT },
+            CONDITION.or(
+              { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, moveType: MOVE_TYPE.CAVALRY.id, weaponType: WEAPON_TYPE.SWORD.id },
+              { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, moveType: MOVE_TYPE.CAVALRY.id, weaponType: WEAPON_TYPE.LANCE.id },
+              { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, moveType: MOVE_TYPE.CAVALRY.id, weaponType: WEAPON_TYPE.AXE.id })
+          ),
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.ATTACKS_TWICE, target: { type: EFFECT_TARGET.SELF } }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Def_Side_Consecutive_Atk_RG_W.webp",
+    canUse: {
+      unit: [UNIT.SULLY.id]
+    }
+  },
   CAMILLAS_AXE: {
     name: "Camilla's Axe",
     description: "If unit is within 2 spaces of a cavalry or flying ally, grants Atk/Spd+4 during combat.",
@@ -1265,6 +1335,47 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Camillas_Axe_W.webp",
     canUse: {
       unit: [UNIT.CAMILLA.id]
+    }
+  },
+  CANDIED_DAGGER: {
+    name: "Candied Dagger",
+    description: "If unit initiates combat, grants Spd+4 and deals damage = 10% of unit's Spd during combat.\nEffect:【Dagger ７】",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.DAGGER.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.dagger(7),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        conditions: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+        actions: [{ type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.SELF } }]
+      },
+      {
+        phase: EFFECT_PHASE.DURING_COMBAT,
+        conditions: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+        actions: [{ type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 10, stat: STATS.SPD } }]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "At start of combat, if foe's HP = 100%, deals +7 damage. When a Special triggers before combat, if foe's HP = 100%, deals +7 damage before combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.FOE_HP_IS_MAX_HP },
+          actions: [{ type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, value: 7 }]
+        },
+        {
+          phase: EFFECT_PHASE.ON_AOE_SPECIAL_TRIGGER,
+          actions: [{ type: EFFECT_ACTION.DEAL_DAMAGE, value: 7 }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Candied_Dagger_W.webp",
+    canUse: {
+      unit: [UNIT.GAIUS.id]
     }
   },
   CHERCHES_AXE: {
@@ -1681,7 +1792,7 @@ const EXCLUSIVE_WEAPONS = {
       effects: [
         {
           phase: EFFECT_PHASE.START_OF_COMBAT,
-          conditions: CONDITION.or(
+          condition: CONDITION.or(
             { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.RED_TOME.id },
             { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.BLUE_TOME.id },
             { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.GREEN_TOME.id },
@@ -1865,6 +1976,45 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Gladiators_Blade_W.webp",
     canUse: {
       unit: [UNIT.OGMA.id]
+    }
+  },
+  GOLDEN_NAGINATA: {
+    name: "Golden Naginata",
+    description: "	Accelerates Special trigger (cooldown count-1). At start of combat, if foe's Atk ≥ unit's Atk+3, grants Atk/Spd/Def/Res+3 during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 16 }),
+      EFFECT.slaying(),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_STAT_LESS_THAN_EQUAL_TO_FOE, unitStat: STATS.ATK, foeStat: STATS.ATK, unitModifier: 3, statType: STAT_CHECK_TYPE.VISIBLE },
+        actions: [
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 3, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 3, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 3, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 3, target: { type: EFFECT_TARGET.SELF } }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "At the start of combat, if unit's HP ≥ 70%, deals +7 damage.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_HP_GREATER_THAN_EQUAL_TO, percent: 70 },
+          actions: [
+            { type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, value: 7 }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Golden_Naginata_W.webp",
+    canUse: {
+      unit: [UNIT.SUBAKI.id]
     }
   },
   GUARDIANS_AXE: {
@@ -2080,6 +2230,48 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Even_Atk_Wave_W.webp",
     canUse: {
       unit: [UNIT.NINO.id]
+    }
+  },
+  JAKOBS_TRAY: {
+    name: "Jakob's Tray",
+    description: "If unit initiates combat, inflicts Atk/Spd/Def/Res-4 on foe during combat.\nEffect:【Dagger ７】",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.DAGGER.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.dagger(7),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+        actions: [
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: -4, target: { type: EFFECT_TARGET.FOE } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: -4, target: { type: EFFECT_TARGET.FOE } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: -4, target: { type: EFFECT_TARGET.FOE } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: -4, target: { type: EFFECT_TARGET.FOE } }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit is within 3 spaces of an ally who has HP < 100%, grants Atk/Spd/Def/Res+4 to unit during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 3, allyCondition: { type: EFFECT_CONDITION.UNIT_HP_LESS_THAN, percent: 100 } },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Felicias_Plate_W.webp",
+    canUse: {
+      unit: [UNIT.JAKOB.id]
     }
   },
   NAMELESS_BLADE: {
@@ -2391,6 +2583,28 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.RYOMA.id]
     }
   },
+  RENOWNED_BOW: {
+    name: "Renowned Bow",
+    description: "Effective against flying foes. Inflicts Spd-5. If unit initiates combat, unit attacks twice.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BOW.id,
+    might: 9,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 9, spd: -5 }),
+      EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id),
+      EFFECT.playerPhaseBrave()
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Inflicts Atk/Def-4 on foes within 2 spaces during combat.",
+      effects: [...EFFECT.rein({ atk: -4, def: -4 })]
+    },
+    refineImg: "assets/refines/Renowned_Bow_W.webp",
+    canUse: {
+      unit: [UNIT.GORDIN.id]
+    }
+  },
   SELENAS_BLADE: {
     name: "Selena's Blade",
     description: "Effective against armored foes. At start of combat, if foe's Atk ≥ unit's Atk+3, grants Atk/Spd/Def/Res+3 during combat.",
@@ -2574,6 +2788,24 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Stalwart_Sword_W.webp",
     canUse: {
       unit: [UNIT.DRAUG.id]
+    }
+  },
+  THARJAS_HEX: {
+    name: "Tharja's Hex",
+    description: "Grants bonus to unit’s Atk = total bonuses on unit during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.blade()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Inflicts Atk/Spd-4 on foes within 2 spaces during combat.",
+      effects: [...EFFECT.rein({ atk: -4, spd: -4 })]
+    },
+    refineImg: "assets/refines/Tharjas_Hex_W.webp",
+    canUse: {
+      unit: [UNIT.THARJA.id]
     }
   },
   TOME_OF_ORDER: {
