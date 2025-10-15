@@ -673,6 +673,22 @@ const UNIT = {
     superboons: [STATS.HP, STATS.DEF],
     superbanes: [],
   },
+  LILINA: {
+    name: "Lilina",
+    subtitle: "Delightful Noble",
+    imgFace: "assets/face/book1/Lilina_Delightful_Noble_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Lilina_Delightful_Noble_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.BINDING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 16, atk: 9, spd: 6, def: 4, res: 9 },
+    level40Stats: { hp: 35, atk: 37, spd: 25, def: 19, res: 31 },
+    superboons: [STATS.HP, STATS.SPD],
+    superbanes: [STATS.RES]
+  },
   LISSA: {
     name: "Lissa",
     subtitle: "Sprightly Cleric",
@@ -768,6 +784,22 @@ const UNIT = {
     level40Stats: { hp: 41, atk: 31, spd: 34, def: 29, res: 23 },
     superboons: [],
     superbanes: [STATS.HP, STATS.DEF]
+  },
+  MATTHEW: {
+    name: "Matthew",
+    subtitle: "Faithful Spy",
+    imgFace: "assets/face/book1/Matthew_Faithful_Spy_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Matthew_Faithful_Spy_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.C_DAGGER.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.BLAZING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 17, atk: 6, spd: 10, def: 6, res: 5 },
+    level40Stats: { hp: 41, atk: 25, spd: 34, def: 30, res: 18 },
+    superboons: [STATS.ATK],
+    superbanes: [STATS.RES]
   },
   MINERVA: {
     name: "Minerva",

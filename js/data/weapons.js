@@ -1957,6 +1957,30 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.ALFONSE.id]
     }
   },
+  FORBLAZE: {
+    name: "Forblaze",
+    description: "At start of turn, inflicts Res-7 on foe on the enemy team with the highest Res through its next action.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        actions: [{ type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.RES, value: 7, target: { type: EFFECT_TARGET.FOES_WITH_HIGHEST_STAT, stat: STATS.RES } }]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit initiates combat, grants Atk+6 during combat..",
+      effects: [...EFFECT.playerPhaseStats({ atk: 6 })]
+    },
+    refineImg: "assets/refines/Death_Blow_W.webp",
+    canUse: {
+      unit: [UNIT.LILINA.id]
+    }
+  },
   FREDERICKS_AXE: {
     name: "Frederick's Axe",
     description: "Effective against armoured foes.",
@@ -2239,8 +2263,8 @@ const EXCLUSIVE_WEAPONS = {
         phase: EFFECT_PHASE.START_OF_TURN,
         condition: { type: EFFECT_CONDITION.UNIT_HP_GREATER_THAN_EQUAL_TO, percent: 50 },
         actions: [
-          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.FOE_WITH_LOWEST_STAT, stat: STATS.SPD } },
-          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.DEF, value: 5, target: { type: EFFECT_TARGET.FOE_WITH_LOWEST_STAT, stat: STATS.SPD } }
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.FOES_WITH_LOWEST_STAT, stat: STATS.SPD } },
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.DEF, value: 5, target: { type: EFFECT_TARGET.FOES_WITH_LOWEST_STAT, stat: STATS.SPD } }
         ]
       }
     ],
@@ -2854,6 +2878,35 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Life_and_Death_W.webp",
     canUse: {
       unit: [UNIT.LONQU.id]
+    }
+  },
+  SPYS_DAGGER: {
+    name: "Spy's Dagger",
+    description: "After combat, if unit attacked, grants Def/Res+6 to unit and allies within 2 spaces of unit for 1 turn.\nEffect:【Dagger ６】",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.DAGGER.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      {
+        phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
+        condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
+        actions: [
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.UNIT_AND_ALLIES_WITHIN_X_SPACES, spaces: 2 } },
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.UNIT_AND_ALLIES_WITHIN_X_SPACES, spaces: 2 } }
+        ]
+      },
+      EFFECT.dagger(6)
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Grants bonus to unit's Atk = total penalties on foe during combat.",
+      effects: [EFFECT.reverseBlade()]
+    },
+    refineImg: "assets/refines/Weakness_Atk_W.webp",
+    canUse: {
+      unit: [UNIT.MATTHEW.id]
     }
   },
   STALWART_SWORD: {

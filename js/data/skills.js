@@ -3337,7 +3337,7 @@ const C_SKILLS = {
               foeStat: STATS.RES
             }
           }]
-      },
+      }
     ]
   },
   SPD_PLOY_3: {
@@ -3359,7 +3359,7 @@ const C_SKILLS = {
               foeStat: STATS.RES
             }
           }]
-      },
+      }
     ]
   },
   DEF_PLOY_3: {
@@ -3381,7 +3381,7 @@ const C_SKILLS = {
               foeStat: STATS.RES
             }
           }]
-      },
+      }
     ]
   },
   RES_PLOY_3: {
@@ -3403,7 +3403,7 @@ const C_SKILLS = {
               foeStat: STATS.RES
             }
           }]
-      },
+      }
     ]
   },
   PANIC_PLOY_3: {
@@ -3425,7 +3425,7 @@ const C_SKILLS = {
               foeStat: STATS.HP
             }
           }]
-      },
+      }
     ]
   },
   ATK_SMOKE_3: {

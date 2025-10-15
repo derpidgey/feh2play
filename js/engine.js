@@ -1860,6 +1860,8 @@ function Engine() {
 
   function processOutOfCombatEffects(effects, context) {
     const hpChanges = new Map();
+    const buffChanges = new Map();
+    const debuffChanges = new Map();
     effects.forEach(({ action, unit }) => {
       if (action.type === EFFECT_ACTION.DEAL_DAMAGE || action.type === EFFECT_ACTION.RESTORE_HP) {
         const targets = getTargetedUnits({ unit, ...context }, action.target);
@@ -1867,6 +1869,14 @@ function Engine() {
         if (action.calculation?.type === EFFECT_CALCULATION.HP_RESTORED_TO_TARGET) value = context.hpRestored;
         if (action.type === EFFECT_ACTION.DEAL_DAMAGE) value = -value;
         targets.forEach(target => hpChanges.set(target.id, (hpChanges.get(target) || 0) + value));
+      } else if (action.type === EFFECT_ACTION.APPLY_BUFF || action.type === EFFECT_ACTION.APPLY_DEBUFF) {
+        const targets = getTargetedUnits({ unit, ...context }, action.target);
+        const map = action.type === EFFECT_ACTION.APPLY_BUFF ? buffChanges : debuffChanges;
+        targets.forEach(target => {
+          if (!map.has(target.id)) map.set(target.id, {});
+          const entry = map.get(target.id);
+          entry[action.stat] = Math.max(entry[action.stat] || 0, action.value);
+        });
       } else {
         performEffectAction(action, { unit, ...context })
       }
@@ -1879,6 +1889,30 @@ function Engine() {
       hashHp(context.gameState, target);
       target.stats.hp = Math.max(1, Math.min(target.stats.maxHp, target.stats.hp + value));
       hashHp(context.gameState, target);
+    });
+
+    buffChanges.forEach((changes, id) => {
+      const target = context.gameState.teams[0]
+        .concat(context.gameState.teams[1])
+        .find(u => u.id === id);
+
+      for (const stat in changes) {
+        hashBuff(context.gameState, target, stat);
+        target.buffs[stat] = Math.max(target.buffs[stat], changes[stat]);
+        hashBuff(context.gameState, target, stat);
+      }
+    });
+
+    debuffChanges.forEach((changes, id) => {
+      const target = context.gameState.teams[0]
+        .concat(context.gameState.teams[1])
+        .find(u => u.id === id);
+
+      for (const stat in changes) {
+        hashDebuff(context.gameState, target, stat);
+        target.debuffs[stat] = Math.max(target.debuffs[stat], changes[stat]);
+        hashDebuff(context.gameState, target, stat);
+      }
     });
   }
 
@@ -2194,10 +2228,10 @@ function Engine() {
         return context.gameState.teams[team ^ 1].filter(u => manhattan(u.pos, unit.pos) <= target.spaces);
       case EFFECT_TARGET.FOES_IN_CARDINAL_DIRECTIONS:
         return getFoesInCardinalDirections(context.gameState, unit, target);
-      case EFFECT_TARGET.FOE_WITH_HIGHEST_STAT:
+      case EFFECT_TARGET.FOES_WITH_HIGHEST_STAT:
         return getFoesWithHighestStat(context.gameState, team, target.stat);
-      case EFFECT_TARGET.FOE_WITH_LOWEST_STAT:
-        return geFoesWithLowestStat(context.gameState, team, target.stat);
+      case EFFECT_TARGET.FOES_WITH_LOWEST_STAT:
+        return getFoesWithLowestStat(context.gameState, team, target.stat);
       case EFFECT_TARGET.ASSIST_USER:
         return [context.assistUser];
       case EFFECT_TARGET.ASSIST_TARGET:
@@ -2236,7 +2270,7 @@ function Engine() {
     return gameState.teams[team].filter(unit => unit.stats[stat] === highestStat);
   }
 
-  function geFoesWithLowestStat(gameState, team, stat) {
+  function getFoesWithLowestStat(gameState, team, stat) {
     let lowestStat = 6969;
     gameState.teams[team].forEach(unit => {
       const unitStats = getVisibleStats(unit);
@@ -2310,6 +2344,18 @@ function Engine() {
       if (foe.flags[COMBAT_FLAG.NEUTRALIZE_PENALTIES]) return;
       if (action.calculation.stat in foe.flags[COMBAT_FLAG.NEUTRALIZE_SPECIFIC_PENALTIES]) return;
       target.tempStats[action.calculation.stat] += foe.debuffs[action.calculation.stat];
+      if (foe.flags[COMBAT_FLAG.PANIC]) {
+        target.tempStats[action.calculation.stat] += foe.buffs[action.calculation.stat];
+      }
+    } else if (action.calculation.type === EFFECT_CALCULATION.TOTAL_PENALTIES_ON_FOE) {
+      const foe = context.results.units.find(u => u.team !== context.unit.team);
+      if (foe.flags[COMBAT_FLAG.NEUTRALIZE_PENALTIES]) return;
+      target.tempStats[action.stat] += foe.debuffs.atk + foe.debuffs.spd + foe.debuffs.def + foe.debuffs.res;
+      foe.flags[COMBAT_FLAG.NEUTRALIZE_SPECIFIC_PENALTIES].forEach(stat => target.tempStats[action.stat] -= foe.debuffs[stat]);
+      if (foe.flags[COMBAT_FLAG.PANIC]) {
+        target.tempStats[action.stat] += foe.buffs.atk + foe.buffs.spd + foe.buffs.def + foe.buffs.res;
+        foe.flags[COMBAT_FLAG.NEUTRALIZE_SPECIFIC_PENALTIES].forEach(stat => target.tempStats[action.stat] -= foe.buffs[stat]);
+      }
     }
   }
 

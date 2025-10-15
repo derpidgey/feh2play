@@ -209,4 +209,8 @@ export const EFFECT = {
       { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, calculation: { type: EFFECT_CALCULATION.FOE_STAT_DEBUFF, stat: STATS.RES }, target: { type: EFFECT_TARGET.SELF } }
     ]
   }),
+  reverseBlade: () => ({
+    phase: EFFECT_PHASE.START_OF_COMBAT,
+    actions: [{ type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, calculation: { type: EFFECT_CALCULATION.TOTAL_PENALTIES_ON_FOE }, target: { type: EFFECT_TARGET.SELF } }]
+  })
 };
