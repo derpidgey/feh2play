@@ -636,6 +636,42 @@ const INHERITABLE_WEAPONS = {
       ]
     }
   },
+  SMOKE_DAGGER_PLUS: {
+    name: "Smoke Dagger+",
+    description: "After combat, if unit attacked, inflicts Def/Res-6 on foes within 2 spaces of target through their next actions.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.DAGGER.id,
+    might: 9,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 9 }),
+      {
+        phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
+        condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
+        actions: [
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "After combat, if unit attacked, inflicts Atk/Spd/Def/Res-6 on target and foes within 2 spaces of target through their next actions.",
+      effects: [
+        EFFECT.visibleStats({ atk: 13 }),
+        {
+          phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
+          condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
+          actions: [
+            { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
+            { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
+            { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
+            { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }
+          ]
+        }
+      ]
+    }
+  },
   RAUDRBLADE_PLUS: {
     name: "Rauðrblade+",
     description: "Slows Special trigger (cooldown count+1). Grants bonus to unit’s Atk = total bonuses on unit during combat.",
@@ -1978,6 +2014,42 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.OGMA.id]
     }
   },
+  GLOOM_BREATH: {
+    name: "Gloom Breath",
+    description: "At start of turn, inflicts Atk/Spd-7 on foes within 2 spaces through their next actions. After combat, if unit attacked, inflicts Atk/Spd-7 on target and foes within 2 spaces of target through their next actions. If foe's Range = 2, calculates damage using the lower of foe's Def or Res.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BREATH.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 16 }),
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        actions: [
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 7, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES, spaces: 2 } },
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.SPD, value: 7, target: { type: EFFECT_TARGET.FOES_WITHIN_X_SPACES, spaces: 2 } }
+        ]
+      },
+      {
+        phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
+        condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
+        actions: [
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 7, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.SPD, value: 7, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }
+        ]
+      },
+      EFFECT.adaptiveVsRanged()
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Grants bonus to Atk/Spd/Def/Res during combat = current penalty on each of target's stats. Calculates each stat bonus independently.",
+      effects: [EFFECT.foesDebuffsAsBuffs()]
+    },
+    refineImg: "assets/refines/Combat_Bonuses_Enemy_Weakening_W.webp",
+    canUse: {
+      unit: [UNIT.CORRIN_F.id]
+    }
+  },
   GOLDEN_NAGINATA: {
     name: "Golden Naginata",
     description: "	Accelerates Special trigger (cooldown count-1). At start of combat, if foe's Atk ≥ unit's Atk+3, grants Atk/Spd/Def/Res+3 during combat.",
@@ -2603,6 +2675,36 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Renowned_Bow_W.webp",
     canUse: {
       unit: [UNIT.GORDIN.id]
+    }
+  },
+  SAIZOS_STAR: {
+    name: "Saizo's Star",
+    description: "After combat, if unit attacked, inflicts Atk/Spd/Def/Res-6 on target and foes within 2 spaces of target through their next actions.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.DAGGER.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      {
+        phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
+        condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
+        actions: [
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } },
+          { type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 2 } }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "Grants bonus to Atk/Spd/Def/Res during combat = current penalty on each of target's stats. Calculates each stat bonus independently.",
+      effects: [EFFECT.foesDebuffsAsBuffs()]
+    },
+    refineImg: "assets/refines/Combat_Bonuses_Enemy_Weakening_W.webp",
+    canUse: {
+      unit: [UNIT.SAIZO.id]
     }
   },
   SELENAS_BLADE: {

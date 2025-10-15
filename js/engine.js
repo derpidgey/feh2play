@@ -2305,6 +2305,11 @@ function Engine() {
       const numberOfAlliesInRange = context.gameState.teams[context.unit.team]
         .filter(ally => ally.id !== context.unit.id && manhattan(ally.pos, context.unit.pos) <= spaces).length;
       target.tempStats[action.stat] += Math.min(numberOfAlliesInRange * multiplier, max);
+    } else if (action.calculation.type === EFFECT_CALCULATION.FOE_STAT_DEBUFF) {
+      const foe = context.results.units.find(u => u.team !== context.unit.team);
+      if (foe.flags[COMBAT_FLAG.NEUTRALIZE_PENALTIES]) return;
+      if (action.calculation.stat in foe.flags[COMBAT_FLAG.NEUTRALIZE_SPECIFIC_PENALTIES]) return;
+      target.tempStats[action.calculation.stat] += foe.debuffs[action.calculation.stat];
     }
   }
 

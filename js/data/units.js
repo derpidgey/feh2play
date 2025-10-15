@@ -305,6 +305,22 @@ const UNIT = {
     superboons: [STATS.HP],
     superbanes: [STATS.RES],
   },
+  CORRIN_F: {
+    name: "Corrin",
+    subtitle: "Fateful Princess",
+    imgFace: "assets/face/book1/Corrin_Fateful_Princess_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Corrin_Fateful_Princess_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.BLUE_BREATH.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 19, atk: 8, spd: 6, def: 8, res: 6 },
+    level40Stats: { hp: 41, atk: 27, spd: 34, def: 34, res: 21 },
+    superboons: [STATS.ATK],
+    superbanes: [STATS.HP]
+  },
   DONNEL: {
     name: "Donnel",
     subtitle: "Village Hero",
@@ -928,6 +944,22 @@ const UNIT = {
     level40Stats: { hp: 41, atk: 34, spd: 35, def: 27, res: 21 },
     superboons: [],
     superbanes: [STATS.HP, STATS.DEF]
+  },
+  SAIZO: {
+    name: "Saizo",
+    subtitle: "Angry Ninja",
+    imgFace: "assets/face/book1/Saizo_Angry_Ninja_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Saizo_Angry_Ninja_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.C_DAGGER.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 17, atk: 7, spd: 8, def: 9, res: 3 },
+    level40Stats: { hp: 36, atk: 29, spd: 34, def: 33, res: 16 },
+    superboons: [STATS.HP],
+    superbanes: [STATS.ATK, STATS.RES]
   },
   SAKURA: {
     name: "Sakura",

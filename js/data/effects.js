@@ -199,5 +199,14 @@ export const EFFECT = {
         actions
       }
     ]
-  }
+  },
+  foesDebuffsAsBuffs: () => ({
+    phase: EFFECT_PHASE.START_OF_COMBAT,
+    actions: [
+      { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, calculation: { type: EFFECT_CALCULATION.FOE_STAT_DEBUFF, stat: STATS.ATK }, target: { type: EFFECT_TARGET.SELF } },
+      { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, calculation: { type: EFFECT_CALCULATION.FOE_STAT_DEBUFF, stat: STATS.SPD }, target: { type: EFFECT_TARGET.SELF } },
+      { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, calculation: { type: EFFECT_CALCULATION.FOE_STAT_DEBUFF, stat: STATS.DEF }, target: { type: EFFECT_TARGET.SELF } },
+      { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, calculation: { type: EFFECT_CALCULATION.FOE_STAT_DEBUFF, stat: STATS.RES }, target: { type: EFFECT_TARGET.SELF } }
+    ]
+  }),
 };
