@@ -1106,7 +1106,7 @@ const EXCLUSIVE_WEAPONS = {
     },
     refineImg: "assets/refines/Life_and_Death_W.webp",
     canUse: {
-      unit: [UNIT.MINERVA.id]
+      unit: [UNIT.RAVEN.id]
     }
   },
   BERUKAS_AXE: {
@@ -1427,7 +1427,7 @@ const EXCLUSIVE_WEAPONS = {
     },
     refineImg: "assets/refines/Wrath_W.webp",
     canUse: {
-      unit: [UNIT.SHARENA.id]
+      unit: [UNIT.BARST.id]
     }
   },
   DURANDAL: {
@@ -1605,7 +1605,7 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.LUCINA.id] // masked marth, exalted chrom
     }
   },
-  FALCHION_AWAKENING: {
+  FALCHION_MYSTERY: {
     name: "Falchion",
     description: "Effective against dragon foes. At the start of every third turn, restores 10 HP.",
     type: SKILL_TYPE.WEAPON,
