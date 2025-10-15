@@ -1974,7 +1974,7 @@ const EXCLUSIVE_WEAPONS = {
     canBeRefined: true,
     effectRefine: {
       description: "If unit initiates combat, grants Atk+6 during combat..",
-      effects: [...EFFECT.playerPhaseStats({ atk: 6 })]
+      effects: [EFFECT.playerPhaseStats({ atk: 6 })]
     },
     refineImg: "assets/refines/Death_Blow_W.webp",
     canUse: {
@@ -2365,9 +2365,44 @@ const EXCLUSIVE_WEAPONS = {
         }
       ]
     },
-    refineImg: "assets/refines/Felicias_Plate_W.webp",
+    refineImg: "assets/refines/Jakobs_Tray_W.webp",
     canUse: {
       unit: [UNIT.JAKOB.id]
+    }
+  },
+  KAGEROS_DART: {
+    name: "Kagero's Dart",
+    description: "At start of combat, if unit's Atk > foe's Atk, grants Atk/Spd+4 during combat.\nEffect:【Dagger ７】",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.DAGGER.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.dagger(7),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE, unitStat: STATS.ATK, foeStat: STATS.ATK, statType: STAT_CHECK_TYPE.VISIBLE },
+        actions: [
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.SELF } }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit initiates combat, reduces damage from foe's first attack by 50%.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.FIRST_ATTACK_DAMAGE_REDUCTION, percent: 50, target: { type: EFFECT_TARGET.SELF } }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Kageros_Dart_W.webp",
+    canUse: {
+      unit: [UNIT.KAGERO.id]
     }
   },
   NAMELESS_BLADE: {

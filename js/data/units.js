@@ -673,6 +673,22 @@ const UNIT = {
     superboons: [STATS.HP, STATS.DEF],
     superbanes: [],
   },
+  KAGERO: {
+    name: "Kagero",
+    subtitle: "Honorable Ninja",
+    imgFace: "assets/face/book1/Kagero_Honorable_Ninja_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Kagero_Honorable_Ninja_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.C_DAGGER.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 16, atk: 9, spd: 8, def: 5, res: 6 },
+    level40Stats: { hp: 31, atk: 35, spd: 32, def: 22, res: 28 },
+    superboons: [],
+    superbanes: [STATS.RES]
+  },
   LILINA: {
     name: "Lilina",
     subtitle: "Delightful Noble",
