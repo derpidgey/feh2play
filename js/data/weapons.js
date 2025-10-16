@@ -2690,6 +2690,43 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.OBORO.id]
     }
   },
+  ODINS_GRIMOIRE: {
+    name: "Odin's Grimoire",
+    description: "Grants bonus to unit's Atk = total bonuses on unit during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BLUE_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.blade()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If a movement Assist skill (like Reposition, Shove, Pivot, etc.) is used by unit or targets unit, grants Atk/Spd+6 to unit and target ally or unit and targeting ally for 1 turn.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.USED_MOVEMENT_ASSIST,
+          actions: [
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ASSIST_USER } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ASSIST_USER } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ASSIST_TARGET } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ASSIST_TARGET } }
+          ]
+        },
+        {
+          phase: EFFECT_PHASE.TARGETTED_BY_MOVEMENT_ASSIST,
+          actions: [
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ASSIST_USER } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ASSIST_USER } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ASSIST_TARGET } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ASSIST_TARGET } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Atk_Spd_Link_W.webp",
+    canUse: {
+      unit: [UNIT.ODIN.id]
+    }
+  },
   PANTHER_LANCE: {
     name: "Panther Lance",
     description: "During combat, boosts unit's Atk/Def by number of allies within 2 spaces × 2. (Maximum bonus of +6 to each stat.)",

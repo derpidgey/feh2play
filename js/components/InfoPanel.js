@@ -72,6 +72,9 @@ const ActionPreview = ({ gameState, potentialAction }) => {
       if (attacksTwice) hits *= 2;
       return `${Math.floor((baseDamage + Math.floor(constantFixedDamage)) * staffMod)}${hits > 1 ? `x${hits}` : ""}`;
     });
+    if (result.sequence[0].aoe) {
+      formulas[0] = `${result.sequence[0].damage}+` + formulas[0];
+    }
   }
 
   const renderTempStats = stats => {

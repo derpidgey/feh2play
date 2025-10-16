@@ -864,7 +864,7 @@ function Engine() {
             sequence.push(damageSequence);
           });
 
-          const context = { results, gameState };
+          const context = { results, gameState, sequence };
 
           const afterCombatBeforeDeathEffects = [];
           afterCombatBeforeDeathEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH, unit, context));
@@ -888,7 +888,6 @@ function Engine() {
             .forEach(u => afterCombatEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_ALLY_COMBAT, u, context)));
           processEffects(afterCombatEffects, context);
 
-          context.sequence = sequence;
           const afterCombatDisplacementEffects = [];
           if (unit.stats.hp > 0) {
             afterCombatDisplacementEffects.push(...getEligibleEffects(EFFECT_PHASE.AFTER_COMBAT_DISPLACEMENT, unit, context));
@@ -929,8 +928,7 @@ function Engine() {
 
   function performAssist(gameState, unit, targetUnit, sequence) {
     const assist = getAssistInfo(unit);
-    const unitContext = { gameState, assistTarget: targetUnit };
-    const targetContext = { gameState, assistUser: unit };
+    const context = { gameState, assistUser: unit, assistTarget: targetUnit, sequence };
     if (assist.assistType === ASSIST_TYPE.MOVEMENT) {
       hashPos(gameState, unit);
       hashPos(gameState, targetUnit);
@@ -943,15 +941,15 @@ function Engine() {
       targetUnit.pos = targetDestination;
       hashPos(gameState, unit);
       hashPos(gameState, targetUnit);
-      const movementEffects = getEligibleEffects(EFFECT_PHASE.USED_MOVEMENT_ASSIST, unit, unitContext);
-      processEffects(movementEffects, unitContext);
-      const targetedByMovementEffects = getEligibleEffects(EFFECT_PHASE.TARGETTED_BY_MOVEMENT_ASSIST, targetUnit, targetContext);
-      processEffects(targetedByMovementEffects, targetContext);
+      const movementEffects = getEligibleEffects(EFFECT_PHASE.USED_MOVEMENT_ASSIST, unit, context);
+      processEffects(movementEffects, context);
+      const targetedByMovementEffects = getEligibleEffects(EFFECT_PHASE.TARGETTED_BY_MOVEMENT_ASSIST, targetUnit, context);
+      processEffects(targetedByMovementEffects, context);
     } else if (assist.assistType === ASSIST_TYPE.REFRESH) {
       targetUnit.hasAction = true;
       hashHasAction(gameState, targetUnit);
-      const danceEffects = getEligibleEffects(EFFECT_PHASE.USED_DANCE, unit, unitContext);
-      processEffects(danceEffects, unitContext);
+      const danceEffects = getEligibleEffects(EFFECT_PHASE.USED_DANCE, unit, context);
+      processEffects(danceEffects, context);
     } else if (assist.assistType === ASSIST_TYPE.HEAL) {
       hashHp(gameState, targetUnit);
       const healAmount = calculateHealAmount(unit, targetUnit, assist.heal);
@@ -969,14 +967,14 @@ function Engine() {
         hashHp(gameState, unit);
         // console.log(`${unit.unitId} self-heals for ${actualSelfHealed} HP.`);
       }
-      unitContext.hpRestored = actualHealed;
-      const healEffects = getEligibleEffects(EFFECT_PHASE.USED_HEAL, unit, unitContext);
-      processEffects(healEffects, unitContext);
+      context.hpRestored = actualHealed;
+      const healEffects = getEligibleEffects(EFFECT_PHASE.USED_HEAL, unit, context);
+      processEffects(healEffects, context);
       const special = getSpecialInfo(unit);
       if (special) {
         if (special.specialType === SPECIAL_TYPE.HEALING && unit.special.current === 0) {
-          const healingSpecialEffects = getEligibleEffects(EFFECT_PHASE.ON_HEALING_SPECIAL_TRIGGER, unit, unitContext);
-          processEffects(healingSpecialEffects, unitContext);
+          const healingSpecialEffects = getEligibleEffects(EFFECT_PHASE.ON_HEALING_SPECIAL_TRIGGER, unit, context);
+          processEffects(healingSpecialEffects, context);
           hashSpecial(gameState, unit);
           unit.special.current = unit.special.max;
           hashSpecial(gameState, unit);
@@ -989,10 +987,10 @@ function Engine() {
     } else if (assist.assistType === ASSIST_TYPE.RALLY) {
       // might move rallyBuffs into USED_RALLY_ASSIST effects
       assist.rallyBuffs.forEach(buff => targetUnit.buffs[buff.stat] = Math.max(targetUnit.buffs[buff.stat], buff.value));
-      const rallyEffects = getEligibleEffects(EFFECT_PHASE.USED_RALLY_ASSIST, unit, unitContext);
-      processEffects(rallyEffects, unitContext);
-      const targetedByRallyEffects = getEligibleEffects(EFFECT_PHASE.TARGETTED_BY_RALLY_ASSIST, unit, targetContext);
-      processEffects(targetedByRallyEffects, unitContext);
+      const rallyEffects = getEligibleEffects(EFFECT_PHASE.USED_RALLY_ASSIST, unit, context);
+      processEffects(rallyEffects, context);
+      const targetedByRallyEffects = getEligibleEffects(EFFECT_PHASE.TARGETTED_BY_RALLY_ASSIST, unit, context);
+      processEffects(targetedByRallyEffects, context);
     } else if (assist.assistType === ASSIST_TYPE.SACRIFICE) {
       const amount = assist.amount ?? Math.min(unit.stats.hp - 1, targetUnit.stats.maxHp - targetUnit.stats.hp);
       hashHp(gameState, targetUnit);
@@ -1898,6 +1896,7 @@ function Engine() {
 
       for (const stat in changes) {
         hashBuff(context.gameState, target, stat);
+        context.sequence?.push([{ type: "buff", id: target.id, stat, previousBuff: target.buffs[stat] }]);
         target.buffs[stat] = Math.max(target.buffs[stat], changes[stat]);
         hashBuff(context.gameState, target, stat);
       }
@@ -2094,7 +2093,6 @@ function Engine() {
     let unitValue = 0;
     let foeValue = 0;
     if (!condition.statType || condition.statType === STAT_CHECK_TYPE.VISIBLE) {
-      // might need to get unit from gameState (in first object) for accurate visible stat
       unitValue = getVisibleStats(unit)[condition.unitStat ?? condition.allyStat];
       foeValue = getVisibleStats(foe)[condition.foeStat];
     } else if (condition.statType === STAT_CHECK_TYPE.IN_COMBAT) {
@@ -2148,12 +2146,6 @@ function Engine() {
         break;
       case EFFECT_ACTION.RESTORE_HP:
         handleRestoreHp(action, context);
-        break;
-      case EFFECT_ACTION.APPLY_BUFF:
-        applyBuff(action, context);
-        break;
-      case EFFECT_ACTION.APPLY_DEBUFF:
-        applyDebuff(action, context);
         break;
       case EFFECT_ACTION.APPLY_STATUS:
         applyStatus(action, context);
@@ -2416,24 +2408,6 @@ function Engine() {
         context.specialFlags.restoreHpByPercentDamageDealt = damage => Math.floor(damage * action.calculation.percent / 100);
       }
     }
-  }
-
-  function applyBuff(action, context) {
-    const targets = getTargetedUnits(context, action.target);
-    targets.forEach(target => {
-      hashBuff(context.gameState, target, action.stat);
-      target.buffs[action.stat] = Math.max(target.buffs[action.stat], action.value);
-      hashBuff(context.gameState, target, action.stat);
-    });
-  }
-
-  function applyDebuff(action, context) {
-    const targets = getTargetedUnits(context, action.target);
-    targets.forEach(target => {
-      hashDebuff(context.gameState, target, action.stat);
-      target.debuffs[action.stat] = Math.max(target.debuffs[action.stat], action.value);
-      hashDebuff(context.gameState, target, action.stat);
-    });
   }
 
   function applyStatus(action, context) {
@@ -2700,6 +2674,14 @@ function Engine() {
           unit.penalties.push(step.penalty);
           hashPenalty(gameState, unit, step.penalty);
         }
+      } else if (step.type === "buff") {
+        hashBuff(gameState, unit, step.stat);
+        unit.buffs[step.stat] = step.previousBuff;
+        hashBuff(gameState, unit, step.stat);
+      } else if (step.type === "debuff") {
+        hashDebuff(gameState, unit, step.stat);
+        unit.debuffs[step.stat] = step.previousDeuff;
+        hashDebuff(gameState, unit, step.stat);
       } else if (step.type === "duelStateActionsRemaining") {
         const currentDuelState = gameState.duelState[step.currentTurn];
         hashActionsRemaining(gameState, step.currentTurn);

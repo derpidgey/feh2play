@@ -913,6 +913,22 @@ const BOOK_1 = {
     superboons: [STATS.SPD, STATS.RES],
     superbanes: [STATS.HP]
   },
+  ODIN: {
+    name: "Odin",
+    subtitle: "Potent Force",
+    imgFace: "assets/face/book1/Odin_Potent_Force_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Odin_Potent_Force_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.BLUE_TOME.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 19, atk: 5, spd: 8, def: 6, res: 6 },
+    level40Stats: { hp: 43, atk: 22, spd: 32, def: 25, res: 25 },
+    superboons: [STATS.DEF, STATS.RES],
+    superbanes: []
+  },
   OGMA: {
     name: "Ogma",
     subtitle: "Loyal Blade",
