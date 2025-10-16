@@ -1255,11 +1255,7 @@ const A_SKILLS = {
       }
     ],
     canUse: {
-      weaponType: [
-        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
-        WEAPON_TYPE.RED_BREATH.id, WEAPON_TYPE.BLUE_BREATH.id, WEAPON_TYPE.GREEN_BREATH.id, WEAPON_TYPE.C_BREATH.id,
-        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id, WEAPON_TYPE.C_BEAST.id
-      ],
+      weaponType: MELEE,
       moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
     }
   },
@@ -1280,11 +1276,7 @@ const A_SKILLS = {
       }
     ],
     canUse: {
-      weaponType: [
-        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
-        WEAPON_TYPE.RED_BREATH.id, WEAPON_TYPE.BLUE_BREATH.id, WEAPON_TYPE.GREEN_BREATH.id, WEAPON_TYPE.C_BREATH.id,
-        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id, WEAPON_TYPE.C_BEAST.id
-      ],
+      weaponType: MELEE,
       moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
     }
   },
@@ -1305,11 +1297,7 @@ const A_SKILLS = {
       }
     ],
     canUse: {
-      weaponType: [
-        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
-        WEAPON_TYPE.RED_BREATH.id, WEAPON_TYPE.BLUE_BREATH.id, WEAPON_TYPE.GREEN_BREATH.id, WEAPON_TYPE.C_BREATH.id,
-        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id, WEAPON_TYPE.C_BEAST.id
-      ],
+      weaponType: MELEE,
       moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
     }
   },
@@ -1330,11 +1318,7 @@ const A_SKILLS = {
       }
     ],
     canUse: {
-      weaponType: [
-        WEAPON_TYPE.SWORD.id, WEAPON_TYPE.LANCE.id, WEAPON_TYPE.AXE.id,
-        WEAPON_TYPE.RED_BREATH.id, WEAPON_TYPE.BLUE_BREATH.id, WEAPON_TYPE.GREEN_BREATH.id, WEAPON_TYPE.C_BREATH.id,
-        WEAPON_TYPE.RED_BEAST.id, WEAPON_TYPE.BLUE_BEAST.id, WEAPON_TYPE.GREEN_BEAST.id, WEAPON_TYPE.C_BEAST.id
-      ],
+      weaponType: MELEE,
       moveType: [MOVE_TYPE.INFANTRY.id, MOVE_TYPE.ARMOURED.id]
     }
   },
@@ -2996,7 +2980,7 @@ const C_SKILLS = {
       {
         phase: EFFECT_PHASE.START_OF_TURN,
         actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1 } }]
-      },
+      }
     ]
   },
   HONE_SPD_3: {
@@ -3009,7 +2993,7 @@ const C_SKILLS = {
       {
         phase: EFFECT_PHASE.START_OF_TURN,
         actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1 } }]
-      },
+      }
     ]
   },
   FORTIFY_DEF_3: {
@@ -3022,7 +3006,7 @@ const C_SKILLS = {
       {
         phase: EFFECT_PHASE.START_OF_TURN,
         actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1 } }]
-      },
+      }
     ]
   },
   FORTIFY_RES_3: {
@@ -3035,7 +3019,7 @@ const C_SKILLS = {
       {
         phase: EFFECT_PHASE.START_OF_TURN,
         actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1 } }]
-      },
+      }
     ]
   },
   HONE_ARMOUR: {
@@ -3050,7 +3034,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.ARMOURED.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.ARMOURED.id } }
         ]
-      },
+      }
     ],
     canUse: {
       moveType: [MOVE_TYPE.ARMOURED.id]
@@ -3068,7 +3052,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.ARMOURED.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.ARMOURED.id } }
         ]
-      },
+      }
     ],
     canUse: {
       moveType: [MOVE_TYPE.ARMOURED.id]
@@ -3086,7 +3070,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.CAVALRY.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.CAVALRY.id } }
         ]
-      },
+      }
     ],
     canUse: {
       moveType: [MOVE_TYPE.CAVALRY.id]
@@ -3104,7 +3088,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.CAVALRY.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.CAVALRY.id } }
         ]
-      },
+      }
     ],
     canUse: {
       moveType: [MOVE_TYPE.CAVALRY.id]
@@ -3122,7 +3106,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.FLIER.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.FLIER.id } }
         ]
-      },
+      }
     ],
     canUse: {
       moveType: [MOVE_TYPE.FLIER.id]
@@ -3140,7 +3124,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.FLIER.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, moveType: MOVE_TYPE.FLIER.id } }
         ]
-      },
+      }
     ],
     canUse: {
       moveType: [MOVE_TYPE.FLIER.id]
@@ -3165,7 +3149,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BREATH.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BREATH.id } }
         ]
-      },
+      }
     ],
     canUse: {
       weaponType: DRAGONS
@@ -3190,7 +3174,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BREATH.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BREATH.id } }
         ]
-      },
+      }
     ],
     canUse: {
       weaponType: DRAGONS
@@ -3215,7 +3199,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BEAST.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BEAST.id } }
         ]
-      },
+      }
     ],
     canUse: {
       weaponType: DRAGONS
@@ -3240,7 +3224,7 @@ const C_SKILLS = {
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BEAST.id } },
           { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_BEAST.id } }
         ]
-      },
+      }
     ],
     canUse: {
       weaponType: DRAGONS
@@ -3548,7 +3532,7 @@ const S_SKILLS = {
         phase: EFFECT_PHASE.START_OF_TURN,
         condition: { type: EFFECT_CONDITION.UNIT_HP_IS_MAX_HP },
         actions: [{ type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.MOBILITY_INCREASED.id, target: { type: EFFECT_TARGET.SELF } }]
-      },
+      }
     ],
     canUse: {
       moveType: [MOVE_TYPE.ARMOURED.id]
@@ -3564,7 +3548,7 @@ const S_SKILLS = {
         phase: EFFECT_PHASE.START_OF_TURN,
         condition: { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 1 },
         actions: [{ type: EFFECT_ACTION.CURRENT_SPECIAL_COOLDOWN_MOD, value: -1, target: { type: EFFECT_TARGET.SELF } }]
-      },
+      }
     ]
   },
   HARDY_BEARING_3: {
@@ -3576,7 +3560,7 @@ const S_SKILLS = {
       {
         phase: EFFECT_PHASE.START_OF_COMBAT,
         actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.HARDY_BEARING, target: { type: EFFECT_TARGET.SELF } }]
-      },
+      }
     ]
   },
   PHANTOM_SPD_3: {
@@ -3637,7 +3621,7 @@ const S_SKILLS = {
   },
   DEFLECT_MAGIC_3: {
     name: "Deflect Magic 3",
-    description: "If unit receives consecutive attacks and foe uses bow or dagger, reduces damage from foe's second attack onward by 80%.",
+    description: "If unit receives consecutive attacks and foe uses magic, reduces damage from foe's second attack onward by 80%.",
     img: "assets/skills/Deflect_Magic_3.webp",
     type: SKILL_TYPE.S,
     effects: [

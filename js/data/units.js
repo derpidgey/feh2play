@@ -1,6 +1,6 @@
 import { ENTRY, MOVE_TYPE, RARITY, STATS, WEAPON_TYPE } from "./definitions.js";
 
-const UNIT = {
+const BOOK_1 = {
   ABEL: {
     name: "Abel",
     subtitle: "The Panther",
@@ -705,6 +705,22 @@ const UNIT = {
     superboons: [STATS.HP, STATS.SPD],
     superbanes: [STATS.RES]
   },
+  LINDE: {
+    name: "Linde",
+    subtitle: "Light Mage",
+    imgFace: "assets/face/book1/Linde_Light_Mage_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Linde_Light_Mage_Mini_Unit_Idle.webp",
+    rarity: RARITY.FIVE_STAR,
+    weaponType: WEAPON_TYPE.BLUE_TOME.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 16, atk: 9, spd: 10, def: 4, res: 5 },
+    level40Stats: { hp: 35, atk: 35, spd: 36, def: 14, res: 27 },
+    superboons: [STATS.HP, STATS.DEF],
+    superbanes: [STATS.RES]
+  },
   LISSA: {
     name: "Lissa",
     subtitle: "Sprightly Cleric",
@@ -816,6 +832,22 @@ const UNIT = {
     level40Stats: { hp: 41, atk: 25, spd: 34, def: 30, res: 18 },
     superboons: [STATS.ATK],
     superbanes: [STATS.RES]
+  },
+  MERRIC: {
+    name: "Merric",
+    subtitle: "Wind Mage",
+    imgFace: "assets/face/book1/Merric_Wind_Mage_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Merric_Wind_Mage_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.GREEN_TOME.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 19, atk: 7, spd: 8, def: 6, res: 4 },
+    level40Stats: { hp: 43, atk: 26, spd: 32, def: 28, res: 19 },
+    superboons: [STATS.ATK],
+    superbanes: [STATS.DEF]
   },
   MINERVA: {
     name: "Minerva",
@@ -1201,6 +1233,38 @@ const UNIT = {
     superboons: [],
     superbanes: [STATS.HP]
   },
+  TIKI_A: {
+    name: "Tiki",
+    subtitle: "Dragon Scion",
+    imgFace: "assets/face/book1/Tiki_Dragon_Scion_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Tiki_Dragon_Scion_Mini_Unit_Idle.webp",
+    rarity: RARITY.FIVE_STAR,
+    weaponType: WEAPON_TYPE.RED_BREATH.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 15, atk: 5, spd: 4, def: 8, res: 7 },
+    level40Stats: { hp: 41, atk: 31, spd: 30, def: 32, res: 29 },
+    superboons: [],
+    superbanes: [STATS.RES]
+  },
+  TIKI_Y: {
+    name: "Tiki",
+    subtitle: "Naga's Voice",
+    imgFace: "assets/face/book1/Tiki_Nagas_Voice_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Tiki_Nagas_Voice_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.RED_BREATH.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.AWAKENING],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 18, atk: 7, spd: 6, def: 9, res: 7 },
+    level40Stats: { hp: 40, atk: 35, spd: 23, def: 35, res: 24 },
+    superboons: [],
+    superbanes: [STATS.HP]
+  },
   WRYS: {
     name: "Wrys",
     subtitle: "Kindly Priest",
@@ -1218,6 +1282,10 @@ const UNIT = {
     superbanes: [],
   }
 };
+
+const UNIT = {
+  ...BOOK_1
+}
 
 Object.entries(UNIT).forEach(([key, value]) => UNIT[key] = { id: key, ...value });
 

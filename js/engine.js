@@ -2030,12 +2030,13 @@ function Engine() {
     }
   }
 
-  function handleUnitWithinSpacesOfAlly({ unit, gameState }, { spaces, moveType, weaponType, count, allyCondition }) {
+  function handleUnitWithinSpacesOfAlly({ unit, gameState }, { spaces, moveType, weaponType, count, allyCondition, attackRange }) {
     const allyUnits = gameState.teams[unit.team]
       .filter(u => u.id !== unit.id)
       .filter(u => manhattan(u.pos, unit.pos) <= spaces)
       .filter(u => !moveType || UNIT[u.unitId].moveType === moveType)
       .filter(u => !weaponType || UNIT[u.unitId].weaponType === weaponType)
+      .filter(u => !attackRange || attackRange === getWeaponType(u).range)
       .filter(u => {
         if (!allyCondition) return true;
         if (allyCondition.type === EFFECT_CONDITION.UNIT_HP_LESS_THAN) {
@@ -2168,6 +2169,7 @@ function Engine() {
         break;
       case EFFECT_ACTION.CONSTANT_FIXED_DAMAGE:
         handleConstantFixedDamage(action, context);
+        break;
       case EFFECT_ACTION.MOVE_EXTRA_SPACES:
         context.movementFlags.extraSpaces = action.spaces;
         break;
@@ -2218,12 +2220,14 @@ function Engine() {
         return context.gameState.teams[team]
           .filter(u => manhattan(u.pos, unit.pos) <= target.spaces)
           .filter(u => !target.moveType || target.moveType === UNIT[u.unitId].moveType)
-          .filter(u => !target.weaponType || target.weaponType === UNIT[u.unitId].weaponType);
+          .filter(u => !target.weaponType || target.weaponType === UNIT[u.unitId].weaponType)
+          .filter(u => !target.attackRange || target.attackRange === getWeaponType(u).range);
       case EFFECT_TARGET.ALLIES_WITHIN_X_SPACES:
         return context.gameState.teams[team]
           .filter(u => u !== unit && manhattan(u.pos, unit.pos) <= target.spaces)
           .filter(u => !target.moveType || target.moveType === UNIT[u.unitId].moveType)
-          .filter(u => !target.weaponType || target.weaponType === UNIT[u.unitId].weaponType);
+          .filter(u => !target.weaponType || target.weaponType === UNIT[u.unitId].weaponType)
+          .filter(u => !target.attackRange || target.attackRange === getWeaponType(u).range);
       case EFFECT_TARGET.FOES_WITHIN_X_SPACES:
         return context.gameState.teams[team ^ 1].filter(u => manhattan(u.pos, unit.pos) <= target.spaces);
       case EFFECT_TARGET.FOES_IN_CARDINAL_DIRECTIONS:

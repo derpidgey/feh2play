@@ -1105,6 +1105,62 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.HECTOR.id]
     }
   },
+  AURA: {
+    name: "Aura",
+    description: "If unit initiates combat, restores 5 HP to adjacent allies after combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BLUE_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      {
+        phase: EFFECT_PHASE.AFTER_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+        actions: [{ type: EFFECT_ACTION.RESTORE_HP, value: 5, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1 } }]
+      }
+    ],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "At start of turn, grants Atk+6 to adjacent magic and staff allies for 1 turn.",
+      effects: [
+        EFFECT.visibleStats({ atk: 14 }),
+        {
+          phase: EFFECT_PHASE.START_OF_TURN,
+          actions: [
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.RED_TOME.id } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.BLUE_TOME.id } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.GREEN_TOME.id } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.C_TOME.id } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, weaponType: WEAPON_TYPE.STAFF.id } }
+          ]
+        }
+      ]
+    },
+    effectRefine: {
+      description: "If unit is within 2 spaces of magic or staff ally, grants Atk/Spd+5 during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.or(
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.RED_TOME.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.BLUE_TOME.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.GREEN_TOME.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.C_TOME.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.STAFF.id }
+          ),
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 5, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Magic_Staff_Atk_Spd_Bond_W.webp",
+    canUse: {
+      unit: [UNIT.LINDE.id]
+    }
+  },
   AXE_OF_VIRILITY: {
     name: "Axe of Virility",
     description: "Effective against armoured foes.",
@@ -1253,6 +1309,51 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.ROY.id]
     }
   },
+  BREATH_OF_FOG: {
+    name: "Breath of Fog",
+    description: "Effective against dragon foes. At start of odd-numbered turns, restores 10 HP. If foe's Range = 2, calculates damage using the lower of foe's Def or Res.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BREATH.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 16 }),
+      EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.RED_BREATH.id),
+      EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.BLUE_BREATH.id),
+      EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.GREEN_BREATH.id),
+      EFFECT.effectiveAgainstWeaponType(WEAPON_TYPE.C_BREATH.id),
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        condition: { type: EFFECT_CONDITION.IS_ODD_TURN },
+        actions: [{ type: EFFECT_ACTION.RESTORE_HP, value: 10, target: { type: EFFECT_TARGET.SELF } }]
+      },
+      EFFECT.adaptiveVsRanged()
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit is within 2 spaces of sword or dragon ally, grants Atk/Def+5 during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.or(
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.SWORD.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.RED_BREATH.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.BLUE_BREATH.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.GREEN_BREATH.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.C_BREATH.id }
+          ),
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 5, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Eternal_Breath_W.webp",
+    canUse: {
+      unit: [UNIT.FAE.id]
+    }
+  },
   BULL_BLADE: {
     name: "Bull Blade",
     description: "During combat, boosts unit's Atk/Def by number of allies within 2 spaces × 2. (Maximum bonus of +6 to each stat.)",
@@ -1391,7 +1492,7 @@ const EXCLUSIVE_WEAPONS = {
       {
         phase: EFFECT_PHASE.DURING_COMBAT,
         conditions: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
-        actions: [{ type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 10, stat: STATS.SPD } }]
+        actions: [{ type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, calculation: { type: EFFECT_CALCULATION.PERCENT_OF_STAT, percent: 10, stat: STATS.SPD }, target: { type: EFFECT_TARGET.SELF } }]
       }
     ],
     canBeRefined: true,
@@ -1401,7 +1502,7 @@ const EXCLUSIVE_WEAPONS = {
         {
           phase: EFFECT_PHASE.START_OF_COMBAT,
           condition: { type: EFFECT_CONDITION.FOE_HP_IS_MAX_HP },
-          actions: [{ type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, value: 7 }]
+          actions: [{ type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, value: 7, target: { type: EFFECT_TARGET.SELF } }]
         },
         {
           phase: EFFECT_PHASE.ON_AOE_SPECIAL_TRIGGER,
@@ -1530,6 +1631,63 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Crimson_Axe_W.webp",
     canUse: {
       unit: [UNIT.SHEENA.id]
+    }
+  },
+  DARK_AURA: {
+    name: "Dark Aura",
+    description: "At start of turn, if adjacent allies use sword, axe, lance, dragonstone, or beast damage, grants Atk+6 to those allies for 1 turn.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BLUE_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 6, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 1, attackRange: 1 } }]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit is within 2 spaces of a sword, lance, axe, dragon, or beast ally, grants Atk/Spd+5 to unit during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, attackRange: 1 },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 5, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Dark_Aura_W.webp",
+    canUse: {
+      unit: [UNIT.LINDE.id] // also delthea
+    }
+  },
+  DARK_EXCALIBUR: {
+    name: "Dark Excalibur",
+    description: "Deals +10 damage when Special triggers.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.GREEN_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.damageOnSpecialTrigger(10)],
+    canBeRefined: true,
+    effectRefine: {
+      description: "At the start of turn 1, grants Special cooldown count-2.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_TURN,
+          condition: { type: EFFECT_CONDITION.IS_TURN_COUNT, turnCount: 1 },
+          actions: [{ type: EFFECT_ACTION.CURRENT_SPECIAL_COOLDOWN_MOD, value: -2, target: { type: EFFECT_TARGET.SELF } }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Quickened_Pulse_W.webp",
+    canUse: {
+      unit: [UNIT.MERRIC.id] // sonya
     }
   },
   DEVIL_AXE: {
@@ -1695,6 +1853,43 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Bracing_Stance_W.webp",
     canUse: {
       unit: [UNIT.SOPHIA.id]
+    }
+  },
+  EXCALIBUR: {
+    name: "Excalibur",
+    description: "Effective against flying foes.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.GREEN_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id)],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "Accelerates Special trigger (cooldown count-1). Effective against flying units.",
+      effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.slaying(), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id)],
+    },
+    effectRefine: {
+      description: "If unit is within 2 spaces of magic or staff ally, grants Atk/Spd+5 during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.or(
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.RED_TOME.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.BLUE_TOME.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.GREEN_TOME.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.C_TOME.id },
+            { type: EFFECT_CONDITION.UNIT_WITHIN_X_SPACES_OF_ALLY, spaces: 2, weaponType: WEAPON_TYPE.STAFF.id }
+          ),
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 5, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Magic_Staff_Atk_Spd_Bond_W.webp",
+    canUse: {
+      unit: [UNIT.MERRIC.id]
     }
   },
   FALCHION_AWAKENING: {
@@ -2103,7 +2298,7 @@ const EXCLUSIVE_WEAPONS = {
           phase: EFFECT_PHASE.START_OF_COMBAT,
           condition: { type: EFFECT_CONDITION.UNIT_HP_GREATER_THAN_EQUAL_TO, percent: 70 },
           actions: [
-            { type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, value: 7 }
+            { type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, value: 7, target: { type: EFFECT_TARGET.SELF } }
           ]
         }
       ]

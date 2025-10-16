@@ -66,16 +66,16 @@ const UnitInfo = ({ unit, backgroundType, playingAs }) => {
       </div>
       <div style="display: flex; flex-direction: column;">
         <div class="skill-line">
-          <img src=${weaponInfo.img ?? "assets/icons/Icon_Skill_Weapon.webp"} />
-          <span style="font-size:1rem;color: ${weaponInfo.refined ? "lime" : "white"};">${weaponInfo.name ?? "-"}</span>
+          <img src=${weaponInfo?.img ?? "assets/icons/Icon_Skill_Weapon.webp"} />
+          <span style="font-size:1rem;color: ${weaponInfo?.refined ? "lime" : "white"};">${weaponInfo?.name ?? "-"}</span>
         </div>
         <div class="skill-line">
           <img src="assets/icons/Icon_Skill_Assist.webp" />
-          <span style="font-size:1rem">${assistInfo.name ?? "-"}</span>
+          <span style="font-size:1rem">${assistInfo?.name ?? "-"}</span>
         </div>
         <div class="skill-line">
           <img src="assets/icons/Icon_Skill_Special.webp" />
-          <span style="font-size:1rem">${specialInfo.name ?? "-"}</span>
+          <span style="font-size:1rem">${specialInfo?.name ?? "-"}</span>
         </div>
       </div>
     </div>
