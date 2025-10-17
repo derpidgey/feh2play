@@ -407,7 +407,7 @@ const INHERITABLE_WEAPONS = {
     effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id)],
     canBeRefined: true,
     effectRefine: {
-      description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
+      description: "Neutralizes cavalry foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
     },
     refineImg: "assets/refines/Dull_Cavalry_W.webp",
@@ -422,7 +422,7 @@ const INHERITABLE_WEAPONS = {
     effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id)],
     canBeRefined: true,
     effectRefine: {
-      description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
+      description: "Neutralizes cavalry foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
     },
     refineImg: "assets/refines/Dull_Cavalry_W.webp",
@@ -437,7 +437,7 @@ const INHERITABLE_WEAPONS = {
     effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id)],
     canBeRefined: true,
     effectRefine: {
-      description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
+      description: "Neutralizes cavalry foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
     },
     refineImg: "assets/refines/Dull_Cavalry_W.webp",
@@ -452,7 +452,7 @@ const INHERITABLE_WEAPONS = {
     effects: [EFFECT.visibleStats({ atk: 12 }), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id)],
     canBeRefined: true,
     effectRefine: {
-      description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
+      description: "Neutralizes cavalry foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
     },
     refineImg: "assets/refines/Dull_Cavalry_W.webp",
@@ -467,7 +467,7 @@ const INHERITABLE_WEAPONS = {
     effects: [EFFECT.visibleStats({ atk: 12 }), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id)],
     canBeRefined: true,
     effectRefine: {
-      description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
+      description: "Neutralizes cavalry foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
     },
     refineImg: "assets/refines/Dull_Cavalry_W.webp",
@@ -482,7 +482,7 @@ const INHERITABLE_WEAPONS = {
     effects: [EFFECT.visibleStats({ atk: 12 }), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id)],
     canBeRefined: true,
     effectRefine: {
-      description: "Neutralizes armoured foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
+      description: "Neutralizes cavalry foes' bonuses (from skills like Fortify, Rally, etc.) during combat.",
       effects: [EFFECT.neutralizeMoveTypeBonuses(MOVE_TYPE.CAVALRY.id)]
     },
     refineImg: "assets/refines/Dull_Cavalry_W.webp",
@@ -741,6 +741,36 @@ const INHERITABLE_WEAPONS = {
     range: 2,
     effects: [EFFECT.visibleStats({ atk: 11 }), EFFECT.raven()],
     canBeRefined: false
+  },
+  RAUDROWL_PLUS: {
+    name: "Rauðrowl+",
+    description: "During combat, boosts unit's Atk/Spd/Def/Res by number of adjacent allies × 2.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    might: 10,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 10 }), EFFECT.owl()],
+    canBeRefined: true
+  },
+  BLAROWL_PLUS: {
+    name: "Blárowl+",
+    description: "During combat, boosts unit's Atk/Spd/Def/Res by number of adjacent allies × 2.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BLUE_TOME.id,
+    might: 10,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 10 }), EFFECT.owl()],
+    canBeRefined: true
+  },
+  GRONNOWL_PLUS: {
+    name: "Gronnowl+",
+    description: "During combat, boosts unit's Atk/Spd/Def/Res by number of adjacent allies × 2.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.GREEN_TOME.id,
+    might: 10,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 10 }), EFFECT.owl()],
+    canBeRefined: true
   },
   BERKUTS_LANCE_PLUS: {
     name: "Berkut's Lance+",
@@ -2521,6 +2551,32 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Special_Damage_W.webp",
     canUse: {
       unit: [UNIT.MINERVA.id]
+    }
+  },
+  HERMITS_TOME: {
+    name: "Hermit's Tome",
+    description: "Effective against cavalry foes. If foe uses bow, dagger, magic, or staff, neutralizes foe's bonuses (from skills like Fortify, Rally, etc.) during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.effectiveAgainstMoveType(MOVE_TYPE.CAVALRY.id),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: { type: EFFECT_CONDITION.FOE_HAS_X_RANGE, range: 2 },
+        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.NEUTRALIZE_BONUSES, target: { type: EFFECT_TARGET.FOE } }]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "During combat, boosts unit's Atk/Spd/Def/Res by number of adjacent allies × 2.",
+      effects: [EFFECT.owl()]
+    },
+    refineImg: "assets/refines/Hermits_Tome_W.webp",
+    canUse: {
+      unit: [UNIT.RAIGH.id]
     }
   },
   HEWN_LANCE: {

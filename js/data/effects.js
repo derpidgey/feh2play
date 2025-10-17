@@ -212,5 +212,14 @@ export const EFFECT = {
   reverseBlade: () => ({
     phase: EFFECT_PHASE.START_OF_COMBAT,
     actions: [{ type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, calculation: { type: EFFECT_CALCULATION.TOTAL_PENALTIES_ON_FOE }, target: { type: EFFECT_TARGET.SELF } }]
+  }),
+  owl: () => ({
+    phase: EFFECT_PHASE.START_OF_COMBAT,
+    actions: [
+      { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, calculation: { type: EFFECT_CALCULATION.NUMBER_OF_ALLIES_WITHIN_X_SPACES, spaces: 1, multiplier: 2 }, target: { type: EFFECT_TARGET.SELF } },
+      { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, calculation: { type: EFFECT_CALCULATION.NUMBER_OF_ALLIES_WITHIN_X_SPACES, spaces: 1, multiplier: 2 }, target: { type: EFFECT_TARGET.SELF } },
+      { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, calculation: { type: EFFECT_CALCULATION.NUMBER_OF_ALLIES_WITHIN_X_SPACES, spaces: 1, multiplier: 2 }, target: { type: EFFECT_TARGET.SELF } },
+      { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, calculation: { type: EFFECT_CALCULATION.NUMBER_OF_ALLIES_WITHIN_X_SPACES, spaces: 1, multiplier: 2 }, target: { type: EFFECT_TARGET.SELF } }
+    ]
   })
 };

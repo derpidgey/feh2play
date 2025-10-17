@@ -1025,6 +1025,22 @@ const BOOK_1 = {
     superboons: [STATS.HP],
     superbanes: []
   },
+  RAIGH: {
+    name: "Raigh",
+    subtitle: "Dark Child",
+    imgFace: "assets/face/book1/Raigh_Dark_Child_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Raigh_Dark_Child_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.BINDING_BLADE],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 17, atk: 8, spd: 7, def: 5, res: 7 },
+    level40Stats: { hp: 36, atk: 32, spd: 29, def: 22, res: 29 },
+    superboons: [STATS.HP],
+    superbanes: [STATS.SPD, STATS.RES]
+  },
   RAVEN: {
     name: "Raven",
     subtitle: "Peerless Fighter",
