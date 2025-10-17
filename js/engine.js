@@ -459,10 +459,10 @@ function Engine() {
 
       if (unitInfo.moveType === MOVE_TYPE.INFANTRY.id) {
         if (terrain === TERRAIN.WALL || terrain === TERRAIN.FLIER) continue;
-        if (terrain === TERRAIN.FOREST && !(x === unit.pos.x && y === unit.pos.y)) nextRange -= 1;
+        if (!movementFlags[MOVEMENT_FLAG.TRAVERSE_TERRAIN] && terrain === TERRAIN.FOREST && !(x === unit.pos.x && y === unit.pos.y)) nextRange -= 1;
       } else if (unitInfo.moveType === MOVE_TYPE.CAVALRY.id) {
         if (terrain === TERRAIN.FOREST || terrain === TERRAIN.WALL || terrain === TERRAIN.FLIER) continue;
-        if (terrain === TERRAIN.TRENCH && !(x === unit.pos.x && y === unit.pos.y)) nextRange -= 2;
+        if (!movementFlags[MOVEMENT_FLAG.TRAVERSE_TERRAIN] && terrain === TERRAIN.TRENCH && !(x === unit.pos.x && y === unit.pos.y)) nextRange -= 2;
       } else if (unitInfo.moveType === MOVE_TYPE.FLIER.id) {
         if (terrain === TERRAIN.WALL) continue;
       } else if (unitInfo.moveType === MOVE_TYPE.ARMOURED.id) {

@@ -1265,6 +1265,22 @@ const BOOK_1 = {
     superboons: [STATS.ATK],
     superbanes: [STATS.RES]
   },
+  TAKUMI: {
+    name: "Takumi",
+    subtitle: "Wild Card",
+    imgFace: "assets/face/book1/Takumi_Wild_Card_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Takumi_Wild_Card_Mini_Unit_Idle.webp",
+    rarity: RARITY.FIVE_STAR,
+    weaponType: WEAPON_TYPE.C_BOW.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 18, atk: 8, spd: 7, def: 6, res: 5 },
+    level40Stats: { hp: 40, atk: 32, spd: 33, def: 25, res: 18 },
+    superboons: [STATS.DEF],
+    superbanes: [STATS.HP, STATS.RES]
+  },
   THARJA: {
     name: "Tharja",
     subtitle: "Dark Shadow",

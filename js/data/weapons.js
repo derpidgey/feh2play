@@ -1,5 +1,5 @@
 import { CONDITION } from "./conditions.js";
-import { COMBAT_FLAG, EFFECT_ACTION, EFFECT_CALCULATION, EFFECT_CONDITION, EFFECT_PHASE, EFFECT_TARGET, MOVE_TYPE, MOVEMENT_TYPE, SKILL_TYPE, SPECIAL_TYPE, STAT_CHECK_TYPE, STATS, WEAPON_TYPE } from "./definitions.js";
+import { COMBAT_FLAG, EFFECT_ACTION, EFFECT_CALCULATION, EFFECT_CONDITION, EFFECT_PHASE, EFFECT_TARGET, MOVE_TYPE, MOVEMENT_FLAG, MOVEMENT_TYPE, SKILL_TYPE, SPECIAL_TYPE, STAT_CHECK_TYPE, STATS, WEAPON_TYPE } from "./definitions.js";
 import { EFFECT } from "./effects.js";
 import STATUS from "./status.js";
 import UNIT from "./units.js";
@@ -2251,6 +2251,50 @@ const EXCLUSIVE_WEAPONS = {
     refineImg: "assets/refines/Death_Blow_W.webp",
     canUse: {
       unit: [UNIT.FREDERICK.id]
+    }
+  },
+  FUJIN_YUMI: {
+    name: "Fujin Yumi",
+    description: "Effective against flying foes. If unit's HP ≥ 50%, unit can move through foes' spaces.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BOW.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id),
+      {
+        phase: EFFECT_PHASE.CALCULATE_OWN_MOVEMENT,
+        condition: { type: EFFECT_CONDITION.UNIT_HP_GREATER_THAN_EQUAL_TO, percent: 50 },
+        actions: [{ type: EFFECT_ACTION.SET_MOVEMENT_FLAG, flag: MOVEMENT_FLAG.PASS }]
+      }
+    ],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "Effective against flying foes. If unit's HP ≥ 50%, unit cannot be slowed by terrain. (Does not apply to impassable terrain.)",
+      effects: [
+        EFFECT.visibleStats({ atk: 14 }),
+        EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id),
+        {
+          phase: EFFECT_PHASE.CALCULATE_OWN_MOVEMENT,
+          condition: { type: EFFECT_CONDITION.UNIT_HP_GREATER_THAN_EQUAL_TO, percent: 50 },
+          actions: [{ type: EFFECT_ACTION.SET_MOVEMENT_FLAG, flag: MOVEMENT_FLAG.TRAVERSE_TERRAIN }]
+        }
+      ]
+    },
+    effectRefine: {
+      description: "If unit's HP ≥ 50%, unit can move to a space adjacent to any ally within 2 spaces.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.CALCULATE_OWN_MOVEMENT,
+          condition: { type: EFFECT_CONDITION.UNIT_HP_GREATER_THAN_EQUAL_TO, percent: 50 },
+          actions: [{ type: EFFECT_ACTION.ENABLE_WARP, target: { type: EFFECT_TARGET.SPACES_WITHIN_ALLIES, allyRange: 2, warpRange: 1 } }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Follow_W.webp",
+    canUse: {
+      unit: [UNIT.TAKUMI.id]
     }
   },
   GLADIATORS_BLADE: {
