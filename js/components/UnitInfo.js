@@ -1,17 +1,10 @@
 import { html } from "https://esm.sh/htm/preact/standalone";
 import UNIT from "../data/units.js";
-import SKILLS from "../data/skills.js";
 import STATUS from "../data/status.js";
-import { SKILL_TYPE, WEAPON_TYPE } from "../data/definitions.js";
+import { SKILL_TYPE } from "../data/definitions.js";
 import Engine from "../engine.js";
 
 const engine = Engine();
-
-const getSkillInfo = (unit, skillType) => SKILLS[unit.skills.find(skill => SKILLS[skill].type === skillType)];
-const getWeaponInfo = unit => getSkillInfo(unit, SKILL_TYPE.WEAPON);
-const getAssistInfo = unit => getSkillInfo(unit, SKILL_TYPE.ASSIST);
-const getSpecialInfo = unit => getSkillInfo(unit, SKILL_TYPE.SPECIAL);
-const getWeaponType = unit => WEAPON_TYPE[UNIT[unit.unitId].weaponType];
 
 const UnitInfo = ({ unit, backgroundType, playingAs }) => {
   const unitInfo = UNIT[unit.unitId];
@@ -34,13 +27,13 @@ const UnitInfo = ({ unit, backgroundType, playingAs }) => {
     background = unit.team === 0 ? "mediumturquoise" : "darkred";
   }
 
-  const weaponInfo = getWeaponInfo(unit);
-  const assistInfo = getAssistInfo(unit);
-  const specialInfo = getSpecialInfo(unit);
-  const aInfo = getSkillInfo(unit, SKILL_TYPE.A);
-  const bInfo = getSkillInfo(unit, SKILL_TYPE.B);
-  const cInfo = getSkillInfo(unit, SKILL_TYPE.C);
-  const sInfo = getSkillInfo(unit, SKILL_TYPE.S);
+  const weaponInfo = engine.getWeaponInfo(unit);
+  const assistInfo = engine.getAssistInfo(unit);
+  const specialInfo = engine.getSpecialInfo(unit);
+  const aInfo = engine.getSkillInfo(unit, SKILL_TYPE.A);
+  const bInfo = engine.getSkillInfo(unit, SKILL_TYPE.B);
+  const cInfo = engine.getSkillInfo(unit, SKILL_TYPE.C);
+  const sInfo = engine.getSkillInfo(unit, SKILL_TYPE.S);
 
   return html`
   <div class="info-panel" style="background: ${background};">

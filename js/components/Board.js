@@ -5,11 +5,15 @@ import Engine from "../engine.js";
 import useResizeListener from "../hooks/useResizeListener.js";
 import Timer from "./Timer.js";
 import ActionTracker from "./ActionTracker.js";
+import { SPECIAL_TYPE } from "../data/definitions.js";
 
 const engine = Engine();
 const FPS = 1000 / 30;
 const blockSheet = new Image();
 blockSheet.src = "assets/maps/common/Wallpattern.webp";
+
+const specialIcon = new Image();
+specialIcon.src = "assets/icons/aoeIcon.png";
 
 const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs }) => {
   const [tileSize, setTileSize] = useState(50);
@@ -22,8 +26,9 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
   const [unitPositions, setUnitPositions] = useState(unitPositionsRef.current);
 
   const boardRef = useRef(null);
-  const canvasRef = useRef(null);
+  const actionCanvasRef = useRef(null);
   const blockCanvasRef = useRef(null);
+  const specialCanvasRef = useRef(null);
 
   const isDuel = gameState.mode === "duel";
   const boardWidth = gameState.map.terrain[0].length;
@@ -135,21 +140,47 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
   }, [animationSequence]);
 
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) return;
-    const context = canvas.getContext("2d");
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    const tileWithPath = validActions.find(action => action.to.x === potentialAction.to?.x && action.to.y === potentialAction.to?.y);
-    const path = tileWithPath?.to.path || [];
-    if (path.length === 0) return;
-    context.strokeStyle = "rgba(173, 216, 230, 0.5)";
-    context.lineWidth = tileSize / 3;
-    context.lineJoin = "round";
-    context.lineCap = "round";
-    context.beginPath();
-    context.moveTo(path[0].x * tileSize + tileSize / 2, path[0].y * tileSize + tileSize / 2);
-    path.forEach(point => context.lineTo(point.x * tileSize + tileSize / 2, point.y * tileSize + tileSize / 2));
-    context.stroke();
+    const actionCanvas = actionCanvasRef.current;
+    const specialCanvas = specialCanvasRef.current;
+    if (!actionCanvas || !specialCanvas) return;
+    const actionCtx = actionCanvas.getContext("2d");
+    const specialCtx = specialCanvas.getContext("2d");
+    actionCtx.clearRect(0, 0, actionCanvas.width, actionCanvas.height);
+    specialCtx.clearRect(0, 0, specialCanvas.width, specialCanvas.height);
+    if (!potentialAction.from) return;
+    const path = potentialAction.to.path ?? [];
+    actionCtx.strokeStyle = "rgba(173, 216, 230, 0.5)";
+    actionCtx.lineWidth = tileSize / 3;
+    actionCtx.lineJoin = "round";
+    actionCtx.lineCap = "round";
+    actionCtx.beginPath();
+    if (path.length === 0) {
+      actionCtx.fillStyle = actionCtx.strokeStyle;
+      actionCtx.arc(potentialAction.from.x * tileSize + tileSize / 2, potentialAction.from.y * tileSize + tileSize / 2, tileSize / 6, 0, 2 * Math.PI);
+      actionCtx.fill();
+    } else {
+      actionCtx.moveTo(path[0].x * tileSize + tileSize / 2, path[0].y * tileSize + tileSize / 2);
+      path.forEach(point => actionCtx.lineTo(point.x * tileSize + tileSize / 2, point.y * tileSize + tileSize / 2));
+      actionCtx.stroke();
+    }
+    if (potentialAction.type === "attack" && activeUnit.special.current === 0) {
+      const specialInfo = engine.getSpecialInfo(activeUnit);
+      if (specialInfo.specialType === SPECIAL_TYPE.AOE) {
+        specialInfo.aoe.shape.forEach(({ x, y }) => {
+          const tileX = (potentialAction.target.x + x) * tileSize;
+          const tileY = (potentialAction.target.y + y) * tileSize;
+          const iconSize = tileSize * 0.8;
+          const offset = (tileSize - iconSize) / 2;
+          specialCtx.drawImage(
+            specialIcon,
+            tileX + offset,
+            tileY + offset,
+            iconSize,
+            iconSize
+          );
+        });
+      }
+    }
   }, [potentialAction]);
 
   const ATLAS_TILE = 182;
@@ -338,7 +369,7 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
       ${highlightedTiles.map(tile => html`<${Tile} x=${tile.x} y=${tile.y} size=${tileSize} colour=${tile.colour} />`)}
     </div>
     <canvas 
-      ref=${canvasRef}
+      ref=${actionCanvasRef}
       width=${tileSize * boardWidth}
       height=${tileSize * boardHeight}
       style=${{ position: "absolute", left: 0, top: 0, pointerEvents: "none" }} />
@@ -366,6 +397,11 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
           position=${position}
           showActionIndicator=${showActionIndicator} />`;
       })}</div>
+    <canvas 
+      ref=${specialCanvasRef}
+      width=${tileSize * boardWidth}
+      height=${tileSize * boardHeight}
+      style=${{ position: "absolute", left: 0, top: 0, pointerEvents: "none" }} />
     ${isDuel && html`<div class="corner" style=${getCornerStyle(0, 0)}>
       <${ActionTracker} tileSize=${tileSize} gameState=${gameState} />
     </div>`}

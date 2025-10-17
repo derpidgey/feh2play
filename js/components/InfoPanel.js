@@ -1,17 +1,10 @@
 import { html } from "https://esm.sh/htm/preact/standalone";
 import UNIT from "../data/units.js";
-import SKILLS from "../data/skills.js";
-import { COMBAT_FLAG, SKILL_TYPE, WEAPON_TYPE } from "../data/definitions.js";
+import { COMBAT_FLAG } from "../data/definitions.js";
 import Engine from "../engine.js";
 import UnitInfo from "./UnitInfo.js";
 
 const engine = Engine();
-
-const getSkillInfo = (unit, skillType) => SKILLS[unit.skills.find(skill => SKILLS[skill].type === skillType)];
-const getWeaponInfo = unit => getSkillInfo(unit, SKILL_TYPE.WEAPON);
-const getAssistInfo = unit => getSkillInfo(unit, SKILL_TYPE.ASSIST);
-const getSpecialInfo = unit => getSkillInfo(unit, SKILL_TYPE.SPECIAL);
-const getWeaponType = unit => WEAPON_TYPE[UNIT[unit.unitId].weaponType];
 
 const InfoPanel = ({ gameState, unit, potentialAction, playingAs }) => {
   if (potentialAction.target) {
@@ -55,7 +48,7 @@ const ActionPreview = ({ gameState, potentialAction }) => {
   let result;
   let formulas;
   if (actionType === "assist") {
-    assist = getAssistInfo(unit).name; // todo implement calculateAssistResult
+    assist = engine.getAssistInfo(unit).name; // todo implement calculateAssistResult
   } else if (actionType === "attack") {
     const unitPos = unit.pos;
     unit.pos = { ...potentialAction.to }

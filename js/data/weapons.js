@@ -1,5 +1,5 @@
 import { CONDITION } from "./conditions.js";
-import { COMBAT_FLAG, CONDITION_OPERATOR, EFFECT_ACTION, EFFECT_CALCULATION, EFFECT_CONDITION, EFFECT_PHASE, EFFECT_TARGET, MOVE_TYPE, MOVEMENT_TYPE, SKILL_TYPE, SPECIAL_TYPE, STAT_CHECK_TYPE, STATS, WEAPON_TYPE } from "./definitions.js";
+import { COMBAT_FLAG, EFFECT_ACTION, EFFECT_CALCULATION, EFFECT_CONDITION, EFFECT_PHASE, EFFECT_TARGET, MOVE_TYPE, MOVEMENT_TYPE, SKILL_TYPE, SPECIAL_TYPE, STAT_CHECK_TYPE, STATS, WEAPON_TYPE } from "./definitions.js";
 import { EFFECT } from "./effects.js";
 import STATUS from "./status.js";
 import UNIT from "./units.js";
@@ -671,6 +671,16 @@ const INHERITABLE_WEAPONS = {
         }
       ]
     }
+  },
+  POISON_DAGGER_PLUS: {
+    name: "Poison Dagger+",
+    description: "Effective against infantry foes.\nAfter combat, if unit attacked, inflicts Def/Res-6 on infantry foe through its next action.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.DAGGER.id,
+    might: 5,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 5 }), EFFECT.effectiveAgainstMoveType(MOVE_TYPE.INFANTRY.id), EFFECT.weakDagger(7)],
+    canBeRefined: false
   },
   RAUDRBLADE_PLUS: {
     name: "Rauðrblade+",

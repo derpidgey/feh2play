@@ -3000,6 +3000,10 @@ function Engine() {
 
 
   return {
+    getSkillInfo,
+    getWeaponInfo,
+    getAssistInfo,
+    getSpecialInfo,
     validateBuild,
     validateTeam,
     canLearn,

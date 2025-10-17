@@ -118,15 +118,20 @@ const Unit = ({ unit, isCaptain, tileSize, position, showActionIndicator }) => {
         height: `${tileSize / 3}px`,
         ...captainIconPosition
       }} />`}
-    ${specialCharge != null && html`
-      <span style=${{
+    ${specialCharge != null && (specialCharge === 0 ? html`
+      <img src="assets/icons/Icon_Skill_Special.webp" style=${{
         position: "absolute",
-        color: "DarkMagenta",
-        fontSize,
-        fontWeight: "bold",
-        backgroundColor: "grey",
+        height: fontSize,
         ...specialChargePosition
-      }}>${specialCharge}</span>`}
+      }} />` : html`
+      <span style=${{
+          position: "absolute",
+          color: "DarkMagenta",
+          fontSize,
+          fontWeight: "bold",
+          backgroundColor: "grey",
+          ...specialChargePosition
+        }}>${specialCharge}</span>`)}
     ${totalStatuses.length > 0 && statusIndex < totalStatuses.length && html`
       <img src=${getStatusImage(totalStatuses[statusIndex])} style=${{
         position: "absolute",
