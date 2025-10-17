@@ -1943,6 +1943,7 @@ function Engine() {
     const unitIndex = context.results?.units.findIndex(u => u.id === unit.id);
     const foe = context.results?.units.find(u => u.team !== unit.team);
     const foeIndex = unitIndex ^ 1;
+    const allyInCombat = context.results?.units.find(u => u.team === unit.team);
 
     switch (type) {
       case EFFECT_CONDITION.IS_TURN_COUNT:
@@ -1955,6 +1956,8 @@ function Engine() {
         return context.gameState.turnCount % 3 === 1;
       case EFFECT_CONDITION.UNIT_INITIATES_COMBAT:
         return context.results.units[unitIndex].isInitiator;
+      case EFFECT_CONDITION.ALLY_INITIATES_COMBAT:
+        return allyInCombat.isInitiator;
       case EFFECT_CONDITION.FOE_INITIATES_COMBAT:
         return foe.isInitiator;
       case EFFECT_CONDITION.UNIT_HP_GREATER_THAN:
@@ -2209,17 +2212,9 @@ function Engine() {
       case EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE:
         return context.gameState.teams[team ^ 1].filter(u => manhattan(u.pos, foeInCombat.pos) <= target.spaces);
       case EFFECT_TARGET.UNIT_AND_ALLIES_WITHIN_X_SPACES:
-        return context.gameState.teams[team]
-          .filter(u => manhattan(u.pos, unit.pos) <= target.spaces)
-          .filter(u => !target.moveType || target.moveType === UNIT[u.unitId].moveType)
-          .filter(u => !target.weaponType || target.weaponType === UNIT[u.unitId].weaponType)
-          .filter(u => !target.attackRange || target.attackRange === getWeaponType(u).range);
+        return getAlliesWithinXSpaces(context.gameState, unit, target, true);
       case EFFECT_TARGET.ALLIES_WITHIN_X_SPACES:
-        return context.gameState.teams[team]
-          .filter(u => u !== unit && manhattan(u.pos, unit.pos) <= target.spaces)
-          .filter(u => !target.moveType || target.moveType === UNIT[u.unitId].moveType)
-          .filter(u => !target.weaponType || target.weaponType === UNIT[u.unitId].weaponType)
-          .filter(u => !target.attackRange || target.attackRange === getWeaponType(u).range);
+        return getAlliesWithinXSpaces(context.gameState, unit, target, false);
       case EFFECT_TARGET.FOES_WITHIN_X_SPACES:
         return context.gameState.teams[team ^ 1].filter(u => manhattan(u.pos, unit.pos) <= target.spaces);
       case EFFECT_TARGET.FOES_IN_CARDINAL_DIRECTIONS:
@@ -2240,6 +2235,21 @@ function Engine() {
         return [];
     }
   };
+
+  function getAlliesWithinXSpaces(gameState, unit, target, includesUnit = false) {
+    const targets = [];
+    if (includesUnit) targets.push(unit);
+    return gameState.teams[unit.team]
+      .filter(u => u !== unit && manhattan(u.pos, unit.pos) <= target.spaces)
+      .filter(u => !target.moveType || target.moveType === UNIT[u.unitId].moveType)
+      .filter(u => !target.weaponType || target.weaponType === UNIT[u.unitId].weaponType)
+      .filter(u => !target.attackRange || target.attackRange === getWeaponType(u).range)
+      .filter(u => !target.tactics || countMoveType(UNIT[u.unitId].moveType, gameState.teams[unit.team]) <= 2);
+  }
+
+  function countMoveType(moveType, team) {
+    return team.reduce((total, unit) => total + UNIT[unit.unitId].moveType === moveType, 0);
+  }
 
   function getFoesInCardinalDirections(gameState, unit, target) {
     const foes = gameState.teams[unit.team ^ 1];

@@ -1803,6 +1803,53 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.EFFIE.id]
     }
   },
+  ELISES_STAFF: {
+    name: "Elise's Staff",
+    description: "Grants Spd+3. Calculates damage from staff like other weapons. After combat, if unit attacked, inflicts 【Gravity】on target and foes within 1 space of target.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.STAFF.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14, spd: 3 }),
+      EFFECT.wrathful(),
+      {
+        phase: EFFECT_PHASE.AFTER_COMBAT_BEFORE_DEATH,
+        condition: { type: EFFECT_CONDITION.UNIT_ATTACKED_DURING_COMBAT },
+        actions: [{ type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.GRAVITY.id, target: { type: EFFECT_TARGET.FOE_AND_FOES_WITHIN_X_SPACES_OF_FOE, spaces: 1 } }]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit or ally initiates combat against a foe within 2 spaces of unit, inflicts Atk/Spd/Def/Res-4 on that foe during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: -4, target: { type: EFFECT_TARGET.FOE } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: -4, target: { type: EFFECT_TARGET.FOE } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: -4, target: { type: EFFECT_TARGET.FOE } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: -4, target: { type: EFFECT_TARGET.FOE } }
+          ]
+        },
+        {
+          phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
+          condition: { type: EFFECT_CONDITION.ALLY_INITIATES_COMBAT },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: -4, target: { type: EFFECT_TARGET.FOE_IN_COMBAT } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: -4, target: { type: EFFECT_TARGET.FOE_IN_COMBAT } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: -4, target: { type: EFFECT_TARGET.FOE_IN_COMBAT } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: -4, target: { type: EFFECT_TARGET.FOE_IN_COMBAT } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Elises_Staff_W.webp",
+    canUse: {
+      unit: [UNIT.ELISE.id]
+    }
+  },
   ETERNAL_BREATH: {
     name: "Eternal Breath",
     description: "At start of turn, if an ally is within 2 spaces of unit, grants Atk/Spd/Def/Res+5 to unit and allies within 2 spaces for 1 turn. If foe's Range = 2, calculates damage using the lower of foe's Def or Res.",
@@ -3222,6 +3269,34 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.DRAUG.id]
     }
   },
+  TACTICAL_BOLT: {
+    name: "Tactical Bolt",
+    description: "Grants weapon-triangle advantage against colorless foes, and inflicts weapon-triangle disadvantage on colorless foes during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BLUE_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [EFFECT.visibleStats({ atk: 14 }), EFFECT.raven()],
+    canBeRefined: true,
+    effectRefine: {
+      description: "At start of turn, grants Atk/Spd/Def/Res+4 to allies within 2 spaces for 1 turn. Granted only if number of that ally's movement type on current team ≤ 2.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_TURN,
+          actions: [
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 2, tactics: true } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 2, tactics: true } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 2, tactics: true } },
+            { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ALLIES_WITHIN_X_SPACES, spaces: 2, tactics: true } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/All_Tactic_W.webp",
+    canUse: {
+      unit: [UNIT.ROBIN_M.id]
+    }
+  },
   THARJAS_HEX: {
     name: "Tharja's Hex",
     description: "Grants bonus to unit’s Atk = total bonuses on unit during combat.",
@@ -3376,10 +3451,15 @@ Object.entries(WEAPON_SKILLS).forEach(([key, value]) => WEAPON_SKILLS[key] = { i
 Object.values(WEAPON_SKILLS).forEach(weapon => {
   if (weapon.canBeRefined) {
     if (weapon.weaponType === WEAPON_TYPE.STAFF.id) {
-      ["WRATHFUL", "DAZZLE"].forEach(refineType => {
-        const refinedWeapon = createRefinedStaffWeapon(weapon, refineType);
-        WEAPON_SKILLS[refinedWeapon.id] = refinedWeapon;
-      });
+      if (weapon.effectRefine) {
+        const effectRefinedWeapon = createRefinedWeapon(weapon, "EFF");
+        WEAPON_SKILLS[effectRefinedWeapon.id] = effectRefinedWeapon;
+      } else {
+        ["WRATHFUL", "DAZZLE"].forEach(refineType => {
+          const refinedWeapon = createRefinedStaffWeapon(weapon, refineType);
+          WEAPON_SKILLS[refinedWeapon.id] = refinedWeapon;
+        });
+      }
       return;
     }
     ["ATK", "SPD", "DEF", "RES"].forEach(stat => {

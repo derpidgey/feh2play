@@ -369,6 +369,22 @@ const BOOK_1 = {
     superboons: [STATS.RES],
     superbanes: [STATS.DEF],
   },
+  ELISE: {
+    name: "Elise",
+    subtitle: "Budding Flower",
+    imgFace: "assets/face/book1/Elise_Budding_Flower_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Elise_Budding_Flower_Mini_Unit_Idle.webp",
+    rarity: RARITY.FIVE_STAR,
+    weaponType: WEAPON_TYPE.STAFF.id,
+    moveType: MOVE_TYPE.CAVALRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 15, atk: 8, spd: 8, def: 4, res: 8 },
+    level40Stats: { hp: 30, atk: 32, spd: 32, def: 19, res: 32 },
+    superboons: [],
+    superbanes: []
+  },
   ELIWOOD: {
     name: "Eliwood",
     subtitle: "Knight of Lycia",
@@ -1008,6 +1024,22 @@ const BOOK_1 = {
     level40Stats: { hp: 41, atk: 34, spd: 35, def: 25, res: 22 },
     superboons: [STATS.DEF],
     superbanes: [STATS.HP]
+  },
+  ROBIN_M: {
+    name: "Robin",
+    subtitle: "High Deliverer",
+    imgFace: "assets/face/book1/Robin_High_Deliverer_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Robin_High_Deliverer_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.BLUE_TOME.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.AWAKENING],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 18, atk: 7, spd: 7, def: 7, res: 5 },
+    level40Stats: { hp: 40, atk: 29, spd: 29, def: 29, res: 22 },
+    superboons: [],
+    superbanes: [STATS.HP, STATS.ATK, STATS.SPD, STATS.DEF]
   },
   ROY: {
     name: "Roy",

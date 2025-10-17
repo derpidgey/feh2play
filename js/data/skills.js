@@ -2106,27 +2106,123 @@ const B_SKILLS = {
   },
   EARTH_DANCE_3: {
     name: "Earth Dance 3",
-    description: "If Sing or Dance is used, grants Def+4 to target.",
+    description: "If Sing or Dance is used, grants Def+5 to target.",
     img: "assets/skills/Earth_Dance_3.webp",
     type: SKILL_TYPE.B,
     availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.USED_DANCE,
-        actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.ASSIST_TARGET } }]
+        actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 5, target: { type: EFFECT_TARGET.ASSIST_TARGET } }]
       }
     ]
   },
   TORRENT_DANCE_3: {
     name: "Torrent Dance 3",
-    description: "If Sing or Dance is used, grants Res+4 to target.",
+    description: "If Sing or Dance is used, grants Res+5 to target.",
     img: "assets/skills/Torrent_Dance_3.webp",
     type: SKILL_TYPE.B,
     availableAsSeal: true,
     effects: [
       {
         phase: EFFECT_PHASE.USED_DANCE,
-        actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ASSIST_TARGET } }]
+        actions: [{ type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 5, target: { type: EFFECT_TARGET.ASSIST_TARGET } }]
+      }
+    ]
+  },
+  CALDERA_DANCE_2: {
+    name: "Caldera Dance 2",
+    description: "If Sing or Dance is used, grants Atk+3 and Def+4 to target.",
+    img: "assets/skills/Caldera_Dance_2.webp",
+    type: SKILL_TYPE.B,
+    availableAsSeal: true,
+    effects: [
+      {
+        phase: EFFECT_PHASE.USED_DANCE,
+        actions: [
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 3, target: { type: EFFECT_TARGET.ASSIST_TARGET } },
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.ASSIST_TARGET } }
+        ]
+      }
+    ]
+  },
+  FIREFLOOD_DANCE_2: {
+    name: "Fireflood Dance 2",
+    description: "If Sing or Dance is used, grants Atk+3 and Res+4 to target.",
+    img: "assets/skills/Fireflood_Dance_2.webp",
+    type: SKILL_TYPE.B,
+    availableAsSeal: true,
+    effects: [
+      {
+        phase: EFFECT_PHASE.USED_DANCE,
+        actions: [
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 3, target: { type: EFFECT_TARGET.ASSIST_TARGET } },
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ASSIST_TARGET } }
+        ]
+      }
+    ]
+  },
+  FIRESTORM_DANCE_2: {
+    name: "Firestorm Dance 2",
+    description: "If Sing or Dance is used, grants Atk+3 and Spd+3 to target.",
+    img: "assets/skills/Firestorm_Dance_2.webp",
+    type: SKILL_TYPE.B,
+    availableAsSeal: true,
+    effects: [
+      {
+        phase: EFFECT_PHASE.USED_DANCE,
+        actions: [
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.ATK, value: 3, target: { type: EFFECT_TARGET.ASSIST_TARGET } },
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 3, target: { type: EFFECT_TARGET.ASSIST_TARGET } }
+        ]
+      }
+    ]
+  },
+  ROCKSLIDE_DANCE_2: {
+    name: "Rockslide Dance 2",
+    description: "If Sing or Dance is used, grants Spd+3 and Def+4 to target.",
+    img: "assets/skills/Rockslide_Dance_2.webp",
+    type: SKILL_TYPE.B,
+    availableAsSeal: true,
+    effects: [
+      {
+        phase: EFFECT_PHASE.USED_DANCE,
+        actions: [
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 3, target: { type: EFFECT_TARGET.ASSIST_TARGET } },
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.ASSIST_TARGET } }
+        ]
+      }
+    ]
+  },
+  DELUGE_DANCE_2: {
+    name: "Deluge Dance 2",
+    description: "If Sing or Dance is used, grants Spd+3 and Res+4 to target.",
+    img: "assets/skills/Deluge_Dance_2.webp",
+    type: SKILL_TYPE.B,
+    availableAsSeal: true,
+    effects: [
+      {
+        phase: EFFECT_PHASE.USED_DANCE,
+        actions: [
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.SPD, value: 3, target: { type: EFFECT_TARGET.ASSIST_TARGET } },
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ASSIST_TARGET } }
+        ]
+      }
+    ]
+  },
+  GEYSER_DANCE_2: {
+    name: "Geyser Dance 2",
+    description: "If Sing or Dance is used, grants Def/Res+4 to target.",
+    img: "assets/skills/Geyser_Dance_2.webp",
+    type: SKILL_TYPE.B,
+    availableAsSeal: true,
+    effects: [
+      {
+        phase: EFFECT_PHASE.USED_DANCE,
+        actions: [
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.ASSIST_TARGET } },
+          { type: EFFECT_ACTION.APPLY_BUFF, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.ASSIST_TARGET } }
+        ]
       }
     ]
   },
