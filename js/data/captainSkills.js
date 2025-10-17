@@ -7,7 +7,7 @@ const CAPTAIN_SKILLS = {
   ADROIT_CAPTAIN: {
     name: "Adroit Captain",
     description: "Grants Spd+5 to captain during combat.\nCaptain and allies within 2 spaces of captain receive: \"If Spd > foe's Spd, neutralizes effects that guarantee foe's follow-up attacks and prevent unit's follow-up attacks.\"",
-    img: "assets/captainskills/Adroit_Captain.webp",
+    img: "assets/captainSkills/Adroit_Captain.webp",
     type: SKILL_TYPE.CAPTAIN,
     effects: [
       EFFECT.inCombatStats({ spd: 5 }),
@@ -18,7 +18,7 @@ const CAPTAIN_SKILLS = {
   DAUNTLESS: {
     name: "Dauntless",
     description: "At the start of turns 2 through 5, grants Special cooldown charge +1 per attack to captain and allies within 2 spaces of captain for 1 turn and inflicts【Guard】on foes in cardinal directions of captain through their next actions.",
-    img: "assets/captainskills/Dauntless.webp",
+    img: "assets/captainSkills/Dauntless.webp",
     type: SKILL_TYPE.CAPTAIN,
     effects: [
       {
@@ -39,7 +39,7 @@ const CAPTAIN_SKILLS = {
   EARTH_RENDERING: {
     name: "Earth Rendering",
     description: "At the start of turns 2-4, if your captain is in the Capture Area, the Capture Area will move one space closer to your team. (Red: moves up. Blue: moves down.)",
-    img: "assets/captainskills/Earth_Rendering.webp",
+    img: "assets/captainSkills/Earth_Rendering.webp",
     type: SKILL_TYPE.CAPTAIN,
     effects: [
       {
@@ -59,7 +59,7 @@ const CAPTAIN_SKILLS = {
   FLASH_OF_STEEL: {
     name: "Flash of Steel",
     description: "If captain initiates combat, captain can make a follow-up attack before foe can counterattack.\nGrants the following to captain and allies within 2 spaces of captain during combat: \"neutralizes effects that grant 'Special cooldown charge +X' to foe or inflict 'Special cooldown charge -X' on unit.\"",
-    img: "assets/captainskills/Flash_of_Steel.webp",
+    img: "assets/captainSkills/Flash_of_Steel.webp",
     type: SKILL_TYPE.CAPTAIN,
     effects: [
       {
@@ -87,7 +87,7 @@ const CAPTAIN_SKILLS = {
   MIGHT_OF_MIRIADS: {
     name: "Might of Miriads",
     description: "Grants Atk/Spd/Def/Res+6 to captain during combat. Captain can counterattack regardless of foe's range (excluding when unit's Savior skill triggers).",
-    img: "assets/captainskills/Might_of_Myriads.webp",
+    img: "assets/captainSkills/Might_of_Myriads.webp",
     type: SKILL_TYPE.CAPTAIN,
     effects: [
       EFFECT.inCombatStats({ atk: 6, spd: 6, def: 6, res: 6 }),
@@ -97,7 +97,7 @@ const CAPTAIN_SKILLS = {
   TURMOIL: {
     name: "Turmoil",
     description: "At the start of the turn, captain can move 1 extra space. (That turn only. Does not stack.)\nCaptain counts as two Heroes for scoring purposes while in the Capture Area.",
-    img: "assets/captainskills/Turmoil.webp",
+    img: "assets/captainSkills/Turmoil.webp",
     type: SKILL_TYPE.CAPTAIN,
     effects: [
       {
