@@ -705,6 +705,22 @@ const BOOK_1 = {
     superboons: [],
     superbanes: [STATS.RES]
   },
+  LEO: {
+    name: "Leo",
+    subtitle: "Sorcerous Prince",
+    imgFace: "assets/face/book1/Leo_Sorcerous_Prince_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Leo_Sorcerous_Prince_Mini_Unit_Idle.webp",
+    rarity: RARITY.FIVE_STAR,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    moveType: MOVE_TYPE.CAVALRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 17, atk: 7, spd: 5, def: 6, res: 8 },
+    level40Stats: { hp: 39, atk: 29, spd: 22, def: 25, res: 30 },
+    superboons: [STATS.DEF],
+    superbanes: [STATS.HP, STATS.ATK, STATS.RES]
+  },
   LILINA: {
     name: "Lilina",
     subtitle: "Delightful Noble",

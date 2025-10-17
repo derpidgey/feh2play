@@ -1364,6 +1364,56 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.FAE.id]
     }
   },
+  BRYNHILDR: {
+    name: "Brynhildr",
+    description: "If unit initiates combat, inflicts status on foe restricting movement to 1 space through its next action.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.RED_TOME.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      {
+        phase: EFFECT_PHASE.AFTER_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+        actions: [{ type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.GRAVITY.id, target: { type: EFFECT_TARGET.FOE_POST_COMBAT, spaces: 1 } }]
+      }
+    ],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "Reduces damage from magic foe's first attack by 30%.",
+      effects: [
+        EFFECT.visibleStats({ atk: 14 }),
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.or(
+            { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.RED_TOME.id },
+            { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.BLUE_TOME.id },
+            { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.GREEN_TOME.id },
+            { type: EFFECT_CONDITION.FOE_IS_WEAPON_TYPE, weaponType: WEAPON_TYPE.C_TOME.id }
+          ),
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.FIRST_ATTACK_DAMAGE_REDUCTION, percent: 30, target: { type: EFFECT_TARGET.SELF } }]
+        }
+      ]
+    },
+    effectRefine: {
+      description: "If foe uses bow, dagger, magic, or staff and unit's Def > foe's Def, foe cannot make a follow-up attack.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: CONDITION.and(
+            { type: EFFECT_CONDITION.FOE_HAS_X_RANGE, range: 2 },
+            { type: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE, unitStat: STATS.DEF, foeStat: STATS.DEF, statType: STAT_CHECK_TYPE.IN_COMBAT }
+          ),
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Brynhildr_W.webp",
+    canUse: {
+      unit: [UNIT.LEO.id]
+    }
+  },
   BULL_BLADE: {
     name: "Bull Blade",
     description: "During combat, boosts unit's Atk/Def by number of allies within 2 spaces × 2. (Maximum bonus of +6 to each stat.)",

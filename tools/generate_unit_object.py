@@ -4,7 +4,7 @@ import json
 import re
 
 # Define the URL for the unit's wiki page
-url = "https://feheroes.fandom.com/wiki/Takumi:_Wild_Card"
+url = "https://feheroes.fandom.com/wiki/Leo:_Sorcerous_Prince"
 
 response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
