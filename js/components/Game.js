@@ -34,7 +34,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   const backgroundType = isDuel ? "absolute" : "relative";
 
   if (gameState.gameOver) {
-    onGameOver(gameState.duelState[playingAs].result);
+    onGameOver(gameState.duelState[playingAs].result, 1000);
   }
 
   useResizeListener(() => setIsWideScreen(window.innerWidth >= window.innerHeight * 3 / 2));
@@ -254,7 +254,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     <${Board} gameState=${gameState} activeUnit=${activeUnit} validActions=${validActions} potentialAction=${potentialAction}
       animationSequence=${animationSequence} onAnimationComplete=${onAnimationComplete}
       handleTileClick=${handleTileClick} lastClick=${lastClick} showDangerArea=${showDangerArea} playingAs=${playingAs} />
-    <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} surrender=${() => onGameOver("lose")} />
+    <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} surrender=${() => onGameOver("lose", 0)} />
     <${StatusBar} turn=${gameState.turnCount} currentTurn=${gameState.currentTurn} playingAs=${playingAs} />
   </div>
   ${isWideScreen && html`<${SidePanel} team=${gameState.teams[1].filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)} backgroundType=${backgroundType} playingAs=${playingAs} />`}

@@ -128,35 +128,32 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
     }
 
     return html`
-          <div class="input-row">
-            <img src=${config.icon} style="height: 1.8rem;" />
-            <${Dropdown}
-            options=${[{ label: "-", value: "" }, ...Object.values(SKILLS).filter(skill => skill.type === config.skillType)
+        <div class="input-row">
+          <img src=${config.icon} style="height: 1.8rem;" />
+          <${Dropdown}
+          options=${[{ label: "-", value: "" }, ...Object.values(SKILLS).filter(skill => skill.type === config.skillType)
         .filter(skill => currentUnit?.unitId ? engine.canLearn(currentUnitInfo, skill) : false)
         .map(skill => ({ label: skill.name, value: skill.id }))]}
-            onSelect=${skillId => updateSkill(i, skillId)}
-            defaultSelected=${currentSkill === "" ? "-" : Object.values(SKILLS).find(s => currentSkill === s.id).name}/>
-          </div>
-          `
-  })}
+          onSelect=${skillId => updateSkill(i, skillId)}
+          defaultSelected=${currentSkill === "" ? "-" : Object.values(SKILLS).find(s => currentSkill === s.id).name}/>
+        </div>`})}
       </div>
 
       ${teamData.mode === "sd" && html`
-        <div class="card p-3 mb-4">
-          <div class="input-row">
-            <div style="width: 1.8rem;"></div>
-            <${Dropdown}
-              options=${[
+      <div class="card p-3 mb-4">
+        <div class="input-row">
+          <div style="width: 1.8rem;"></div>
+          <${Dropdown}
+            options=${[
         { label: "-", value: "" },
         ...Object.values(SKILLS)
           .filter(skill => skill.type === SKILL_TYPE.CAPTAIN)
           .map(skill => ({ label: skill.name, value: skill.id })),
       ]}
-              onSelect=${skillId => updateSkill(7, skillId)}
-              defaultSelected=${team[0]?.skills?.[7] ? SKILLS[team[0].skills[7]].name : "-"}/>
-          </div>
+            onSelect=${skillId => updateSkill(7, skillId)}
+            defaultSelected=${team[0]?.skills?.[7] ? SKILLS[team[0].skills[7]].name : "-"}/>
         </div>
-      `}
+      </div>`}
 
       <div class="d-flex gap-2">
         <button type="button" class="btn btn-secondary flex-fill" onClick=${onCancel}>Cancel</button>

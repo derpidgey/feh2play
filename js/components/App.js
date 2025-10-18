@@ -39,11 +39,11 @@ const App = () => {
   ];
   const gameState = engine.newGame(MAPS.SD15, team1, team2, "duel");
 
-  const onGameOver = result => {
+  const onGameOver = (result, delay = 1000) => {
     setTimeout(() => {
       setScreen("gameOver");
       setGameResult(result);
-    }, 1000);
+    }, delay);
   }
 
   return html`
@@ -65,7 +65,6 @@ const App = () => {
         <div class="screen">
           <div class="p-3 text-center">
             <h2>Summoner Duels Demo</h2>
-            <p>Playing as: Team ${playingAs + 1}</p>
             <div class="btn-group btn-group-lg w-100 mb-5">
               <button type="button" class="btn btn-outline-info w-50${playingAs === 0 ? " active" : ""}" onClick=${() => setPlayingAs(0)}>Team 1</button>
               <button type="button" class="btn btn-outline-danger w-50${playingAs === 1 ? " active" : ""}" onClick=${() => setPlayingAs(1)}>Team 2</button>
