@@ -4,6 +4,7 @@ import UNIT from "../data/units.js";
 import SKILLS from "../data/skills.js";
 import Engine from "../engine.js";
 import MAPS from "../data/maps.js";
+import GameOver from "./GameOver.js";
 
 function createBuild(unitId, skills = []) {
   return {
@@ -98,7 +99,7 @@ const SDAssault = ({ onExit }) => {
     const isLastBattle = battleIndex >= level.battles.length - 1;
     if (result === "lose" || isLastBattle) {
       setTimeout(() => {
-        setScreen("result");
+        setScreen("gameOver");
         setGameResult(result);
       }, 1000);
     } else {
@@ -129,49 +130,55 @@ const SDAssault = ({ onExit }) => {
   }
 
   return html`
-    <div class="screen menu">
+    <div class="screen">
       ${screen === "levelSelect" && html`
-        <div>
-          <h2>SD Assault</h2>
-          ${SD_LEVELS.map(l => html`
-            <div style="border:1px solid #888; padding:8px; margin:6px; cursor:pointer;"
-                 onClick=${() => { setSelectedLevel(l.id); setScreen("preview"); }}>
-              <strong>${l.name}</strong><br/>
-              <small>${l.description}</small>
-            </div>
-          `)}
-          <button onClick=${onExit}>Back</button>
+        <div class="p-3 text-center d-flex flex-column" style="height: 100%;">
+          <h2 class="mb-4">SD Assault</h2>
+          <div class="d-grid gap-3 overflow-auto mb-4">
+            ${SD_LEVELS.map(l => html`
+              <div class="card shadow-sm border-0" role="button" onClick=${() => { setSelectedLevel(l.id); setScreen("preview"); }}>
+                <div class="card-body">
+                  <h5 class="card-title mb-1">${l.name}</h5>
+                  <p class="card-text text-muted small mb-0">${l.description}</p>
+                </div>
+              </div>
+            `)}
+          </div>
+          <div class="d-grid mt-auto">
+            <button type="button" class="btn btn-danger btn-lg" onClick=${onExit}>Back</button>
+          </div>
         </div>
       `}
 
       ${screen === "preview" && level && html`
-        <div>
-          <h3>${level.name}</h3>
-          <p>${level.description}</p>
-          <div>Maps in this challenge: ${level.battles.length}</div>
+        <div class="p-3 text-center">
+          <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+              <h3 class="card-title mb-2">${level.name}</h3>
+              <p class="card-text text-muted mb-3">${level.description}</p>
+              <p class="fw-semibold">Maps in this challenge: ${level.battles.length}</p>
+            </div>
+          </div>
 
-          <div style="margin-top:10px;">
-            <label>Select Your Team:</label><br/>
-            <select onChange=${e => setSelectedTeam(savedTeams[e.target.value])}>
+          <div class="mb-4">
+            <label for="teamSelect" class="form-label fw-semibold">Select Your Team:</label>
+            <select 
+              id="teamSelect" 
+              class="form-select form-select-lg text-center"
+              onChange=${e => setSelectedTeam(savedTeams[e.target.value])}>
               <option value="">-- Select --</option>
               ${savedTeams.map((team, i) => html`<option value=${i}>${team.name}</option>`)}
             </select>
           </div>
 
-          <button onClick=${startLevel}>Start</button>
-          <button onClick=${() => setScreen("levelSelect")}>Back</button>
-        </div>
-      `}
-
-      ${screen === "result" && html`
-        <div class="screen menu">
-          <div>
-            <h2>Game Over</h2>
-            <div>${gameResult}</div>
-            <button onClick=${() => setScreen("levelSelect")}>Back to Levels</button>
+          <div class="d-grid gap-3">
+            <button type="button" class="btn btn-success btn-lg" onClick=${startLevel}>Fight!</button>
+            <button type="button" class="btn btn-danger btn-lg" onClick=${() => setScreen("levelSelect")}>Back</button>
           </div>
         </div>
       `}
+
+      ${screen === "gameOver" && html`<${GameOver} gameResult=${gameResult} btnClick=${() => setScreen("levelSelect")} btnText="Back to Levels" />`}
     </div>
   `;
 }

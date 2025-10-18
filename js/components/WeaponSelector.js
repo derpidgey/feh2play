@@ -43,14 +43,14 @@ const WeaponSelector = ({ weaponId, onChange, unitInfo }) => {
   };
 
   return html`
-    <div class="input-row" style="gap: 10px;">
+    <div class="input-row">
       <img src="assets/icons/Icon_Skill_Weapon.webp" style="height: 1.8rem;" />
       <${Dropdown}
         options=${weaponOptions}
         onSelect=${handleWeaponChange}
         defaultSelected=${baseLabel || "-"} />
     </div>
-    <div class="input-row" style="gap: 10px;">
+    <div class="input-row">
       <img src="assets/icons/Refine.webp" style="height: 1.8rem;" />
       <${Dropdown}
         options=${refineOptions}

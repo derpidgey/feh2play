@@ -37,6 +37,11 @@ const TeamBuilder = ({ onExit }) => {
     setNewTeamName("");
   };
 
+  const copyTeam = team => {
+    const newTeam = { ...team, name: "Copy of " + team.name };
+    saveTeams([newTeam, ...teams]);
+  }
+
   if (editingIndex !== null && draft) {
     return html`<${TeamEditor}
       teamData=${draft}
@@ -48,33 +53,44 @@ const TeamBuilder = ({ onExit }) => {
 
   return html`
     <div class="screen">
-      <h2>Team Builder</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Team name"
-          value=${newTeamName}
-          onInput=${e => setNewTeamName(e.target.value)}
-        />
-        <select value=${newTeamMode} onChange=${e => setNewTeamMode(e.target.value)}>
-          <option value="standard">Standard</option>
-          <option value="sd">SD</option>
-        </select>
-        <button onClick=${createTeam}>Create Team</button>
-      </div>
-
-      <h3>Teams</h3>
-      <div>
-        ${teams.map((team, i) => html`
-          <div>
-            ${team.name} (${team.mode})
-            <button onClick=${() => startEditing(i)}>Edit</button>
-            <button onClick=${() => saveTeams(teams.filter((_, idx) => idx !== i))}>Delete</button>
+      <div class="p-3">
+        <h2 class="text-center mb-4">Team Builder</h2>
+        <div class="row g-3 align-items-center mb-4">
+          <div class="col-md-5">
+            <input type="text" class="form-control" placeholder="Team name" 
+            value=${newTeamName} onInput=${e => setNewTeamName(e.target.value)}/>
           </div>
-        `)}
-      </div>
+          <div class="col-md-3">
+            <select class="form-select" value=${newTeamMode} onChange=${e => setNewTeamMode(e.target.value)}>
+              <option value="standard">Standard</option>
+              <option value="sd">SD</option>
+            </select>
+          </div>
+          <div class="col-md-4 text-end">
+            <button type="button" class="btn btn-success" onClick=${createTeam}>Create Team</button>
+          </div>
+        </div>
 
-      <button onClick=${onExit}>Back</button>
+        <h3>Teams</h3>
+        <div class="list-group mb-4">
+          ${teams.map((team, i) => html`
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>${team.name}</strong> <small class="text-muted">(${team.mode})</small>
+              </div>
+              <div class="btn-group">
+                <button type="button" class="btn btn-outline-primary btn-sm" onClick=${() => startEditing(i)}>Edit</button>
+                <button type="button" class="btn btn-outline-success btn-sm" onClick=${() => copyTeam(team)}>Copy</button>
+                <button type="button" class="btn btn-outline-danger btn-sm" onClick=${() => saveTeams(teams.filter((_, idx) => idx !== i))}>Delete</button>
+              </div>
+            </div>
+          `)}
+        </div>
+
+        <div class="d-grid">
+          <button type="button" class="btn btn-secondary btn-lg" onClick=${onExit}>Back</button>
+        </div>
+      </div>
     </div>
   `;
 }

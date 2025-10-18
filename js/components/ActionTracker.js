@@ -60,15 +60,17 @@ const ActionTracker = ({ tileSize, gameState }) => {
     }} />
   <span style=${{
       width: "100%",
-      top: `${tileSize / 2}px`,
+      top: `${tileSize * 1 / 3}px`,
       textAlign: "center",
-      fontSize: `${tileSize * 3 / 5}px`
+      fontSize: `${tileSize * 3 / 5}px`,
+      color: "black"
     }}>${turnCount}</span>
   <span style=${{
       width: "100%",
-      top: `${tileSize * 1.15}px`,
+      top: `${tileSize * 1.1}px`,
       textAlign: "center",
-      fontSize: `${tileSize / 3}px`
+      fontSize: `${tileSize / 3}px`,
+      color: "black"
     }}>5</span>
   `;
 }

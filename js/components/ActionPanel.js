@@ -1,12 +1,13 @@
-import { html, useState } from "https://esm.sh/htm/preact/standalone";
+import { html } from "https://esm.sh/htm/preact/standalone";
 
-const ActionPanel = ({ gameState, onEndTurn, setShowDangerArea, onEndSwapPhase, playingAs }) => {
+const ActionPanel = ({ gameState, onEndTurn, setShowDangerArea, onEndSwapPhase, playingAs, surrender }) => {
 
   return html`
-  <div class="action-panel">
-    <button onClick=${() => setShowDangerArea(prev => !prev)}>Danger Area</button>
-    ${!gameState.isSwapPhase && gameState.currentTurn === playingAs && html`<button onClick=${onEndTurn}>End Turn</button>`}
-    ${gameState.isSwapPhase && html`<button onClick=${onEndSwapPhase}>Fight!</button>`}
+  <div class="action-panel d-flex justify-content-start gap-2 p-2">
+    <button class="btn btn-danger" onClick=${() => setShowDangerArea(prev => !prev)}>Danger<br/>Area</button>
+    ${!gameState.isSwapPhase && gameState.currentTurn === playingAs && html`<button class="btn btn-primary" onClick=${onEndTurn}>End<br/>Turn</button>`}
+    ${gameState.isSwapPhase && html`<button class="btn btn-success" onClick=${onEndSwapPhase}>Fight!</button>`}
+    <button class="btn btn-warning" onClick=${surrender}>Surrender</button>
   </div>
   `;
 }

@@ -85,17 +85,17 @@ const ActionPreview = ({ gameState, potentialAction }) => {
       <img src=${unitInfo.imgFace} alt=${unitInfo.name} style="width: 100%; max-width: 80px; object-fit: contain;" />
     </div>
     <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[leftBackground]};">
-      <h2>${unitInfo.name}</h2>
-      <p>${unitStartingHp} → ${unitRemainingHp}</p>
-      ${actionType === "assist" && html`<p>${assist}</p>`}
-      ${actionType === "attack" && html`<p>${formulas[0]}</p>`}
-      ${actionType === "attack" && html`<p>${renderTempStats(result.units[0].tempStats)}</p>`}
+      <h3>${unitInfo.name}</h3>
+      <span>${unitStartingHp} → ${unitRemainingHp}</span>
+      ${actionType === "assist" && html`<span>${assist}</span>`}
+      ${actionType === "attack" && html`<span>${formulas[0]}</span>`}
+      ${actionType === "attack" && html`<span>${renderTempStats(result.units[0].tempStats)}</span>`}
     </div>
     <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[rightBackground]};">
-      <h2>${targetName}</h2>
-      <p>${targetStartingHp} → ${targetRemainingHp}</p>
-      ${actionType === "attack" && html`<p>${formulas[1]}</p>`}
-      ${actionType === "attack" && html`<p>${renderTempStats(result.units[1].tempStats)}</p>`}
+      <h3>${targetName}</h3>
+      <span>${targetStartingHp} → ${targetRemainingHp}</span>
+      ${actionType === "attack" && html`<span>${formulas[1]}</span>`}
+      ${actionType === "attack" && html`<span>${renderTempStats(result.units[1].tempStats)}</span>`}
     </div>
     <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center; background: ${backgrounds[rightBackground]};">
       ${targetUnit

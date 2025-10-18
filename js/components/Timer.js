@@ -5,7 +5,7 @@ const Timer = ({ tileSize, currentTurn, playingAs }) => {
   const extra = "∞";
 
   const line1 = tileSize / 6;
-  const line2 = line1 + tileSize / 6;
+  const line2 = line1 + tileSize / 8;
   const line3 = line2 + tileSize;
 
   
@@ -24,7 +24,7 @@ const Timer = ({ tileSize, currentTurn, playingAs }) => {
   }}>Time:</span>
   <span style=${{
     width: "100%",
-    top: `${line2}px`,
+    top: `${line1}px`,
     textAlign: "center",
     fontSize: `${tileSize}px`
   }}>${(time === "∞" || time > 0) ? time : extra}</span>

@@ -1389,9 +1389,9 @@ const EXCLUSIVE_WEAPONS = {
         }
       ]
     },
-    refineImg: "assets/refines/Eternal_Breath_W.webp",
+    refineImg: "assets/refines/Breath_of_Fog_W.webp",
     canUse: {
-      unit: [UNIT.FAE.id]
+      unit: [UNIT.TIKI_A.id, UNIT.TIKI_Y.id]
     }
   },
   BRYNHILDR: {
