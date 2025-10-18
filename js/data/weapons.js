@@ -3593,9 +3593,6 @@ const EXCLUSIVE_WEAPONS = {
 
 const WEAPON_SKILLS = { ...INHERITABLE_WEAPONS, ...EXCLUSIVE_WEAPONS }
 
-console.log(`${Object.keys(INHERITABLE_WEAPONS).length} inheritable weapons
-${Object.keys(INHERITABLE_WEAPONS).length} exclusive weapons`);
-
 Object.entries(WEAPON_SKILLS).forEach(([key, value]) => WEAPON_SKILLS[key] = { id: key, ...value });
 
 Object.values(WEAPON_SKILLS).forEach(weapon => {

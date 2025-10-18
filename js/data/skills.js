@@ -3737,12 +3737,12 @@ const S_SKILLS = {
 
 const SKILLS = { ...CAPTAIN_SKILLS, ...WEAPON_SKILLS, ...ASSIST_SKILLS, ...SPECIAL_SKILLS, ...A_SKILLS, ...B_SKILLS, ...C_SKILLS, ...S_SKILLS }
 
-console.log(`${Object.keys(ASSIST_SKILLS).length} assist skills
-${Object.keys(SPECIAL_SKILLS).length} special skills
-${Object.keys(A_SKILLS).length} a skills
-${Object.keys(B_SKILLS).length} b skills
-${Object.keys(C_SKILLS).length} c skills
-${Object.keys(S_SKILLS).length} s skills`);
+// console.log(`${Object.keys(ASSIST_SKILLS).length} assist skills
+// ${Object.keys(SPECIAL_SKILLS).length} special skills
+// ${Object.keys(A_SKILLS).length} a skills
+// ${Object.keys(B_SKILLS).length} b skills
+// ${Object.keys(C_SKILLS).length} c skills
+// ${Object.keys(S_SKILLS).length} s skills`);
 
 Object.entries(SKILLS).forEach(([key, value]) => {
   SKILLS[key] = { id: key, ...value };
