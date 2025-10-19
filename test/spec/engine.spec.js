@@ -74,6 +74,11 @@ describe("Engine", function () {
       expect(engine.validateBuild(build).result).toBeFalse();
     });
 
+    it("should check multiple conditions", function () {
+      const build = createBuild(UNIT.CAEDA.id, [SKILLS.STEADY_BREATH.id]);
+      expect(engine.validateBuild(build).result).toBeFalse();
+    });
+
     it("should allow seal versions", function () {
       const build = createBuild(UNIT.ALFONSE.id, [SKILLS.QUICK_RIPOSTE_3.id, SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]);
       expect(engine.validateBuild(build).result).toBeTrue();
@@ -2291,6 +2296,24 @@ describe("Engine", function () {
         expect(results.units[0].tempStats.atk).toBe(6);
         expect(results.units[1].tempStats.atk).toBe(-5);
         expect(results.units[1].tempStats.def).toBe(-6);
+      });
+    });
+
+    describe("Post Combat Damage", function () {
+      it("should do fury things", function () {
+        team1 = [createBuild(UNIT.NINO.id, [SKILLS.REXCALIBUR_PLUS.id, SKILLS.FURY_3.id])];
+        const gameState = engine.newGame(map, team1, team2);
+        const unit = gameState.teams[0][0];
+        engine.executeAction(gameState, { from: { x: 0, y: 0 }, to: { x: 0, y: 0 }, target: { x: 3, y: 0 } });
+        expect(unit.stats.maxHp - unit.stats.hp).toBe(6);
+      });
+
+      it("should do double fury things", function () {
+        team1 = [createBuild(UNIT.NINO.id, [SKILLS.REXCALIBUR_PLUS.id, SKILLS.FURY_3.id, SKILLS.FURY_3.id + "_SEAL"])];
+        const gameState = engine.newGame(map, team1, team2);
+        const unit = gameState.teams[0][0];
+        engine.executeAction(gameState, { from: { x: 0, y: 0 }, to: { x: 0, y: 0 }, target: { x: 3, y: 0 } });
+        expect(unit.stats.maxHp - unit.stats.hp).toBe(12);
       });
     });
   });
