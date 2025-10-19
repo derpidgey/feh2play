@@ -40,18 +40,14 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   useResizeListener(() => setIsWideScreen(window.innerWidth >= window.innerHeight * 3 / 2));
 
   if (gameState.mode === "duel") {
-    useEffect(async () => {
-      if (gameState.currentTurn !== playingAs && !gameState.isSwapPhase && !gameState.gameOver) {
-        handleAction(await getAiMove());
+    useEffect(() => {
+      const runAiTurn = async () => {
+        if (gameState.currentTurn === playingAs || gameState.isSwapPhase || gameState.isGameOver || isAnimating) return;
+        const move = await getAiMove();
+        handleAction(move);
       }
-    }, [
-      gameState.currentTurn,
-      gameState.turnCount,
-      gameState.isSwapPhase,
-      gameState.duelState[0].actionsRemaining,
-      gameState.duelState[1].actionsRemaining,
-      playingAs,
-    ]);
+      runAiTurn();
+    }, [gameState.currentTurn, gameState.isSwapPhase, isAnimating]);
   }
 
   const onEndTurn = () => {
