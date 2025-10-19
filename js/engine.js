@@ -45,19 +45,24 @@ function Engine() {
       if (skillInfo.type === SKILL_TYPE.WEAPON) {
         if (!unitInfo.weaponType.includes(skillInfo.weaponType)) return false;
       }
-    } else if (skillInfo.canUse.unit) {
-      if (!skillInfo.canUse.unit.includes(unitInfo.id)) {
-        return false;
+    } else {
+      if (skillInfo.canUse.unit) {
+        if (!skillInfo.canUse.unit.includes(unitInfo.id)) {
+          return false;
+        }
       }
-    } else if (skillInfo.canUse.weaponType) {
-      if (!skillInfo.canUse.weaponType.includes(unitInfo.weaponType)) {
-        return false;
+      if (skillInfo.canUse.weaponType) {
+        if (!skillInfo.canUse.weaponType.includes(unitInfo.weaponType)) {
+          return false;
+        }
       }
-    } else if (skillInfo.canUse.moveType) {
-      if (!skillInfo.canUse.moveType.includes(unitInfo.moveType)) {
-        return false;
+      if (skillInfo.canUse.moveType) {
+        if (!skillInfo.canUse.moveType.includes(unitInfo.moveType)) {
+          return false;
+        }
       }
     }
+
     return true;
   }
 
@@ -791,11 +796,11 @@ function Engine() {
       && a.target?.x === b.target?.x && a.target?.y === b.target?.y
   }
 
-  function executeAction(gameState, action) { // can add options parameter to check stuff like checkAutoEndTurn
+  function executeAction(gameState, action) {
     const sequence = [];
     if (action.type === "end turn") {
-      endTurn(gameState, sequence);
-      return;
+      sequence.push(...endTurn(gameState, sequence));
+      return sequence;
     }
     gameState.history.push(action);
     const unit = gameState.teams[0].concat(gameState.teams[1])
@@ -921,7 +926,7 @@ function Engine() {
       sequence.push([{ type: "penalty", id: unit.id, penalty, operation: "remove" }]);
     });
     unit.penalties = [];
-    checkAutoEndTurn(gameState, sequence);
+    sequence.push(...checkAutoEndTurn(gameState));
     checkGameOver(gameState);
     return sequence;
   }
@@ -1104,7 +1109,8 @@ function Engine() {
     }
   }
 
-  function checkAutoEndTurn(gameState, sequence) {
+  function checkAutoEndTurn(gameState) {
+    const sequence = [];
     if (gameState.mode === "duel") {
       const currentDuelState = gameState.duelState[gameState.currentTurn];
       const foeDuelState = gameState.duelState[gameState.currentTurn ^ 1];
@@ -1114,22 +1120,23 @@ function Engine() {
       hashActionsRemaining(gameState, gameState.currentTurn);
       const currentTeam = gameState.teams[gameState.currentTurn];
       if (currentTeam.every(unit => !unit.hasAction) || currentDuelState.actionsRemaining === 0) {
-        endTurn(gameState, sequence);
+        sequence.push(...endTurn(gameState));
       } else if (!foeDuelState.endedTurn) {
-        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn }]);
+        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn, current: gameState.currentTurn ^ 1 }]);
         gameState.currentTurn ^= 1;
         hashCurrentTurn(gameState);
         const foeTeam = gameState.teams[gameState.currentTurn];
         if (foeTeam.every(unit => !unit.hasAction)) {
-          endTurn(gameState, sequence);
+          sequence.push(...endTurn(gameState));
         }
       }
-      return;
+      return sequence;
     }
     const currentTeam = gameState.teams[gameState.currentTurn];
     if (currentTeam.every(unit => !unit.hasAction)) {
-      endTurn(gameState, sequence);
+      sequence.push(...endTurn(gameState));
     }
+    return sequence;
   }
 
   function distanceFromCaptureArea(gameState, pos) {
@@ -1158,7 +1165,8 @@ function Engine() {
     }, 0);
   }
 
-  function endTurn(gameState, sequence = []) {
+  function endTurn(gameState) {
+    const sequence = [];
     gameState.teams[gameState.currentTurn].forEach(unit => {
       if (unit.hasAction) {
         for (const stat of [STATS.ATK, STATS.SPD, STATS.DEF, STATS.RES]) {
@@ -1210,18 +1218,18 @@ function Engine() {
             gameState.duelState[1].result = "draw";
             gameState.duelState[0].result = "draw";
           }
-          return;
+          return sequence;
         }
         hashTurnCount(gameState);
         gameState.turnCount += 1;
         hashTurnCount(gameState);
         handleStartOfDuelTurn(gameState);
       } else {
-        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn }]);
+        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn, current: gameState.currentTurn ^ 1 }]);
         gameState.currentTurn ^= 1;
         hashCurrentTurn(gameState);
       }
-      return;
+      return sequence;
     }
     gameState.history.push("end turn");
     gameState.currentTurn ^= 1;
@@ -1229,6 +1237,7 @@ function Engine() {
       gameState.turnCount += 1;
     }
     handleStartOfRegularTurn(gameState);
+    return sequence;
   }
 
   function surrender(gameState, team) {
@@ -1866,7 +1875,7 @@ function Engine() {
         let value = action.value;
         if (action.calculation?.type === EFFECT_CALCULATION.HP_RESTORED_TO_TARGET) value = context.hpRestored;
         if (action.type === EFFECT_ACTION.DEAL_DAMAGE) value = -value;
-        targets.forEach(target => hpChanges.set(target.id, (hpChanges.get(target) || 0) + value));
+        targets.forEach(target => hpChanges.set(target.id, (hpChanges.get(target.id) || 0) + value));
       } else if (action.type === EFFECT_ACTION.APPLY_BUFF || action.type === EFFECT_ACTION.APPLY_DEBUFF) {
         const targets = getTargetedUnits({ unit, ...context }, action.target);
         const map = action.type === EFFECT_ACTION.APPLY_BUFF ? buffChanges : debuffChanges;
@@ -3025,6 +3034,7 @@ function Engine() {
     isValidAction,
     actionEquals,
     executeAction,
+    checkAutoEndTurn,
     swapStartingPositions,
     endTurn,
     surrender,
