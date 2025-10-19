@@ -60,10 +60,10 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   }
 
   const onEndSwapPhase = () => {
-    // temp code
-    if (playingAs === 1) {
-      engine.swapStartingPositions(gameState, gameState.teams[0][0].pos, gameState.teams[0][2].pos);
-    }
+    // swap phase book moves here
+    // if (playingAs === 1) {
+    //   engine.swapStartingPositions(gameState, gameState.teams[0][0].pos, gameState.teams[0][2].pos);
+    // }
     endSwapPhase();
   }
 
@@ -76,13 +76,29 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   const handleAction = action => {
     const { sequence, onComplete } = executeAction(action);
     deselectUnit();
-    if (sequence.length === 0) {
+    const afterUpdateSequence = [];
+    const mainSequence = sequence.map(batch => {
+      const filtered = batch.filter(a => a.type !== "currentTurn");
+      const turn = batch.filter(a => a.type === "currentTurn");
+      if (turn.length > 0) afterUpdateSequence.push(...turn);
+      return filtered;
+    }).filter(batch => batch.length > 0);
+
+    if (mainSequence.length === 0) {
       onComplete();
+      if (afterUpdateSequence.length > 0) {
+        setAnimationSequence([afterUpdateSequence]);
+        setOnAnimationComplete(() => () => setAnimationSequence([]));
+      }
     } else {
-      setAnimationSequence(sequence);
+      setAnimationSequence(mainSequence);
       setOnAnimationComplete(() => () => {
         setAnimationSequence([]);
         onComplete();
+        if (afterUpdateSequence.length > 0) {
+          setAnimationSequence([afterUpdateSequence]);
+          setOnAnimationComplete(() => () => setAnimationSequence([]));
+        }
       });
     }
   }

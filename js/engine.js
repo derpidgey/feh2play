@@ -1122,7 +1122,7 @@ function Engine() {
       if (currentTeam.every(unit => !unit.hasAction) || currentDuelState.actionsRemaining === 0) {
         sequence.push(...endTurn(gameState));
       } else if (!foeDuelState.endedTurn) {
-        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn, current: gameState.currentTurn ^ 1 }]);
+        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn }]);
         gameState.currentTurn ^= 1;
         hashCurrentTurn(gameState);
         const foeTeam = gameState.teams[gameState.currentTurn];
@@ -1225,7 +1225,7 @@ function Engine() {
         hashTurnCount(gameState);
         handleStartOfDuelTurn(gameState);
       } else {
-        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn, current: gameState.currentTurn ^ 1 }]);
+        sequence.push([{ type: "currentTurn", previous: gameState.currentTurn }]);
         gameState.currentTurn ^= 1;
         hashCurrentTurn(gameState);
       }

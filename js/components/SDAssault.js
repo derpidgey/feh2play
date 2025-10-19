@@ -95,13 +95,13 @@ const SDAssault = ({ onExit }) => {
 
   const level = selectedLevel ? SD_LEVELS.find(l => l.id === selectedLevel) : null;
 
-  const handleBattleEnd = result => {
+  const handleBattleEnd = (result, delay = 1000) => {
     const isLastBattle = battleIndex >= level.battles.length - 1;
     if (result === "lose" || isLastBattle) {
       setTimeout(() => {
         setScreen("gameOver");
         setGameResult(result);
-      }, 1000);
+      }, delay);
     } else {
       setBattleIndex(battleIndex + 1);
     }

@@ -17,6 +17,7 @@ specialIcon.src = "assets/icons/aoeIcon.png";
 
 const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs }) => {
   const [tileSize, setTileSize] = useState(50);
+  const [phaseOverlay, setPhaseOverlay] = useState(false);
   const unitPositionsRef = useRef(gameState.teams[0]
     .concat(gameState.teams[1])
     .reduce((acc, unit) => {
@@ -125,6 +126,17 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
               };
               setUnitPositions({ ...unitPositionsRef.current });
               resolve();
+            } else if (animation.type === "currentTurn") {
+              const turnChanges = animationSequence.flat().filter(animation => animation.type === "currentTurn");
+              if (turnChanges.length === 1) {
+                setPhaseOverlay(true);
+                setTimeout(() => {
+                  setPhaseOverlay(false);
+                  resolve();
+                }, 1000);
+              } else {
+                resolve();
+              }
             } else {
               // console.warn(`Unhandled animation type ${animation.type}`);
               resolve();
@@ -406,6 +418,17 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
       <${ActionTracker} tileSize=${tileSize} gameState=${gameState} />
     </div>`}
     ${isDuel && html`<div class="corner" style=${getCornerStyle(6, 8)}><${Timer} tileSize=${tileSize} /></div>`}
+    ${phaseOverlay && html`
+      <div class="board-overlay text-center py-5" style="background: rgba(0, 0, 0, 0.6);top:${tileSize * 2.5}px; height:${tileSize * 3.5}px">
+        <span class="h1 text-white">${gameState.currentTurn === 0 ? "BLUE" : "RED"} PHASE</span><br/>
+        <span class="text-white">${gameState.currentTurn === playingAs ? "Noob Player" : "Big Brain"}'s move</span>
+      </div>
+    `}
+    ${!isAnimating && gameState.currentTurn !== playingAs && !gameState.isSwapPhase && html`
+      <div class="board-overlay text-center py-1" style="background: rgba(0, 0, 0, 0.4);top:${tileSize * 4.5}px; height:${tileSize}px">
+        <span class="text-white">Waiting for opponent${false ? "<br/>Time: 26 plus 10" : ""}</span>
+      </div>
+    `}
   </div>
   `;
 }

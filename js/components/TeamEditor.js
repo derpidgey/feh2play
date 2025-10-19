@@ -1,4 +1,4 @@
-import { html, useState } from "https://esm.sh/htm/preact/standalone";
+import { html, useState, useRef } from "https://esm.sh/htm/preact/standalone";
 import UNIT from "../data/units.js";
 import SKILLS from "../data/skills.js";
 import Dropdown from "./Dropdown.js";
@@ -39,6 +39,38 @@ const engine = Engine();
 
 const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
   const [editingIndex, setEditingIndex] = useState(0);
+  const dragIndexRef = useRef(null);
+
+  const handleDragStart = (e, index) => {
+    dragIndexRef.current = index;
+    e.dataTransfer.effectAllowed = "move";
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+  };
+
+  const handleDrop = (e, dropIndex) => {
+    e.preventDefault();
+    const dragIndex = dragIndexRef.current;
+    if (dragIndex === null || dragIndex === dropIndex) return;
+
+    const newTeamData = deepClone(teamData);
+    const temp = newTeamData.units[dragIndex];
+    newTeamData.units[dragIndex] = newTeamData.units[dropIndex];
+    newTeamData.units[dropIndex] = temp;
+
+    if (teamData.mode === "sd") {
+      const capSkill = teamData.units[0].skills[7];
+      newTeamData.units.forEach(u => (u.skills[7] = ""));
+      newTeamData.units[0].skills[7] = capSkill;
+    }
+
+    onChange(newTeamData);
+    setEditingIndex(dropIndex);
+    dragIndexRef.current = null;
+  };
 
   const team = [...teamData.units];
   const currentUnit = team[editingIndex];
@@ -95,8 +127,12 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
     return html`
         <div
           class="d-flex align-items-center justify-content-center border rounded"
+          draggable="true"
+          onDragStart=${e => handleDragStart(e, i)}
+          onDragOver=${handleDragOver}
+          onDrop=${e => handleDrop(e, i)}
           style=${{
-        cursor: "pointer",
+        cursor: "grab",
         width: "60px",
         height: "60px",
         borderColor: isActive ? "#007bff" : "#ccc",
