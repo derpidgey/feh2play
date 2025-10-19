@@ -4,7 +4,7 @@ import { deepClone } from "../utils.js";
 
 const engine = Engine();
 
-const useGameLogic = (initialGameState) => {
+const useGameLogic = (initialGameState, playingAs) => {
   const workerRef = useRef(null);
   const [gameState, setGameState] = useState(initialGameState);
 
@@ -21,7 +21,10 @@ const useGameLogic = (initialGameState) => {
       return;
     }
     const newGameState = deepClone(gameState);
-    const sequence = engine.executeAction(newGameState, action) ?? [];
+    const sequence = engine.executeAction(newGameState, action);
+    if (sequence.length > 0 && gameState.currentTurn === playingAs) {
+      sequence[0][0].type = "tp";
+    }
     const onComplete = () => {
       setGameState(newGameState);
     }
@@ -52,7 +55,7 @@ const useGameLogic = (initialGameState) => {
       worker.onmessage = (e) => {
         resolve(e.data.best);
       };
-      worker.postMessage({ gameState, depth: 5 });
+      worker.postMessage({ gameState, depth: 4 });
     });
   }
 

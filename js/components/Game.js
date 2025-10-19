@@ -16,7 +16,7 @@ const engine = Engine();
 const DOUBLE_CLICK_THRESHOLD_MS = 200;
 
 const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) => {
-  const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState);
+  const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState, playingAs);
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [potentialAction, setPotentialAction] = useState({});
   const [activeUnit, setActiveUnit] = useState(null);
@@ -79,9 +79,6 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     if (sequence.length === 0) {
       onComplete();
     } else {
-      if (gameState.currentTurn === playingAs) {
-        sequence[0][0].type = "tp";
-      }
       setAnimationSequence(sequence);
       setOnAnimationComplete(() => () => {
         setAnimationSequence([]);
