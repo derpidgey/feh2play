@@ -41,7 +41,7 @@ const UnitInfo = ({ unit, backgroundType, playingAs }) => {
       <img src=${unitInfo.imgFace} alt=${unitInfo.name} style="width: 100%; max-width: 80px; object-fit: contain;" />
     </div>
     <div style="flex: 1 1 40%; display: flex; flex-direction: column;">
-      <h3>${unitInfo.name}</h3>
+      <span class="fw-medium">${unitInfo.name}</span>
       <span>HP: ${unit.stats.hp} / ${unit.stats.maxHp}</span>
       <span>
         ATK: <span style=${getStatStyle(visibleAtk, unit.stats.atk)}>${visibleAtk}</span> SPD: <span style=${getStatStyle(visibleSpd, unit.stats.spd)}>${visibleSpd}</span>
@@ -60,15 +60,15 @@ const UnitInfo = ({ unit, backgroundType, playingAs }) => {
       <div style="display: flex; flex-direction: column;">
         <div class="skill-line">
           <img src=${weaponInfo?.img ?? "assets/icons/Icon_Skill_Weapon.webp"} />
-          <span style="font-size:1rem;color: ${weaponInfo?.refined ? "lime" : "white"};">${weaponInfo?.name ?? "-"}</span>
+          <span style="color: ${weaponInfo?.refined ? "lime" : "white"};">${weaponInfo?.name ?? "-"}</span>
         </div>
         <div class="skill-line">
           <img src="assets/icons/Icon_Skill_Assist.webp" />
-          <span style="font-size:1rem">${assistInfo?.name ?? "-"}</span>
+          <span>${assistInfo?.name ?? "-"}</span>
         </div>
         <div class="skill-line">
           <img src="assets/icons/Icon_Skill_Special.webp" />
-          <span style="font-size:1rem">${specialInfo?.name ?? "-"}</span>
+          <span>${specialInfo?.name ?? "-"}</span>
         </div>
       </div>
     </div>

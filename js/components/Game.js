@@ -17,6 +17,7 @@ const DOUBLE_CLICK_THRESHOLD_MS = 200;
 
 const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) => {
   const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState, playingAs);
+  const [fontSize, setFontSize] = useState("16px");
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [potentialAction, setPotentialAction] = useState({});
   const [activeUnit, setActiveUnit] = useState(null);
@@ -37,7 +38,10 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     onGameOver(gameState.duelState[playingAs].result, 1000);
   }
 
-  useResizeListener(() => setIsWideScreen(window.innerWidth >= window.innerHeight * 3 / 2));
+  useResizeListener(() => {
+    setIsWideScreen(window.innerWidth >= window.innerHeight * 3 / 2);
+    setFontSize(`${Math.min(window.innerWidth, window.innerHeight / 2) * 0.04}px`);
+  });
 
   if (gameState.mode === "duel") {
     useEffect(() => {
@@ -70,31 +74,41 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   }
 
   const handleAction = action => {
-    const { sequence, onComplete } = executeAction(action);
+    const { sequence, updateGameState } = executeAction(action);
     deselectUnit();
-    const afterUpdateSequence = [];
-    const mainSequence = sequence.map(batch => {
-      const filtered = batch.filter(a => a.type !== "currentTurn");
-      const turn = batch.filter(a => a.type === "currentTurn");
-      if (turn.length > 0) afterUpdateSequence.push(...turn);
-      return filtered;
-    }).filter(batch => batch.length > 0);
 
-    if (mainSequence.length === 0) {
-      onComplete();
+    const mainSequence = [];
+    const afterUpdateSequence = [];
+
+    let foundTurn = false;
+
+    for (const batch of sequence) {
+      if (foundTurn) {
+        afterUpdateSequence.push(batch);
+      } else if (batch.some(animation => animation.type === "currentTurn")) {
+        foundTurn = true;
+        afterUpdateSequence.push(batch);
+      } else {
+        mainSequence.push(batch);
+      }
+    }
+
+    const runAfterUpdateSequence = () => {
       if (afterUpdateSequence.length > 0) {
-        setAnimationSequence([afterUpdateSequence]);
+        setAnimationSequence(afterUpdateSequence);
         setOnAnimationComplete(() => () => setAnimationSequence([]));
       }
+    }
+
+    if (mainSequence.length === 0) {
+      updateGameState();
+      runAfterUpdateSequence();
     } else {
       setAnimationSequence(mainSequence);
       setOnAnimationComplete(() => () => {
         setAnimationSequence([]);
-        onComplete();
-        if (afterUpdateSequence.length > 0) {
-          setAnimationSequence([afterUpdateSequence]);
-          setOnAnimationComplete(() => () => setAnimationSequence([]));
-        }
+        updateGameState();
+        runAfterUpdateSequence();
       });
     }
   }
@@ -236,7 +250,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
 
   return html`
   ${isWideScreen && html`<${SidePanel} team=${gameState.teams[0].filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)} backgroundType=${backgroundType} playingAs=${playingAs} />`}
-  <div class="screen">
+  <div class="screen" style="font-size: clamp(0.5rem, ${fontSize}, 1rem);">
     <${InfoPanel} gameState=${gameState} unit=${selectedUnit} potentialAction=${potentialAction} playingAs=${playingAs} />
     ${gameState.mode === "duel" && html`
       <div class="score-bar">

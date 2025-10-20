@@ -25,10 +25,10 @@ const useGameLogic = (initialGameState, playingAs) => {
     if (sequence.length > 0 && gameState.currentTurn === playingAs) {
       sequence[0][0].type = "tp";
     }
-    const onComplete = () => {
+    const updateGameState = () => {
       setGameState(newGameState);
     }
-    return { sequence, onComplete };
+    return { sequence, updateGameState };
   }
 
   const endTurn = () => {

@@ -85,14 +85,14 @@ const ActionPreview = ({ gameState, potentialAction }) => {
       <img src=${unitInfo.imgFace} alt=${unitInfo.name} style="width: 100%; max-width: 80px; object-fit: contain;" />
     </div>
     <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[leftBackground]};">
-      <h3>${unitInfo.name}</h3>
+      <span class="fw-medium">${unitInfo.name}</span>
       <span>${unitStartingHp} → ${unitRemainingHp}</span>
       ${actionType === "assist" && html`<span>${assist}</span>`}
       ${actionType === "attack" && html`<span>${formulas[0]}</span>`}
       ${actionType === "attack" && html`<span>${renderTempStats(result.units[0].tempStats)}</span>`}
     </div>
     <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[rightBackground]};">
-      <h3>${targetName}</h3>
+      <span class="fw-medium">${targetName}</span>
       <span>${targetStartingHp} → ${targetRemainingHp}</span>
       ${actionType === "attack" && html`<span>${formulas[1]}</span>`}
       ${actionType === "attack" && html`<span>${renderTempStats(result.units[1].tempStats)}</span>`}
