@@ -7,7 +7,7 @@ const SidePanel = ({ team, backgroundType, playingAs }) => {
 
   useResizeListener(() => {
     setFontSize(`${Math.min(window.innerWidth, window.innerHeight / 2) * 0.04}px`);
-  });
+  }, 10);
 
   return html`
   <div class="side-panel" style="font-size: clamp(0.5rem, ${fontSize}, 1rem);">

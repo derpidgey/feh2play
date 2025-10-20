@@ -41,7 +41,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   useResizeListener(() => {
     setIsWideScreen(window.innerWidth >= window.innerHeight * 3 / 2);
     setFontSize(`${Math.min(window.innerWidth, window.innerHeight / 2) * 0.04}px`);
-  });
+  }, 10);
 
   if (gameState.mode === "duel") {
     useEffect(() => {
