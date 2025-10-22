@@ -22,9 +22,6 @@ const useGameLogic = (initialGameState, playingAs) => {
     }
     const newGameState = deepClone(gameState);
     const sequence = engine.executeAction(newGameState, action);
-    if (sequence.length > 0 && gameState.currentTurn === playingAs) {
-      sequence[0][0].type = "tp";
-    }
     const updateGameState = () => {
       setGameState(newGameState);
     }

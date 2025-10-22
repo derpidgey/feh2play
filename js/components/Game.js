@@ -46,12 +46,24 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   if (gameState.mode === "duel") {
     useEffect(() => {
       const runAiTurn = async () => {
-        if (gameState.currentTurn === playingAs || gameState.isSwapPhase || gameState.isGameOver || isAnimating) return;
+        if (gameState.currentTurn === playingAs || gameState.isSwapPhase || gameState.gameOver || isAnimating) return;
         const move = await getAiMove();
         handleAction(move);
       }
       runAiTurn();
-    }, [gameState.currentTurn, gameState.isSwapPhase, isAnimating]);
+    }, [gameState.currentTurn, gameState.isSwapPhase, playingAs, isAnimating]);
+
+    useEffect(() => {
+      const runAiTurn = async e => {
+        if (debug && e.code === "KeyZ") {
+          if (gameState.currentTurn !== playingAs || gameState.isSwapPhase || gameState.gameOver || isAnimating) return;
+          const move = await getAiMove();
+          handleAction(move);
+        }
+      }
+      document.addEventListener("keydown", runAiTurn);
+      return () => document.removeEventListener("keydown", runAiTurn);
+    }, [gameState, playingAs, isAnimating]);
   }
 
   const onEndTurn = () => {
@@ -64,6 +76,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     // if (playingAs === 1) {
     //   engine.swapStartingPositions(gameState, gameState.teams[0][0].pos, gameState.teams[0][2].pos);
     // }
+    deselectUnit();
     endSwapPhase();
   }
 
@@ -75,6 +88,9 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
 
   const handleAction = action => {
     const { sequence, updateGameState } = executeAction(action);
+    if (sequence.length > 0 && gameState.currentTurn === playingAs && Object.keys(potentialAction).length > 0) {
+      sequence[0][0].type = "tp";
+    }
     deselectUnit();
 
     const mainSequence = [];

@@ -2540,13 +2540,15 @@ function Engine() {
     const { unitDestination, targetDestination } = calculateMovementTypeDestinations(gameState, unit.pos, target, movementType);
     if (validateMovementTypeDestinations(gameState, unit, unitDestination, target, targetDestination, movementType)) {
       unit.pos = unitDestination;
-      context.sequence.push([{ type: "move", id: unit.id, to: { ...unitDestination }, from: { x: unit.pos.x, y: unit.pos.y } }]);
+      const events = [];
+      events.push({ type: "move", id: unit.id, to: { ...unitDestination }, from: { x: unit.pos.x, y: unit.pos.y } });
       if (target.stats.hp > 0) {
         hashPos(gameState, target);
         target.pos = targetDestination;
-        context.sequence.push([{ type: "move", id: target.id, to: { ...targetDestination }, from: { x: target.pos.x, y: target.pos.y } }]);
+        events.push({ type: "move", id: target.id, to: { ...targetDestination }, from: { x: target.pos.x, y: target.pos.y } });
         hashPos(gameState, target);
       }
+      context.sequence.push(events);
     }
   }
 

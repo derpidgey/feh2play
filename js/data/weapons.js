@@ -1349,6 +1349,52 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.ROY.id]
     }
   },
+  BLAZING_DURANDAL: {
+    name: "Blazing Durandal",
+    description: "Grants Atk+3. If unit's Atk > foe's Atk, grants Special cooldown charge +1 per unit's attack. (Only highest value applied. Does not stack.)",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.SWORD.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 19 }),
+      {
+        phase: EFFECT_PHASE.DURING_COMBAT,
+        condition: { type: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE, unitStat: STATS.ATK, foeStat: STATS.ATK, statType: STAT_CHECK_TYPE.IN_COMBAT },
+        actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_UNIT_ATTACK, target: { type: EFFECT_TARGET.SELF } }]
+      }
+    ],
+    canBeRefined: true,
+    refinedBaseUpgrade: {
+      description: "Grants Atk+3. If unit initiates combat, grants Special cooldown charge +1 to unit and inflicts Special cooldown charge -1 on foe per attack. (Only highest value applied. Does not stack.)",
+      effects: [
+        EFFECT.visibleStats({ atk: 19 }),
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+          actions: [
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_ATTACK, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.GUARD, target: { type: EFFECT_TARGET.FOE } }
+          ]
+        }
+      ]
+    },
+    effectRefine: {
+      description: "If unit initiates combat, grants Spd+7 and Def+10 during combat and foe cannot make a follow-up attack.",
+      effects: [
+        EFFECT.playerPhaseStats({ spd: 7, def: 10 }),
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.CANT_FOLLOW_UP, target: { type: EFFECT_TARGET.FOE } }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Blazing_Durandal_W.webp",
+    canUse: {
+      unit: [UNIT.ELIWOOD.id] // brave roy
+    }
+  },
   BREATH_OF_FOG: {
     name: "Breath of Fog",
     description: "Effective against dragon foes. At start of odd-numbered turns, restores 10 HP. If foe's Range = 2, calculates damage using the lower of foe's Def or Res.",
