@@ -826,7 +826,7 @@ function Engine() {
         // const targetInfo = UNIT[targetUnit.unitId];
         // console.log(`${unitInfo.name} targeted ${targetInfo.name} at (${action.target.x}, ${action.target.y})`);
         if (unit.team === targetUnit.team) {
-          performAssist(gameState, unit, targetUnit, sequence);
+          sequence.push(...performAssist(gameState, unit, targetUnit));
         } else {
           const results = calculateCombatResult(gameState, unit, targetUnit);
           unit.combatsInPhase += 1;
@@ -931,7 +931,8 @@ function Engine() {
     return sequence;
   }
 
-  function performAssist(gameState, unit, targetUnit, sequence) {
+  function performAssist(gameState, unit, targetUnit) {
+    const sequence = [];
     const assist = getAssistInfo(unit);
     const context = { gameState, assistUser: unit, assistTarget: targetUnit, sequence };
     if (assist.assistType === ASSIST_TYPE.MOVEMENT) {
@@ -991,7 +992,9 @@ function Engine() {
       }
     } else if (assist.assistType === ASSIST_TYPE.RALLY) {
       // might move rallyBuffs into USED_RALLY_ASSIST effects
+      hashBuff(gameState, targetUnit, buff.stat);
       assist.rallyBuffs.forEach(buff => targetUnit.buffs[buff.stat] = Math.max(targetUnit.buffs[buff.stat], buff.value));
+      hashBuff(gameState, targetUnit, buff.stat);
       const rallyEffects = getEligibleEffects(EFFECT_PHASE.USED_RALLY_ASSIST, unit, context);
       processEffects(rallyEffects, context);
       const targetedByRallyEffects = getEligibleEffects(EFFECT_PHASE.TARGETTED_BY_RALLY_ASSIST, unit, context);
@@ -1026,6 +1029,7 @@ function Engine() {
         }
       });
     }
+    return sequence;
   }
 
   function calculateHealAmount(unit, targetUnit, healInfo) {
@@ -3034,6 +3038,7 @@ function Engine() {
     isValidAction,
     actionEquals,
     executeAction,
+    performAssist,
     checkAutoEndTurn,
     swapStartingPositions,
     endTurn,

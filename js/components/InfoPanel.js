@@ -3,6 +3,7 @@ import UNIT from "../data/units.js";
 import { COMBAT_FLAG } from "../data/definitions.js";
 import Engine from "../engine.js";
 import UnitInfo from "./UnitInfo.js";
+import { deepClone } from "../utils.js";
 
 const engine = Engine();
 
@@ -48,7 +49,14 @@ const ActionPreview = ({ gameState, potentialAction }) => {
   let result;
   let formulas;
   if (actionType === "assist") {
-    assist = engine.getAssistInfo(unit).name; // todo implement calculateAssistResult
+    assist = engine.getAssistInfo(unit).name;
+    const clone = deepClone(gameState);
+    const cloneUnit = clone.teams[unit.team].find(u => u.id === unit.id);
+    cloneUnit.pos = { ...potentialAction.to }
+    const cloneTarget = clone.teams[targetUnit.team].find(u => u.id === targetUnit.id);
+    engine.performAssist(clone, cloneUnit, cloneTarget);
+    unitRemainingHp = cloneUnit.stats.hp;
+    targetRemainingHp = cloneTarget.stats.hp;
   } else if (actionType === "attack") {
     const unitPos = unit.pos;
     unit.pos = { ...potentialAction.to }
