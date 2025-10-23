@@ -1227,7 +1227,7 @@ function Engine() {
         hashTurnCount(gameState);
         gameState.turnCount += 1;
         hashTurnCount(gameState);
-        handleStartOfDuelTurn(gameState);
+        sequence.push(...handleStartOfDuelTurn(gameState));
       } else {
         sequence.push([{ type: "currentTurn", previous: gameState.currentTurn }]);
         gameState.currentTurn ^= 1;
@@ -1271,17 +1271,21 @@ function Engine() {
   }
 
   function endSwapPhase(gameState) {
-    if (!gameState.isSwapPhase) return;
+    const sequence = [];
+    if (!gameState.isSwapPhase) return sequence;
     gameState.isSwapPhase = false;
     gameState.initialTeams = deepClone(gameState.teams);
     if (gameState.mode === "duel") {
-      handleStartOfDuelTurn(gameState);
+      sequence.push(...handleStartOfDuelTurn(gameState));
     } else {
-      handleStartOfRegularTurn(gameState);
+      sequence.push(...handleStartOfRegularTurn(gameState));
     }
+    return sequence;
   }
 
   function handleStartOfDuelTurn(gameState) {
+    const sequence = [];
+    sequence.push([{ type: "startTurn" }]);
     if (gameState.duelState[0].actionsRemaining > gameState.duelState[1].actionsRemaining) {
       gameState.currentTurn = 0;
     } else if (gameState.duelState[1].actionsRemaining > gameState.duelState[0].actionsRemaining) {
@@ -1340,9 +1344,12 @@ function Engine() {
       gameState.captureArea.y = 5;
       hashCaptureArea(gameState);
     }
+    return sequence;
   }
 
   function handleStartOfRegularTurn(gameState) {
+    const sequence = [];
+    sequence.push([{ type: "startTurn" }]);
     gameState.teams[0].concat(gameState.teams[1]).forEach(unit => {
       unit.buffs = emptyStats();
       unit.bonuses = [];
@@ -1357,6 +1364,7 @@ function Engine() {
     gameState.teams[0].concat(gameState.teams[1])
       .forEach(unit => startOfTurnEffects.push(...getEligibleEffects(EFFECT_PHASE.START_OF_PLAYER_PHASE_OR_ENEMY_PHASE, unit, context)));
     processEffects(startOfTurnEffects, context);
+    return sequence;
   }
 
   function calculateCombatResult(gameState, initiator, defender) {

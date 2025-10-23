@@ -76,8 +76,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     // if (playingAs === 1) {
     //   engine.swapStartingPositions(gameState, gameState.teams[0][0].pos, gameState.teams[0][2].pos);
     // }
-    deselectUnit();
-    endSwapPhase();
+    handleAction();
   }
 
   const deselectUnit = () => {
@@ -87,7 +86,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   }
 
   const handleAction = action => {
-    const { sequence, updateGameState } = executeAction(action);
+    const { sequence, updateGameState } = action ? executeAction(action) : endSwapPhase();
     if (sequence.length > 0 && gameState.currentTurn === playingAs && Object.keys(potentialAction).length > 0) {
       sequence[0][0].type = "tp";
     }
@@ -101,7 +100,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     for (const batch of sequence) {
       if (foundTurn) {
         afterUpdateSequence.push(batch);
-      } else if (batch.some(animation => animation.type === "currentTurn")) {
+      } else if (batch.some(animation => animation.type === "currentTurn" || animation.type === "startTurn")) {
         foundTurn = true;
         afterUpdateSequence.push(batch);
       } else {

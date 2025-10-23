@@ -36,8 +36,11 @@ const useGameLogic = (initialGameState, playingAs) => {
 
   const endSwapPhase = () => {
     const newGameState = deepClone(gameState);
-    engine.endSwapPhase(newGameState);
-    setGameState(newGameState);
+    const sequence = engine.endSwapPhase(newGameState);
+    const updateGameState = () => {
+      setGameState(newGameState);
+    }
+    return { sequence, updateGameState };
   }
 
   const swapStartingPositions = (posA, posB) => {
@@ -47,9 +50,9 @@ const useGameLogic = (initialGameState, playingAs) => {
   }
 
   const getAiMove = () => {
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       const worker = workerRef.current;
-      worker.onmessage = (e) => {
+      worker.onmessage = e => {
         resolve(e.data.best);
       };
       worker.postMessage({ gameState, depth: 4 });

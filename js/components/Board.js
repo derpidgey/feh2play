@@ -18,6 +18,7 @@ specialIcon.src = "assets/icons/aoeIcon.png";
 const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs }) => {
   const [tileSize, setTileSize] = useState(50);
   const [phaseOverlay, setPhaseOverlay] = useState(false);
+  const [turnOverlay, setTurnOverlay] = useState(false);
   const unitPositionsRef = useRef(gameState.teams[0]
     .concat(gameState.teams[1])
     .reduce((acc, unit) => {
@@ -128,7 +129,8 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
               resolve();
             } else if (animation.type === "currentTurn") {
               const turnChanges = animationSequence.flat().filter(animation => animation.type === "currentTurn");
-              if (turnChanges.length === 1) {
+              const startTurn = animationSequence.flat().filter(animation => animation.type === "startTurn");
+              if (turnChanges.length === 1 && startTurn.length === 0) {
                 setPhaseOverlay(true);
                 setTimeout(() => {
                   setPhaseOverlay(false);
@@ -137,6 +139,12 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
               } else {
                 resolve();
               }
+            } else if (animation.type === "startTurn") {
+              setTurnOverlay(true);
+              setTimeout(() => {
+                setTurnOverlay(false);
+                resolve();
+              }, 1000);
             } else {
               // console.warn(`Unhandled animation type ${animation.type}`);
               resolve();
@@ -422,6 +430,12 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
       <div class="board-overlay text-center py-5" style="background: rgba(0, 0, 0, 0.6);top:${tileSize * 2.5}px; height:${tileSize * 3.5}px">
         <span class="h1 text-white">${gameState.currentTurn === 0 ? "BLUE" : "RED"} PHASE</span><br/>
         <span class="text-white">${gameState.currentTurn === playingAs ? "Noob Player" : "Big Brain"}'s move</span>
+      </div>
+    `}
+    ${turnOverlay && html`
+      <div class="board-overlay text-center py-5" style="background: rgba(0, 0, 0, 0.6);top:${tileSize * 2.5}px; height:${tileSize * 3}px">
+        <span class="h1 text-white">Turn ${gameState.turnCount} / 5</span><br/>
+        <span class="text-white">${gameState.currentTurn === playingAs ? "Noob Player" : "Big Brain"} moves first.</span>
       </div>
     `}
     ${!isAnimating && gameState.currentTurn !== playingAs && !gameState.isSwapPhase && html`
