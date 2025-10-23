@@ -1,0 +1,15 @@
+.tooltip-inner {
+  text-align: left;
+}
+
+.tooltip-gold {
+  color: gold;
+}
+
+.tooltip-green {
+  color: lime;
+}
+
+.tooltip-img {
+  height: 1em;
+}

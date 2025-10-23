@@ -11,11 +11,13 @@ import UNIT from "../data/units.js";
 import CAPTAIN_SKILLS from "../data/captainSkills.js";
 import { SKILL_TYPE } from "../data/definitions.js";
 import SKILLS from "../data/skills.js";
+import useBootstrapTooltips from "../hooks/useBootstrapTooltips.js";
 
 const engine = Engine();
 const DOUBLE_CLICK_THRESHOLD_MS = 200;
 
 const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) => {
+  useBootstrapTooltips();
   const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState, playingAs);
   const [fontSize, setFontSize] = useState("16px");
   const [isWideScreen, setIsWideScreen] = useState(false);
@@ -260,8 +262,9 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     if (!unit) return null;
     return CAPTAIN_SKILLS[unit.skills.find(skill => SKILLS[skill].type === SKILL_TYPE.CAPTAIN)];
   }
-  const captainSkillsRevealed = [null, null].map((_, i) => i === playingAs || gameState.duelState[i].captainSkillRevealed);
-  const captainImages = [null, null].map((_, i) => getCaptainInfo(gameState.teams[i][0])?.img);
+  const captainSkillsRevealed = gameState.duelState.map((duelState, i) => i === playingAs || duelState.captainSkillRevealed);
+  const captainSkills = gameState.teams.map(team => getCaptainInfo(team[0]));
+  const getCaptainTooltipContent = skill => `<span class="tooltip-gold">${skill.name}</span><br>${skill.description}`;
 
   return html`
   ${isWideScreen && html`<${SidePanel} team=${gameState.teams[0].filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)} backgroundType=${backgroundType} playingAs=${playingAs} />`}
@@ -277,8 +280,15 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
           <img src="assets/maps/common/captureIcon.webp" />
           <span>${gameState.duelState[0].captureScore}</span>
         </div>
-        <div class="captain-skill">${captainSkillsRevealed[0] && captainImages[0] && html`<img src=${captainImages[0]} />`}</div>
-        <div class="captain-skill">${captainSkillsRevealed[1] && captainImages[1] && html`<img src=${captainImages[1]} />`}</div>
+        ${[0, 1].map(i => html`
+          <div class="captain-skill">${captainSkillsRevealed[i] && captainSkills[i] && 
+            html`<img src=${captainSkills[i].img}
+            data-bs-toggle="tooltip"
+            data-bs-html="true"
+            data-bs-placement="bottom"
+            data-bs-title=${getCaptainTooltipContent(captainSkills[i])} />`}
+          </div>
+        `)}
         <div class="score red">
           <img src="assets/maps/common/koIcon.webp" />
           <span>${gameState.duelState[1].koScore}</span>

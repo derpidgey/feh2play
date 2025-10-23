@@ -50,12 +50,13 @@ function createRefinedWeapon(baseWeapon, refineType) {
   }
   const id = `${baseWeapon.id}_REFINE_${refineType.toUpperCase()}`;
   let description = baseWeapon.refinedBaseUpgrade?.description ?? baseWeapon.description;
+  let refineDescription;
   const effects = baseWeapon.refinedBaseUpgrade
     ? [...baseWeapon.refinedBaseUpgrade.effects, EFFECT.visibleStats(refineStats)]
     : [...baseWeapon.effects, EFFECT.visibleStats(refineStats)];
 
   if (refineType === "EFF") {
-    description += `\n${baseWeapon.effectRefine.description}`;
+    refineDescription = baseWeapon.effectRefine.description;
     effects.push(...baseWeapon.effectRefine.effects);
   }
 
@@ -63,6 +64,7 @@ function createRefinedWeapon(baseWeapon, refineType) {
     ...baseWeapon,
     id,
     description,
+    refineDescription,
     effects,
     refined: true,
     img: REFINE_IMAGE_MAP[refineType] ?? baseWeapon.refineImg

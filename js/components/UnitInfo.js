@@ -3,10 +3,12 @@ import UNIT from "../data/units.js";
 import STATUS from "../data/status.js";
 import { SKILL_TYPE } from "../data/definitions.js";
 import Engine from "../engine.js";
+import useBootstrapTooltips from "../hooks/useBootstrapTooltips.js";
 
 const engine = Engine();
 
 const UnitInfo = ({ unit, backgroundType, playingAs }) => {
+  useBootstrapTooltips();
   const unitInfo = UNIT[unit.unitId];
   const isPanicked = unit.penalties.includes(STATUS.PANIC.id);
   const visibleAtk = unit.stats.atk + (isPanicked ? -unit.buffs.atk : unit.buffs.atk) - unit.debuffs.atk;
@@ -35,6 +37,19 @@ const UnitInfo = ({ unit, backgroundType, playingAs }) => {
   const cInfo = engine.getSkillInfo(unit, SKILL_TYPE.C);
   const sInfo = engine.getSkillInfo(unit, SKILL_TYPE.S);
 
+  const weaponTooltipContent = weaponInfo ?
+    `<span class="tooltip-gold">Mt</span> ${weaponInfo.might} <span class="tooltip-gold">Rng</span> ${weaponInfo.range}<br>
+  ${weaponInfo.description}${weaponInfo.refineDescription && `<br><span class="tooltip-green">${weaponInfo.refineDescription}</span>`}` : "None";
+  const assistTooltipContent = assistInfo ?
+    `<span class="tooltip-gold">Rng</span> ${assistInfo.range}<br>
+  ${assistInfo.description}` : "None";
+  const specialTooltipContent = specialInfo ?
+    `<img src="assets/icons/Icon_Skill_Special.webp" class="tooltip-img" /> ${specialInfo.cooldown}<br>
+  ${specialInfo.description}` : "None";
+  const getPassiveTooltipContent = skillInfo => skillInfo ?
+    `<span class="tooltip-gold">${skillInfo.name}</span><br>
+  ${skillInfo.description}` : "None";
+
   return html`
   <div class="info-panel" style="background: ${background}; color: black;">
     <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center;">
@@ -52,21 +67,25 @@ const UnitInfo = ({ unit, backgroundType, playingAs }) => {
     </div>
     <div class="skills" style="flex: 1 1 40%; display: flex; flex-direction: column;">
       <div class="skill-icons">
-        ${aInfo ? html`<img src=${aInfo.img} style="z-index: 5;" />` : html`<div class="no-skill"></div>`}
-        ${bInfo ? html`<img src=${bInfo.img} style="z-index: 4;" />` : html`<div class="no-skill"></div>`}
-        ${cInfo ? html`<img src=${cInfo.img} style="z-index: 3;" />` : html`<div class="no-skill"></div>`}
-        ${sInfo ? html`<img src=${sInfo.img} style="z-index: 2;" />` : html`<div class="no-skill"></div>`}
+        ${[aInfo, bInfo, cInfo, sInfo].map((skillInfo, i) => skillInfo ? html`
+          <img src=${skillInfo.img}
+          style="z-index: ${6 - i};"
+          data-bs-toggle="tooltip"
+          data-bs-html="true"
+          data-bs-placement="bottom"
+          data-bs-title=${getPassiveTooltipContent(skillInfo)} />` : html`<div class="no-skill"></div>
+        `)}
       </div>
       <div style="display: flex; flex-direction: column;">
-        <div class="skill-line">
+        <div class="skill-line" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" data-bs-title=${weaponTooltipContent}>
           <img src=${weaponInfo?.img ?? "assets/icons/Icon_Skill_Weapon.webp"} />
           <span style="color: ${weaponInfo?.refined ? "lime" : "white"};">${weaponInfo?.name ?? "-"}</span>
         </div>
-        <div class="skill-line">
+        <div class="skill-line" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" data-bs-title=${assistTooltipContent}>
           <img src="assets/icons/Icon_Skill_Assist.webp" />
           <span>${assistInfo?.name ?? "-"}</span>
         </div>
-        <div class="skill-line">
+        <div class="skill-line" data-bs-toggle="tooltip" data-bs-html="true" data-bs-placement="bottom" data-bs-title=${specialTooltipContent}>
           <img src="assets/icons/Icon_Skill_Special.webp" />
           <span>${specialInfo?.name ?? "-"}</span>
         </div>
