@@ -69,8 +69,12 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   }
 
   const onEndTurn = () => {
-    endTurn();
+    const { sequence, updateGameState } = endTurn();
+    if (sequence.length > 0 && gameState.currentTurn === playingAs && Object.keys(potentialAction).length > 0) {
+      sequence[0][0].type = "tp";
+    }
     setActiveUnit(null);
+    handleAnimations(sequence, updateGameState);
   }
 
   const onEndSwapPhase = () => {
@@ -78,7 +82,12 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     // if (playingAs === 1) {
     //   engine.swapStartingPositions(gameState, gameState.teams[0][0].pos, gameState.teams[0][2].pos);
     // }
-    handleAction();
+    const { sequence, updateGameState } = endSwapPhase();
+    if (sequence.length > 0 && gameState.currentTurn === playingAs && Object.keys(potentialAction).length > 0) {
+      sequence[0][0].type = "tp";
+    }
+    deselectUnit();
+    handleAnimations(sequence, updateGameState);
   }
 
   const deselectUnit = () => {
@@ -88,12 +97,19 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   }
 
   const handleAction = action => {
-    const { sequence, updateGameState } = action ? executeAction(action) : endSwapPhase();
+    const { sequence, updateGameState } = executeAction(action);
     if (sequence.length > 0 && gameState.currentTurn === playingAs && Object.keys(potentialAction).length > 0) {
       sequence[0][0].type = "tp";
     }
-    deselectUnit();
+    const newUpdateGameState = () => {
+      updateGameState();
+      deselectUnit();
+    }
+    // deselectUnit();
+    handleAnimations(sequence, newUpdateGameState);
+  }
 
+  const handleAnimations = (sequence, updateGameState) => {
     const mainSequence = [];
     const afterUpdateSequence = [];
 
@@ -281,8 +297,8 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
           <span>${gameState.duelState[0].captureScore}</span>
         </div>
         ${[0, 1].map(i => html`
-          <div class="captain-skill">${captainSkillsRevealed[i] && captainSkills[i] && 
-            html`<img src=${captainSkills[i].img}
+          <div class="captain-skill">${captainSkillsRevealed[i] && captainSkills[i] &&
+    html`<img src=${captainSkills[i].img}
             data-bs-toggle="tooltip"
             data-bs-html="true"
             data-bs-placement="bottom"

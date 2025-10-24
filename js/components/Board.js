@@ -398,9 +398,8 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
       .map(unit => {
         let position = unit.pos;
         if (isAnimating) {
-          if (unitPositions) {
-            position = unitPositions[unit.id];
-          }
+          const pendingTp = animationSequence.flat()?.find(a => a.type === "tp" && a.id === unit.id);
+          position = pendingTp ? pendingTp.to : unitPositions[unit.id];
         } else if (activeUnit?.id === unit.id && potentialAction.to) {
           position = potentialAction.to;
         }

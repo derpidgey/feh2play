@@ -18,7 +18,7 @@ const useGameLogic = (initialGameState, playingAs) => {
   const executeAction = action => {
     if (!engine.isValidAction(gameState, action)) {
       console.warn("Invalid Action:", action);
-      return;
+      return {sequence: [], updateGameState: () => ({})};
     }
     const newGameState = deepClone(gameState);
     const sequence = engine.executeAction(newGameState, action);
@@ -30,8 +30,11 @@ const useGameLogic = (initialGameState, playingAs) => {
 
   const endTurn = () => {
     const newGameState = deepClone(gameState);
-    engine.endTurn(newGameState);
-    setGameState(newGameState);
+    const sequence = engine.endTurn(newGameState);
+    const updateGameState = () => {
+      setGameState(newGameState);
+    }
+    return { sequence, updateGameState };
   }
 
   const endSwapPhase = () => {
