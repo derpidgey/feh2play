@@ -6,9 +6,9 @@ import useResizeListener from "../hooks/useResizeListener.js";
 import Timer from "./Timer.js";
 import ActionTracker from "./ActionTracker.js";
 import { SPECIAL_TYPE } from "../data/definitions.js";
+import useBoardAnimations from "../hooks/useBoardAnimations.js";
 
 const engine = Engine();
-const FPS = 1000 / 30;
 const blockSheet = new Image();
 blockSheet.src = "assets/maps/common/Wallpattern.webp";
 
@@ -16,16 +16,8 @@ const specialIcon = new Image();
 specialIcon.src = "assets/icons/aoeIcon.png";
 
 const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs }) => {
+  const { unitPositions, isAnimating, phaseOverlay, turnOverlay } = useBoardAnimations(gameState, animationSequence, onAnimationComplete);
   const [tileSize, setTileSize] = useState(50);
-  const [phaseOverlay, setPhaseOverlay] = useState(false);
-  const [turnOverlay, setTurnOverlay] = useState(false);
-  const unitPositionsRef = useRef(gameState.teams[0]
-    .concat(gameState.teams[1])
-    .reduce((acc, unit) => {
-      acc[unit.id] = { x: unit.pos.x, y: unit.pos.y };
-      return acc;
-    }, {}));
-  const [unitPositions, setUnitPositions] = useState(unitPositionsRef.current);
 
   const boardRef = useRef(null);
   const actionCanvasRef = useRef(null);
@@ -35,7 +27,6 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
   const isDuel = gameState.mode === "duel";
   const boardWidth = gameState.map.terrain[0].length;
   const boardHeight = gameState.map.terrain.length;
-  const isAnimating = animationSequence.length > 0;
 
   useResizeListener(() => {
     if (boardRef.current) {
@@ -44,120 +35,6 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
       setTileSize(newTileSize);
     }
   }, 10);
-
-  const handleMoveAnimation = (animation, resolve) => {
-    const { id, to } = animation;
-    const frames = 8;
-    const from = unitPositionsRef.current[id];
-    const dx = (to.x - from.x) / frames;
-    const dy = (to.y - from.y) / frames;
-    let frame = 0;
-    const interval = setInterval(() => {
-      if (frame >= frames) {
-        clearInterval(interval);
-        unitPositionsRef.current[id] = { ...to };
-        setUnitPositions({ ...unitPositionsRef.current });
-        resolve();
-      } else {
-        unitPositionsRef.current[id] = {
-          x: unitPositionsRef.current[id].x + dx,
-          y: unitPositionsRef.current[id].y + dy
-        };
-        setUnitPositions({ ...unitPositionsRef.current });
-        frame++;
-      }
-    }, FPS);
-  }
-
-  const handleAttackAnimation = (animation, resolve) => {
-    const { id, target } = animation;
-    const frames = 6;
-    const from = unitPositionsRef.current[id];
-    const dx = (target.x - from.x) / 10;
-    const dy = (target.y - from.y) / 10;
-    let frame = 0;
-    const originalPosition = { ...from };
-    const interval = setInterval(() => {
-      if (frame < 3) {
-        // Advance phase
-        unitPositionsRef.current[id] = {
-          x: unitPositionsRef.current[id].x + dx,
-          y: unitPositionsRef.current[id].y + dy,
-        };
-      } else if (frame < frames) {
-        // Retreat phase
-        unitPositionsRef.current[id] = {
-          x: unitPositionsRef.current[id].x - dx,
-          y: unitPositionsRef.current[id].y - dy,
-        };
-      } else {
-        clearInterval(interval);
-        unitPositionsRef.current[id] = originalPosition;
-        setUnitPositions({ ...unitPositionsRef.current });
-        resolve();
-        return;
-      }
-      setUnitPositions({ ...unitPositionsRef.current });
-      frame++;
-    }, FPS);
-  }
-
-  useEffect(() => {
-    if (!animationSequence || animationSequence.length === 0) return;
-    unitPositionsRef.current = gameState.teams[0]
-      .concat(gameState.teams[1])
-      .reduce((acc, unit) => {
-        acc[unit.id] = { x: unit.pos.x, y: unit.pos.y };
-        return acc;
-      }, {});
-    setUnitPositions({ ...unitPositionsRef.current });
-    const animate = async () => {
-      for (const animationBatch of animationSequence) {
-        const animations = animationBatch.map(animation => {
-          return new Promise(resolve => {
-            if (animation.type === "move") {
-              handleMoveAnimation(animation, resolve);
-            } else if (animation.type === "attack") {
-              handleAttackAnimation(animation, resolve);
-            } else if (animation.type === "tp") {
-              const { id, to } = animation;
-              unitPositionsRef.current[id] = {
-                x: to.x,
-                y: to.y
-              };
-              setUnitPositions({ ...unitPositionsRef.current });
-              resolve();
-            } else if (animation.type === "currentTurn") {
-              const turnChanges = animationSequence.flat().filter(animation => animation.type === "currentTurn");
-              const startTurn = animationSequence.flat().filter(animation => animation.type === "startTurn");
-              if (turnChanges.length === 1 && startTurn.length === 0) {
-                setPhaseOverlay(true);
-                setTimeout(() => {
-                  setPhaseOverlay(false);
-                  resolve();
-                }, 1000);
-              } else {
-                resolve();
-              }
-            } else if (animation.type === "startTurn") {
-              setTurnOverlay(true);
-              setTimeout(() => {
-                setTurnOverlay(false);
-                resolve();
-              }, 1000);
-            } else {
-              // console.warn(`Unhandled animation type ${animation.type}`);
-              resolve();
-            }
-          });
-        });
-        await Promise.all(animations);
-      }
-      onAnimationComplete();
-    };
-
-    animate();
-  }, [animationSequence]);
 
   useEffect(() => {
     const actionCanvas = actionCanvasRef.current;

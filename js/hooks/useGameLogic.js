@@ -4,7 +4,7 @@ import { deepClone } from "../utils.js";
 
 const engine = Engine();
 
-const useGameLogic = (initialGameState, playingAs) => {
+const useGameLogic = (initialGameState) => {
   const workerRef = useRef(null);
   const [gameState, setGameState] = useState(initialGameState);
 

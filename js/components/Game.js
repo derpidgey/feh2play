@@ -18,7 +18,7 @@ const DOUBLE_CLICK_THRESHOLD_MS = 200;
 
 const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) => {
   useBootstrapTooltips();
-  const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState, playingAs);
+  const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState);
   const [fontSize, setFontSize] = useState("16px");
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [potentialAction, setPotentialAction] = useState({});
@@ -101,12 +101,8 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     if (sequence.length > 0 && gameState.currentTurn === playingAs && Object.keys(potentialAction).length > 0) {
       sequence[0][0].type = "tp";
     }
-    const newUpdateGameState = () => {
-      updateGameState();
-      deselectUnit();
-    }
-    // deselectUnit();
-    handleAnimations(sequence, newUpdateGameState);
+    deselectUnit();
+    handleAnimations(sequence, updateGameState);
   }
 
   const handleAnimations = (sequence, updateGameState) => {
