@@ -14,6 +14,7 @@ const useGameInput = ({ gameState, playingAs, isAnimating, handleAction, swapSta
 
   const boardWidth = gameState.map.terrain[0].length;
   const boardHeight = gameState.map.terrain.length;
+  const isDuel = gameState.mode === "duel";
 
   const deselectUnit = () => {
     setActiveUnit(null);
@@ -26,7 +27,9 @@ const useGameInput = ({ gameState, playingAs, isAnimating, handleAction, swapSta
   }
 
   const queryTile = (x, y) => {
-    const clickedUnit = [...gameState.teams[0], ...gameState.teams[1]].find(unit => unit.pos.x === x && unit.pos.y === y);
+    const clickedUnit = [...gameState.teams[0], ...gameState.teams[1]]
+      .filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)
+      .find(unit => unit.pos.x === x && unit.pos.y === y);
     if (!clickedUnit) {
       if (debug) console.log(`Empty tile clicked at (${x}, ${y})`);
       return;
@@ -71,7 +74,8 @@ const useGameInput = ({ gameState, playingAs, isAnimating, handleAction, swapSta
   }
 
   const getPotentialAction = (x, y) => {
-    const clickedUnit = gameState.teams[0].concat(gameState.teams[1]).find(unit => unit.pos.x === x && unit.pos.y === y);
+    const clickedUnit = [...gameState.teams[0], ...gameState.teams[1]]
+      .find(unit => unit.pos.x === x && unit.pos.y === y);
     if (clickedUnit) {
       return getPotentialActionForTargetUnit(clickedUnit);
     }
@@ -96,7 +100,7 @@ const useGameInput = ({ gameState, playingAs, isAnimating, handleAction, swapSta
       return;
     }
     if (gameState.isSwapPhase) {
-      const clickedAlly = [...gameState.teams[playingAs]].find(unit => unit.pos.x === x && unit.pos.y === y);
+      const clickedAlly = gameState.teams[playingAs].find(unit => unit.pos.x === x && unit.pos.y === y);
       if (clickedAlly) {
         swapStartingPositions(activeUnit.pos, clickedAlly.pos);
         deselectUnit();

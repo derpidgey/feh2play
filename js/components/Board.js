@@ -1,26 +1,22 @@
-import { html, useState, useEffect, useRef } from "https://esm.sh/htm/preact/standalone";
-import Tile from "./Tile.js";
+import { html, useState, useRef } from "https://esm.sh/htm/preact/standalone";
 import Unit from "./Unit.js";
 import Engine from "../engine.js";
 import useResizeListener from "../hooks/useResizeListener.js";
 import Timer from "./Timer.js";
 import ActionTracker from "./ActionTracker.js";
-import { SPECIAL_TYPE } from "../data/definitions.js";
 import useBoardAnimations from "../hooks/useBoardAnimations.js";
 import BoardLayerBlocks from "./BoardLayerBlocks.js";
+import BoardLayerTiles from "./BoardLayerTiles.js";
+import BoardLayerAction from "./BoardLayerAction.js";
+import BoardLayerSpecial from "./BoardLayerSpecial.js";
 
 const engine = Engine();
-
-const specialIcon = new Image();
-specialIcon.src = "assets/icons/aoeIcon.png";
 
 const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs }) => {
   const { unitPositions, isAnimating, phaseOverlay, turnOverlay } = useBoardAnimations(gameState, animationSequence, onAnimationComplete);
   const [tileSize, setTileSize] = useState(50);
 
   const boardRef = useRef(null);
-  const actionCanvasRef = useRef(null);
-  const specialCanvasRef = useRef(null);
 
   const isDuel = gameState.mode === "duel";
   const boardWidth = gameState.map.terrain[0].length;
@@ -33,50 +29,6 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
       setTileSize(newTileSize);
     }
   }, 10);
-
-  useEffect(() => {
-    const actionCanvas = actionCanvasRef.current;
-    const specialCanvas = specialCanvasRef.current;
-    if (!actionCanvas || !specialCanvas) return;
-    const actionCtx = actionCanvas.getContext("2d");
-    const specialCtx = specialCanvas.getContext("2d");
-    actionCtx.clearRect(0, 0, actionCanvas.width, actionCanvas.height);
-    specialCtx.clearRect(0, 0, specialCanvas.width, specialCanvas.height);
-    if (!potentialAction.from) return;
-    const path = potentialAction.to.path ?? [];
-    actionCtx.strokeStyle = "rgba(173, 216, 230, 0.5)";
-    actionCtx.lineWidth = tileSize / 3;
-    actionCtx.lineJoin = "round";
-    actionCtx.lineCap = "round";
-    actionCtx.beginPath();
-    if (path.length === 0) {
-      actionCtx.fillStyle = actionCtx.strokeStyle;
-      actionCtx.arc(potentialAction.from.x * tileSize + tileSize / 2, potentialAction.from.y * tileSize + tileSize / 2, tileSize / 6, 0, 2 * Math.PI);
-      actionCtx.fill();
-    } else {
-      actionCtx.moveTo(path[0].x * tileSize + tileSize / 2, path[0].y * tileSize + tileSize / 2);
-      path.forEach(point => actionCtx.lineTo(point.x * tileSize + tileSize / 2, point.y * tileSize + tileSize / 2));
-      actionCtx.stroke();
-    }
-    if (potentialAction.type === "attack" && activeUnit.special.current === 0) {
-      const specialInfo = engine.getSpecialInfo(activeUnit);
-      if (specialInfo.specialType === SPECIAL_TYPE.AOE) {
-        specialInfo.aoe.shape.forEach(({ x, y }) => {
-          const tileX = (potentialAction.target.x + x) * tileSize;
-          const tileY = (potentialAction.target.y + y) * tileSize;
-          const iconSize = tileSize * 0.8;
-          const offset = (tileSize - iconSize) / 2;
-          specialCtx.drawImage(
-            specialIcon,
-            tileX + offset,
-            tileY + offset,
-            iconSize,
-            iconSize
-          );
-        });
-      }
-    }
-  }, [potentialAction]);
 
   const calculateHighlightedTiles = () => {
     const highlightedTiles = Array.from({ length: boardWidth * boardHeight }, (_, i) => ({
@@ -101,7 +53,8 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
         }
       });
     } else {
-      const lastClickedUnit = gameState.teams[0].concat(gameState.teams[1])
+      const lastClickedUnit = [...gameState.teams[0], ...gameState.teams[1]]
+        .filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)
         .find(unit => unit.pos.x === lastClick.tile.x && unit.pos.y === lastClick.tile.y);
       if (lastClickedUnit && (lastClickedUnit.team !== playingAs || !lastClickedUnit.hasAction || gameState.currentTurn !== playingAs)) {
         engine.calculateThreatRange(gameState, lastClickedUnit, false)
@@ -124,14 +77,13 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
   const highlightedTiles = calculateHighlightedTiles();
 
   const handleBoardClick = e => {
-    if (boardRef.current) {
-      const rect = boardRef.current.getBoundingClientRect();
-      const offsetX = e.clientX - rect.left;
-      const offsetY = e.clientY - rect.top;
-      const x = Math.floor(offsetX / tileSize);
-      const y = Math.floor(offsetY / tileSize);
-      handleTileClick(x, y);
-    }
+    if (!boardRef.current) return;
+    const rect = boardRef.current.getBoundingClientRect();
+    const offsetX = e.clientX - rect.left;
+    const offsetY = e.clientY - rect.top;
+    const x = Math.floor(offsetX / tileSize);
+    const y = Math.floor(offsetY / tileSize);
+    handleTileClick(x, y);
   }
 
   const getCaptureAreaStyle = () => {
@@ -162,14 +114,8 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
     <img src=${gameState.map.bg} alt="map" />
     ${isDuel && html`<img src="assets/maps/common/SummonerDuels_PointArea.webp" style=${getCaptureAreaStyle()} alt="capture area" />`}
     <${BoardLayerBlocks} map=${gameState.map} tileSize=${tileSize} />
-    <div class="tile-container">
-      ${highlightedTiles.map(tile => html`<${Tile} x=${tile.x} y=${tile.y} size=${tileSize} colour=${tile.colour} />`)}
-    </div>
-    <canvas 
-      ref=${actionCanvasRef}
-      width=${tileSize * boardWidth}
-      height=${tileSize * boardHeight}
-      style=${{ position: "absolute", left: 0, top: 0, pointerEvents: "none" }} />
+    <${BoardLayerTiles} highlightedTiles=${highlightedTiles} boardWidth=${boardWidth} boardHeight=${boardHeight} tileSize=${tileSize} />
+    <${BoardLayerAction} potentialAction=${potentialAction} boardWidth=${boardWidth} boardHeight=${boardHeight} tileSize=${tileSize} />
     <div class="units">${[...gameState.teams[1], ...gameState.teams[0]]
       .filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)
       .map(unit => {
@@ -195,11 +141,7 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
           position=${position}
           showActionIndicator=${showActionIndicator} />`;
       })}</div>
-    <canvas 
-      ref=${specialCanvasRef}
-      width=${tileSize * boardWidth}
-      height=${tileSize * boardHeight}
-      style=${{ position: "absolute", left: 0, top: 0, pointerEvents: "none" }} />
+    <${BoardLayerSpecial} activeUnit=${activeUnit} potentialAction=${potentialAction} boardWidth=${boardWidth} boardHeight=${boardHeight} tileSize=${tileSize} />
     ${isDuel && html`<div class="corner" style=${getCornerStyle(0, 0)}>
       <${ActionTracker} tileSize=${tileSize} gameState=${gameState} />
     </div>`}

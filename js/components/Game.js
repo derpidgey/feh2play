@@ -34,14 +34,15 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     handleAnimations(sequence, updateGameState);
   }
 
-  const { activeUnit, selectedUnit, potentialAction, validActions, lastClick, handleTileClick, deselectUnit, clearActiveUnit } = useGameInput({
-    gameState,
-    playingAs,
-    isAnimating,
-    handleAction,
-    swapStartingPositions,
-    debug,
-  });
+  const { activeUnit, selectedUnit, potentialAction, validActions,
+    lastClick, handleTileClick, deselectUnit, clearActiveUnit } = useGameInput({
+      gameState,
+      playingAs,
+      isAnimating,
+      handleAction,
+      swapStartingPositions,
+      debug,
+    });
 
   if (gameState.gameOver) {
     onGameOver(gameState.duelState[playingAs].result, 1000);
