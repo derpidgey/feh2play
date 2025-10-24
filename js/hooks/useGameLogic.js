@@ -18,7 +18,7 @@ const useGameLogic = (initialGameState) => {
   const executeAction = action => {
     if (!engine.isValidAction(gameState, action)) {
       console.warn("Invalid Action:", action);
-      return {sequence: [], updateGameState: () => ({})};
+      return { sequence: [], updateGameState: () => { } };
     }
     const newGameState = deepClone(gameState);
     const sequence = engine.executeAction(newGameState, action);
