@@ -1,81 +1,10 @@
 import { html, useState } from "https://esm.sh/htm/preact/standalone";
 import Game from "./Game.js";
-import UNIT from "../data/units.js";
-import SKILLS from "../data/skills.js";
 import Engine from "../engine.js";
-import MAPS from "../data/maps.js";
 import GameOver from "./GameOver.js";
+import { SD_ASSAULT_LEVELS } from "../config.js";
 
-function createBuild(unitId, skills = []) {
-  return {
-    unitId,
-    level: 40,
-    merges: 0,
-    skills
-  }
-}
 const engine = Engine();
-
-const cavs = [
-  createBuild(UNIT.CECILIA.id, [SKILLS.TURMOIL.id, SKILLS.TOME_OF_ORDER.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.GLIMMER.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.GUARD_3.id, SKILLS.GOAD_CAVALRY.id, SKILLS.DRIVE_ATK_2.id + "_SEAL"]),
-  createBuild(UNIT.ELIWOOD.id, [SKILLS.BLAZING_DURANDAL.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.GALEFORCE.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.DRAG_BACK.id, SKILLS.WARD_CAVALRY.id, SKILLS.SWIFT_SPARROW_2.id + "_SEAL"]),
-  createBuild(UNIT.ABEL.id, [SKILLS.PANTHER_LANCE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.DEATH_BLOW_3.id, SKILLS.DRAG_BACK.id, SKILLS.WARD_CAVALRY.id, SKILLS.DEATH_BLOW_3.id + "_SEAL"]),
-  createBuild(UNIT.ELISE.id, [SKILLS.ELISES_STAFF.id + "_REFINE_EFF", SKILLS.PHYSIC_PLUS.id, SKILLS.MIRACLE.id, SKILLS.ATK_SPD_BOND_3.id, SKILLS.DAZZLING_STAFF.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.ATK_SPD_BOND_3.id + "_SEAL"]),
-  createBuild(UNIT.JAGEN.id, [SKILLS.VETERAN_LANCE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.ICEBERG.id, SKILLS.FURY_3.id, SKILLS.DRAG_BACK.id, SKILLS.GOAD_CAVALRY.id, SKILLS.DRIVE_SPD_2.id + "_SEAL"])
-];
-const fliers = [
-  createBuild(UNIT.CATRIA.id, [SKILLS.EARTH_RENDERING.id, SKILLS.WHITEWING_LANCE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.GOAD_FLIERS.id, SKILLS.HARDY_BEARING_3.id]),
-  createBuild(UNIT.OLIVIA.id, [SKILLS.SLAYING_EDGE_PLUS.id + "_REFINE_DEF", SKILLS.DANCE.id, SKILLS.MOONBOW.id, SKILLS.FURY_3.id, SKILLS.WINGS_OF_MERCY_3.id, SKILLS.DRIVE_SPD_2.id, SKILLS.DRIVE_SPD_2.id + "_SEAL"]),
-  createBuild(UNIT.EST.id, [SKILLS.WHITEWING_SPEAR.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.LUNA.id, SKILLS.ATK_DEF_BOND_3.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.GOAD_FLIERS.id, SKILLS.ATK_DEF_BOND_3.id + "_SEAL"]),
-  createBuild(UNIT.CAMILLA.id, [SKILLS.CAMILLAS_AXE.id + "_REFINE_EFF", SKILLS.SWAP.id, SKILLS.LUNA.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.WARD_FLIERS.id, SKILLS.SWIFT_SPARROW_2.id + "_SEAL"]),
-  createBuild(UNIT.PALLA.id, [SKILLS.WHITEWING_BLADE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.LUNA.id, SKILLS.FURY_3.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.WARD_FLIERS.id, SKILLS.ATK_SPD_BOND_3.id + "_SEAL"])
-];
-
-const armours = [
-  createBuild(UNIT.AZAMA.id, [SKILLS.EARTH_RENDERING.id, SKILLS.PAIN_PLUS.id + "_REFINE_WRATHFUL", SKILLS.MARTYR_PLUS.id, SKILLS.MIRACLE.id, SKILLS.FORTRESS_DEF_3.id, SKILLS.DAZZLING_STAFF.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.SAVAGE_BLOW_3.id + "_SEAL"]),
-  createBuild(UNIT.VIRION.id, [SKILLS.DIGNIFIED_BOW.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.GLIMMER.id, SKILLS.HP_ATK_2.id, SKILLS.GUARD_3.id, SKILLS.DRIVE_RES_2.id, SKILLS.HP_ATK_2.id + "_SEAL"]),
-  createBuild(UNIT.GWENDOLYN.id, [SKILLS.WEIGHTED_LANCE.id + "_REFINE_EFF", SKILLS.SWAP.id, SKILLS.BONFIRE.id, SKILLS.DISTANT_COUNTER.id, SKILLS.QUICK_RIPOSTE_3.id, SKILLS.WARD_ARMOUR.id, SKILLS.STEADY_BREATH.id + "_SEAL"]),
-  createBuild(UNIT.DRAUG.id, [SKILLS.STALWART_SWORD.id + "_REFINE_EFF", SKILLS.SMITE.id, SKILLS.MOONBOW.id, SKILLS.ATK_SPD_BOND_3.id, SKILLS.WINGS_OF_MERCY_3.id, SKILLS.ARMOUR_MARCH.id, SKILLS.ATK_SPD_BOND_3.id + "_SEAL"]),
-  createBuild(UNIT.EFFIE.id, [SKILLS.EFFIES_LANCE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.DISTANT_COUNTER.id, SKILLS.VANTAGE_3.id, SKILLS.WARD_ARMOUR.id, SKILLS.DEATH_BLOW_3.id + "_SEAL"])
-];
-
-const SD_LEVELS = [
-  {
-    id: "sd_fliers",
-    name: "Sky Attack",
-    description: "Engage in a battle for air superiority",
-    battles: [
-      { map: MAPS.SD15, enemyTeam: fliers, side: "red" }
-    ]
-  },
-  {
-    id: "sd_armour",
-    name: "Iron Wall",
-    description: "Break through the phalanx.",
-    battles: [
-      { map: MAPS.SD7, enemyTeam: armours, side: "red" }
-    ]
-  },
-  {
-    id: "sd_cavs",
-    name: "Cavalry Training",
-    description: "Endure their relentless advance.",
-    battles: [
-      { map: MAPS.SD9, enemyTeam: cavs, side: "blue" }
-    ]
-  },
-  {
-    id: "sd_emblem_gauntlet",
-    name: "Trial of Emblems",
-    description: "Face of against the triple threat.",
-    battles: [
-      { map: MAPS.SD15, enemyTeam: fliers, side: "red" },
-      { map: MAPS.SD7, enemyTeam: armours, side: "red" },
-      { map: MAPS.SD9, enemyTeam: cavs, side: "blue" },
-    ]
-  },
-];
-
 
 const SDAssault = ({ onExit }) => {
   const [screen, setScreen] = useState("levelSelect");
@@ -93,7 +22,7 @@ const SDAssault = ({ onExit }) => {
     setScreen("battle");
   };
 
-  const level = selectedLevel ? SD_LEVELS.find(l => l.id === selectedLevel) : null;
+  const level = selectedLevel ? SD_ASSAULT_LEVELS.find(l => l.id === selectedLevel) : null;
 
   const handleBattleEnd = (result, delay = 1000) => {
     const isLastBattle = battleIndex >= level.battles.length - 1;
@@ -137,7 +66,7 @@ const SDAssault = ({ onExit }) => {
         <div class="p-3 text-center d-flex flex-column" style="height: 100%;">
           <h2 class="mb-4">SD Assault</h2>
           <div class="d-grid gap-3 overflow-auto mb-4">
-            ${SD_LEVELS.map(l => html`
+            ${SD_ASSAULT_LEVELS.map(l => html`
               <div class="card shadow-sm border-0" role="button" onClick=${() => { setSelectedLevel(l.id); setScreen("preview"); }}>
                 <div class="card-body">
                   <h5 class="card-title mb-1">${l.name}</h5>
