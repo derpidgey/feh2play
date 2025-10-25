@@ -2175,7 +2175,7 @@ const EXCLUSIVE_WEAPONS = {
     },
     refineImg: "assets/refines/Falchion_Awakening_W.webp",
     canUse: {
-      unit: [UNIT.LUCINA.id] // masked marth, exalted chrom
+      unit: [UNIT.LUCINA.id, UNIT.CHROM.id] // masked marth
     }
   },
   FALCHION_MYSTERY: {
@@ -2928,6 +2928,7 @@ const EXCLUSIVE_WEAPONS = {
     range: 2,
     effects: [
       EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.slaying(),
       EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id),
       {
         phase: EFFECT_PHASE.DURING_COMBAT,

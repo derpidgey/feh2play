@@ -66,7 +66,7 @@ function Engine() {
     return true;
   }
 
-  function validateTeam(team, mode = "standard") {
+  function validateTeam(team, mode = "regular") {
     for (const build of team) {
       const buildResult = validateBuild(build);
       if (!buildResult.result) return buildResult;
@@ -84,12 +84,12 @@ function Engine() {
     }
 
     // future mods: aro, ard
-    if (mode === "standard") {
+    if (mode === "regular") {
       if (team.length <= 4) {
         return { result: true, reason: "" };
       }
       return { result: false, reason: "Number of units must be <= 4" };
-    } else if (mode === "sd") {
+    } else if (mode === "duel") {
       if (team.length !== 5) return { result: false, reason: "Number of units must be 5" };
       const unitIds = new Set();
       for (const build of team) {
@@ -121,6 +121,14 @@ function Engine() {
   }
 
   function newGame(map, team1Builds, team2Builds, mode = "regular") {
+    const validate1 = validateTeam(team1Builds, mode);
+    const validate2 = validateTeam(team2Builds, mode);
+    if (!validate1.result) {
+      throw new Error(validate1.reason);
+    }
+    if (!validate2.result) {
+      throw new Error(validate2.reason);
+    }
     const team1 = team1Builds.map(toGameUnit);
     const team2 = team2Builds.map(toGameUnit);
 

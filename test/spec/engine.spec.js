@@ -113,7 +113,7 @@ describe("Engine", function () {
         createBuild(UNIT.ANNA.id, [SKILLS.NOATUN.id]),
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id])
       ];
-      expect(engine.validateTeam(team, "sd").result).toBeFalse();
+      expect(engine.validateTeam(team, "duel").result).toBeFalse();
 
       const validTeam = [
         createBuild(UNIT.ALFONSE.id, [SKILLS.FOLKVANGR.id]),
@@ -122,7 +122,7 @@ describe("Engine", function () {
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id]),
         createBuild(UNIT.CAIN.id, [SKILLS.BRAVE_SWORD_PLUS.id])
       ];
-      expect(engine.validateTeam(validTeam, "sd").result).toBeTrue();
+      expect(engine.validateTeam(validTeam, "duel").result).toBeTrue();
     });
 
     it("should not allow duplicate heroes", function () {
@@ -133,7 +133,7 @@ describe("Engine", function () {
         createBuild(UNIT.ANNA.id, [SKILLS.NOATUN.id]),
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id])
       ];
-      expect(engine.validateTeam(team, "sd").result).toBeFalse();
+      expect(engine.validateTeam(team, "duel").result).toBeFalse();
     });
 
     it("should allow at most 1 refresher", function () {
@@ -144,7 +144,7 @@ describe("Engine", function () {
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id]),
         createBuild(UNIT.CAIN.id, [SKILLS.BRAVE_SWORD_PLUS.id])
       ];
-      expect(engine.validateTeam(team, "sd").result).toBeTrue();
+      expect(engine.validateTeam(team, "duel").result).toBeTrue();
 
       const invalidTeam = [
         createBuild(UNIT.OLIVIA.id, [SKILLS.DANCE.id]),
@@ -153,7 +153,7 @@ describe("Engine", function () {
         createBuild(UNIT.ABEL.id, [SKILLS.SILVER_LANCE_PLUS.id]),
         createBuild(UNIT.CAIN.id, [SKILLS.BRAVE_SWORD_PLUS.id])
       ];
-      expect(engine.validateTeam(invalidTeam, "sd").result).toBeFalse();
+      expect(engine.validateTeam(invalidTeam, "duel").result).toBeFalse();
     });
   });
 
@@ -830,9 +830,10 @@ describe("Engine", function () {
           ],
           defensiveTerrain: [],
           blocks: [],
-          startingPositions: [[{ x: 0, y: 0 }], [{ x: 4, y: 0 }]]
+          startingPositions: [[{ x: 1, y: 0 }, { x: 0, y: 0 }], [{ x: 4, y: 0 }]]
         }
-        team1[0].skills.push(SKILLS.ARMOURED_BOOTS.id, SKILLS.ARMOURED_BOOTS.id);
+        team1[0].skills.push(SKILLS.ARMOUR_MARCH.id, SKILLS.ARMOURED_BOOTS.id);
+        team1.push(createBuild(UNIT.GWENDOLYN.id));
         const gameState = engine.newGame(map, team1, team2);
         engine.endSwapPhase(gameState);
         const range = engine.calculateMovementRange(gameState, gameState.teams[0][0]);
@@ -1755,7 +1756,7 @@ describe("Engine", function () {
 
       it("should gain negative affinity from Triangle Adept", function () {
         team1 = [createBuild(UNIT.CECILIA.id, [SKILLS.GRONNRAVEN_PLUS.id])];
-        team2 = [createBuild(UNIT.JEORGE.id, [SKILLS.SILVER_BOW_PLUS.id, SKILLS.TRIANGLE_ADEPT_3.id])];
+        team2 = [createBuild(UNIT.ODIN.id, [SKILLS.ODINS_GRIMOIRE.id, SKILLS.TRIANGLE_ADEPT_3.id])];
         const gameState = engine.newGame(map, team1, team2);
         const unit = gameState.teams[0][0];
         const foe = gameState.teams[1][0];
