@@ -7,12 +7,13 @@ import { deepClone } from "../utils.js";
 
 const engine = Engine();
 
-const InfoPanel = ({ gameState, unit, potentialAction, playingAs }) => {
+const InfoPanel = ({ gameState, unitId, potentialAction, playingAs }) => {
   if (potentialAction.target) {
     return html`<${ActionPreview} gameState=${gameState} potentialAction=${potentialAction} />`;
   }
-  if (unit) {
+  if (unitId) {
     const backgroundType = gameState.mode === "duel" ? "absolute" : "relative";
+    const unit = gameState.teams[0].concat(gameState.teams[1]).find(u => u.id === unitId);
     return html`<${UnitInfo} unit=${unit} backgroundType=${backgroundType} playingAs=${playingAs} />`
   }
   return html`<div class="info-panel"></div>`;

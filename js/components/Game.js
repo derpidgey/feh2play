@@ -146,7 +146,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   return html`
   ${isWideScreen && html`<${SidePanel} team=${gameState.teams[0].filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)} backgroundType=${backgroundType} playingAs=${playingAs} />`}
   <div class="screen" style="font-size: clamp(0.5rem, ${fontSize}, 1rem);">
-    <${InfoPanel} gameState=${gameState} unit=${selectedUnit} potentialAction=${potentialAction} playingAs=${playingAs} />
+    <${InfoPanel} gameState=${gameState} unitId=${selectedUnit?.id} potentialAction=${potentialAction} playingAs=${playingAs} />
     ${gameState.mode === "duel" && html`
       <div class="score-bar">
         <div class="score blue">
