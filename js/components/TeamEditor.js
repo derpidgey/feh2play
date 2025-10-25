@@ -107,8 +107,14 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
     setTimeout(() => setShowError(false), 3000);
   }
 
+  const toEngineMode = mode => {
+    if (mode === "standard") return "regular";
+    if (mode === "sd") return "duel";
+    return mode;
+  }
+
   const validateAndSave = () => {
-    const result = engine.validateTeam(team.filter(unit => unit.unitId !== ""), teamData.mode);
+    const result = engine.validateTeam(team.filter(unit => unit.unitId !== ""), toEngineMode(teamData.mode));
     if (result.result) {
       onSave();
     } else {
