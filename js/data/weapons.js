@@ -2919,6 +2919,42 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.FIR.id]
     }
   },
+  NILESS_BOW: {
+    name: "Niles's Bow",
+    description: "Accelerates Special trigger (cooldown count-1). Effective against flying foes. If foe's Def ≥ foe's Res+5, deals +7 damage.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BOW.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id),
+      {
+        phase: EFFECT_PHASE.DURING_COMBAT,
+        condition: { type: EFFECT_CONDITION.FOE_STAT_GREATER_THAN_OTHER_STAT, stat: STATS.DEF, otherStat: STATS.RES, statModifier: -4 },
+        actions: [
+          {
+            type: EFFECT_ACTION.CONSTANT_FIXED_DAMAGE, value: 7, target: { type: EFFECT_TARGET.SELF }
+          }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "If unit's Spd > foe's Spd, grants Special cooldown charge +1 per unit's attack. (Only highest value applied. Does not stack.)",
+      effects: [
+        {
+          phase: EFFECT_PHASE.DURING_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE, unitStat: STATS.SPD, foeStat: STATS.SPD, statType: STAT_CHECK_TYPE.IN_COMBAT },
+          actions: [{ type: EFFECT_ACTION.SET_COMBAT_FLAG, flag: COMBAT_FLAG.SPECIAL_CHARGES_PER_UNIT_ATTACK, target: { type: EFFECT_TARGET.SELF } }]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Flashing_Blade_W.webp",
+    canUse: {
+      unit: [UNIT.NILES.id]
+    }
+  },
   NOATUN: {
     name: "Nóatún",
     description: "If unit's HP ≤ 40%, unit can move to a space adjacent to any ally.",

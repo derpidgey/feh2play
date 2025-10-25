@@ -913,6 +913,22 @@ const BOOK_1 = {
     superboons: [],
     superbanes: [STATS.HP]
   },
+  NILES: {
+    name: "Niles",
+    subtitle: "Cruel to Be Kind",
+    imgFace: "assets/face/book1/Niles_Cruel_to_Be_Kind_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Niles_Cruel_to_Be_Kind_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.C_BOW.id,
+    moveType: MOVE_TYPE.INFANTRY.id,
+    entry: [ENTRY.FATES],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 18, atk: 6, spd: 8, def: 4, res: 8 },
+    level40Stats: { hp: 37, atk: 25, spd: 34, def: 17, res: 34 },
+    superboons: [STATS.HP, STATS.ATK],
+    superbanes: [STATS.DEF]
+  },
   NINO: {
     name: "Nino",
     subtitle: "Pious Mage",

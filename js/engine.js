@@ -2045,6 +2045,12 @@ function Engine() {
       case EFFECT_CONDITION.UNIT_STAT_LESS_THAN_FOE:
       case EFFECT_CONDITION.UNIT_STAT_LESS_THAN_EQUAL_TO_FOE:
         return evaluateStatCondition(context, condition);
+      case EFFECT_CONDITION.FOE_STAT_GREATER_THAN_OTHER_STAT:
+        const foeStats = getTotalInCombatStats(foe);
+        let value = foeStats[params.stat];
+        let other = foeStats[params.otherStat];
+        if (params.statModifier) value += params.statModifier;
+        return value > other;
       case EFFECT_CONDITION.FIRST_COMBAT_IN_PHASE:
         return unit.combatsInPhase === 0;
       case EFFECT_CONDITION.UNIT_IN_CAPTURE_AREA:
