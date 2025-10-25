@@ -88,7 +88,7 @@ const TeamBuilder = ({ onExit }) => {
         </div>
 
         <div class="d-grid">
-          <button type="button" class="btn btn-secondary btn-lg" onClick=${onExit}>Back</button>
+          <button type="button" class="btn btn-danger btn-lg" onClick=${onExit}>Back</button>
         </div>
       </div>
     </div>

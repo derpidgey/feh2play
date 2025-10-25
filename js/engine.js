@@ -2240,9 +2240,9 @@ function Engine() {
       case EFFECT_TARGET.FOES_IN_CARDINAL_DIRECTIONS:
         return getFoesInCardinalDirections(context.gameState, unit, target);
       case EFFECT_TARGET.FOES_WITH_HIGHEST_STAT:
-        return getFoesWithHighestStat(context.gameState, team, target.stat);
+        return getFoesWithHighestStat(context.gameState, team ^ 1, target.stat);
       case EFFECT_TARGET.FOES_WITH_LOWEST_STAT:
-        return getFoesWithLowestStat(context.gameState, team, target.stat);
+        return getFoesWithLowestStat(context.gameState, team ^ 1, target.stat);
       case EFFECT_TARGET.ASSIST_USER:
         return [context.assistUser];
       case EFFECT_TARGET.ASSIST_TARGET:
