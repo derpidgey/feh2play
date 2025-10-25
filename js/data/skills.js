@@ -3416,7 +3416,8 @@ const C_SKILLS = {
               unitStat: STATS.RES,
               foeStat: STATS.RES
             }
-          }]
+          }
+        ]
       }
     ]
   },
@@ -3438,7 +3439,8 @@ const C_SKILLS = {
               unitStat: STATS.RES,
               foeStat: STATS.RES
             }
-          }]
+          }
+        ]
       }
     ]
   },
@@ -3460,7 +3462,8 @@ const C_SKILLS = {
               unitStat: STATS.RES,
               foeStat: STATS.RES
             }
-          }]
+          }
+        ]
       }
     ]
   },
@@ -3482,7 +3485,8 @@ const C_SKILLS = {
               unitStat: STATS.RES,
               foeStat: STATS.RES
             }
-          }]
+          }
+        ]
       }
     ]
   },
@@ -3504,7 +3508,8 @@ const C_SKILLS = {
               unitStat: STATS.HP,
               foeStat: STATS.HP
             }
-          }]
+          }
+        ]
       }
     ]
   },

@@ -3531,6 +3531,53 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.CECILIA.id]
     }
   },
+  VETERAN_LANCE: {
+    name: "Veteran Lance",
+    description: "If foe initiates combat or, at start of combat, if foe's HP ≥ 70%, grants Atk/Res+5 to unit during combat.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    might: 16,
+    range: 1,
+    effects: [
+      EFFECT.visibleStats({ atk: 16 }),
+      {
+        phase: EFFECT_PHASE.START_OF_COMBAT,
+        condition: CONDITION.or(
+          { type: EFFECT_CONDITION.FOE_INITIATES_COMBAT },
+          { type: EFFECT_CONDITION.FOE_HP_GREATER_THAN_EQUAL_TO, percent: 70 }
+        ),
+        actions: [
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 5, target: { type: EFFECT_TARGET.SELF } },
+          { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 5, target: { type: EFFECT_TARGET.SELF } }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "At start of turn, if any foe's Res ≤ unit's Res-3 and that foe is adjacent to another foe, inflicts Atk-7 on that foe through its next action.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_TURN,
+          actions: [
+            {
+              type: EFFECT_ACTION.APPLY_DEBUFF, stat: STATS.ATK, value: 7,
+              target: {
+                type: EFFECT_TARGET.FOES_ADJACENT_TO_ANOTHER_FOE,
+                with: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE,
+                unitStat: STATS.RES,
+                foeStat: STATS.RES,
+                unitModifier: -3
+              }
+            }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Sabotage_Atk_W.webp",
+    canUse: {
+      unit: [UNIT.JAGEN.id]
+    }
+  },
   WEIGHTED_LANCE: {
     name: "Weighted Lance",
     description: "Accelerates Special trigger (cooldown count-1).",

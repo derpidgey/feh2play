@@ -2239,6 +2239,8 @@ function Engine() {
         return context.gameState.teams[team ^ 1].filter(u => manhattan(u.pos, unit.pos) <= target.spaces);
       case EFFECT_TARGET.FOES_IN_CARDINAL_DIRECTIONS:
         return getFoesInCardinalDirections(context.gameState, unit, target);
+      case EFFECT_TARGET.FOES_ADJACENT_TO_ANOTHER_FOE:
+        return getFoesAdjacentToAnotherFoe(context.gameState, unit, target);
       case EFFECT_TARGET.FOES_WITH_HIGHEST_STAT:
         return getFoesWithHighestStat(context.gameState, team ^ 1, target.stat);
       case EFFECT_TARGET.FOES_WITH_LOWEST_STAT:
@@ -2278,8 +2280,26 @@ function Engine() {
       const isInCardinalDirection = foe.pos.x === unit.pos.x || foe.pos.y === unit.pos.y;
       if (!isInCardinalDirection) return false;
       if (target.with === EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE) {
-        const unitStatValue = unit.stats[target.unitStat];
-        const foeStatValue = foe.stats[target.foeStat];
+        let unitStatValue = unit.stats[target.unitStat];
+        let foeStatValue = foe.stats[target.foeStat];
+        if (target.unitModifier) unitStatValue += target.unitModifier;
+        if (target.foeModifier) foeStatValue += target.foeModifier;
+        return unitStatValue > foeStatValue;
+      }
+      return true;
+    });
+  }
+
+  function getFoesAdjacentToAnotherFoe(gameState, unit, target) {
+    const foes = gameState.teams[unit.team ^ 1];
+    return foes.filter(foe => {
+      const hasAdjacentUnit = getAlliesWithinXSpaces(gameState, foe, { spaces: 1 });
+      if (!hasAdjacentUnit) return false;
+      if (target.with === EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE) {
+        let unitStatValue = unit.stats[target.unitStat];
+        let foeStatValue = foe.stats[target.foeStat];
+        if (target.unitModifier) unitStatValue += target.unitModifier;
+        if (target.foeModifier) foeStatValue += target.foeModifier;
         return unitStatValue > foeStatValue;
       }
       return true;

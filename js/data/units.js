@@ -1361,6 +1361,22 @@ const BOOK_1 = {
     superboons: [],
     superbanes: [STATS.HP]
   },
+  JAGEN: {
+    name: "Jagen",
+    subtitle: "Veteran Knight",
+    imgFace: "assets/face/book1/Jagen_Veteran_Knight_Face_FC.webp",
+    imgSprite: "assets/sprites/book1/Jagen_Veteran_Knight_Mini_Unit_Idle.webp",
+    rarity: RARITY.THREE_STAR,
+    weaponType: WEAPON_TYPE.LANCE.id,
+    moveType: MOVE_TYPE.CAVALRY.id,
+    entry: [ENTRY.SHADOW_DRAG_NEW_MYSTERY],
+    releaseDate: "2017-02-02",
+    version: "1.0",
+    level1Stats: { hp: 20, atk: 8, spd: 7, def: 8, res: 11 },
+    level40Stats: { hp: 37, atk: 27, spd: 24, def: 25, res: 35 },
+    superboons: [STATS.ATK],
+    superbanes: []
+  },
   WRYS: {
     name: "Wrys",
     subtitle: "Kindly Priest",
