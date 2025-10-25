@@ -84,37 +84,50 @@ const MAPS = {
       { x: 5, y: 5, breakable: true, hp: 1 }
     ]
   },
-  SD3: {
-    name: "SD3",
-    bg: "assets/maps/summonerduels/Map_ZR003.webp",
+  SD2: {
+    name: "SD2",
+    bg: "assets/maps/summonerduels/Map_ZR002.webp",
     terrain: [
-      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL],
-      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
-      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
-      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS],
-      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS],
-      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
-      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS],
-      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS],
-      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL],
-      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL]
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FOREST, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.FOREST],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL]
     ],
     defensiveTerrain: [],
-    blocks: [],
+    blocks: [
+      { x: 2, y: 0, breakable: false },
+      { x: 3, y: 0, breakable: false },
+      { x: 6, y: 0, breakable: false },
+      { x: 7, y: 0, breakable: false },
+      { x: 1, y: 3, breakable: false },
+      { x: 3, y: 3, breakable: false },
+      { x: 4, y: 6, breakable: false },
+      { x: 6, y: 6, breakable: false },
+      { x: 0, y: 9, breakable: false },
+      { x: 1, y: 9, breakable: false },
+      { x: 4, y: 9, breakable: false },
+      { x: 5, y: 9, breakable: false }
+    ],
     startingPositions: [
       [
-        { x: 0, y: 2 },
-        { x: 0, y: 3 },
-        { x: 0, y: 5 },
         { x: 0, y: 7 },
-        { x: 1, y: 8 }
+        { x: 1, y: 7 },
+        { x: 1, y: 8 },
+        { x: 2, y: 8 },
+        { x: 2, y: 9 }
       ],
       [
-        { x: 7, y: 7 },
-        { x: 7, y: 6 },
-        { x: 7, y: 4 },
         { x: 7, y: 2 },
-        { x: 6, y: 1 }
+        { x: 6, y: 2 },
+        { x: 6, y: 1 },
+        { x: 5, y: 1 },
+        { x: 5, y: 0 }
       ]
     ]
   },
@@ -154,6 +167,55 @@ const MAPS = {
         { x: 6, y: 1 },
         { x: 5, y: 1 },
         { x: 5, y: 0 }
+      ]
+    ]
+  },
+  SD8: {
+    name: "SD8",
+    bg: "assets/maps/summonerduels/Map_ZR008.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 2, y: 0, breakable: false },
+      { x: 3, y: 0, breakable: false },
+      { x: 4, y: 0, breakable: false },
+      { x: 5, y: 0, breakable: false },
+      { x: 6, y: 0, breakable: false },
+      { x: 7, y: 0, breakable: false },
+      { x: 2, y: 1, breakable: false },
+      { x: 5, y: 8, breakable: false },
+      { x: 0, y: 9, breakable: false },
+      { x: 1, y: 9, breakable: false },
+      { x: 2, y: 9, breakable: false },
+      { x: 3, y: 9, breakable: false },
+      { x: 4, y: 9, breakable: false },
+      { x: 5, y: 9, breakable: false }
+    ],
+    startingPositions: [
+      [
+        { x: 0, y: 2 },
+        { x: 0, y: 3 },
+        { x: 0, y: 5 },
+        { x: 0, y: 7 },
+        { x: 1, y: 8 }
+      ],
+      [
+        { x: 7, y: 7 },
+        { x: 7, y: 6 },
+        { x: 7, y: 4 },
+        { x: 7, y: 2 },
+        { x: 6, y: 1 }
       ]
     ]
   },

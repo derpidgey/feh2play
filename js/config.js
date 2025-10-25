@@ -40,7 +40,7 @@ export const SD_ASSAULT_LEVELS = [
     name: "Sky Attack",
     description: "Engage in a battle for air superiority",
     battles: [
-      { map: MAPS.SD15, enemyTeam: fliers, side: "red" }
+      { map: MAPS.SD8, enemyTeam: fliers, side: "red" }
     ]
   },
   {
@@ -64,7 +64,7 @@ export const SD_ASSAULT_LEVELS = [
     name: "Trial of Emblems",
     description: "Face of against the triple threat.",
     battles: [
-      { map: MAPS.SD15, enemyTeam: fliers, side: "red" },
+      { map: MAPS.SD8, enemyTeam: fliers, side: "red" },
       { map: MAPS.SD7, enemyTeam: armours, side: "red" },
       { map: MAPS.SD9, enemyTeam: cavs, side: "blue" },
     ]
