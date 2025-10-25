@@ -85,16 +85,15 @@ const BoardLayerBlocks = ({ map, tileSize }) => {
 
   const getNeighborMask = block => {
     let mask = 0;
-    const sameType = other => other && (Boolean(other.breakable) === Boolean(block.breakable));
 
     const north = blockMap.get(`${block.x},${block.y - 1}`);
-    if (sameType(north)) mask |= BIT_N;
+    if (north) mask |= BIT_N;
     const east = blockMap.get(`${block.x + 1},${block.y}`);
-    if (sameType(east)) mask |= BIT_E;
+    if (east) mask |= BIT_E;
     const south = blockMap.get(`${block.x},${block.y + 1}`);
-    if (sameType(south)) mask |= BIT_S;
+    if (south) mask |= BIT_S;
     const west = blockMap.get(`${block.x - 1},${block.y}`);
-    if (sameType(west)) mask |= BIT_W;
+    if (west) mask |= BIT_W;
 
     return mask;
   }

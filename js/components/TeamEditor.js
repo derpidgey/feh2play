@@ -124,9 +124,10 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
 
   const updateMode = e => {
     const mode = e.target.value;
+    if (mode === teamData.mode) return;
     const newTeamData = deepClone(teamData);
 
-    if (mode === "sd" && teamData.mode !== "sd") {
+    if (mode === "sd") {
       // Going from standard -> SD (add 5th unit)
       newTeamData.units.push({
         unitId: "",
@@ -134,7 +135,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
         merges: 0,
         skills: Array(8).fill("")
       });
-    } else if (mode !== "sd" && teamData.mode === "sd") {
+    } else if (mode === "standard") {
       // Going from SD -> standard (remove 5th unit)
       newTeamData.units = newTeamData.units.slice(0, 4);
     }

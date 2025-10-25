@@ -131,6 +131,55 @@ const MAPS = {
       ]
     ]
   },
+  SD5: {
+    name: "SD5",
+    bg: "assets/maps/summonerduels/Map_ZR005.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 2, y: 0, breakable: false },
+      { x: 4, y: 0, breakable: false },
+      { x: 5, y: 0, breakable: true, hp: 1 },
+      { x: 6, y: 0, breakable: false },
+      { x: 7, y: 0, breakable: true, hp: 1 },
+      { x: 7, y: 1, breakable: false },
+      { x: 0, y: 2, breakable: true, hp: 1 },
+      { x: 7, y: 7, breakable: true, hp: 1 },
+      { x: 0, y: 8, breakable: false },
+      { x: 0, y: 9, breakable: true, hp: 1 },
+      { x: 1, y: 9, breakable: false },
+      { x: 2, y: 9, breakable: true, hp: 1 },
+      { x: 3, y: 9, breakable: false },
+      { x: 5, y: 9, breakable: false },
+    ],
+    startingPositions: [
+      [
+        { x: 6, y: 6 },
+        { x: 6, y: 7 },
+        { x: 7, y: 6 },
+        { x: 5, y: 8 },
+        { x: 4, y: 9 }
+      ],
+      [
+        { x: 1, y: 3 },
+        { x: 1, y: 2 },
+        { x: 0, y: 3 },
+        { x: 2, y: 1 },
+        { x: 3, y: 0 }
+      ]
+    ]
+  },
   SD7: {
     name: "SD7",
     bg: "assets/maps/summonerduels/Map_ZR007.webp",
@@ -256,6 +305,45 @@ const MAPS = {
       ]
     ]
   },
+  SD10: {
+    name: "SD10",
+    bg: "assets/maps/summonerduels/Map_ZR010.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.FLIER, TERRAIN.WALL, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 3, y: 0, breakable: false },
+      { x: 7, y: 4, breakable: false },
+      { x: 0, y: 5, breakable: false },
+      { x: 4, y: 9, breakable: false }
+    ],
+    startingPositions: [
+      [
+        { x: 0, y: 7 },
+        { x: 1, y: 7 },
+        { x: 1, y: 8 },
+        { x: 2, y: 8 },
+        { x: 2, y: 9 }
+      ],
+      [
+        { x: 7, y: 2 },
+        { x: 6, y: 2 },
+        { x: 6, y: 1 },
+        { x: 5, y: 1 },
+        { x: 5, y: 0 }
+      ]
+    ]
+  },
   SD11: {
     name: "SD11",
     bg: "assets/maps/summonerduels/Map_ZR011.webp",
@@ -273,6 +361,80 @@ const MAPS = {
     ],
     defensiveTerrain: [],
     blocks: [],
+    startingPositions: [
+      [
+        { x: 0, y: 7 },
+        { x: 1, y: 7 },
+        { x: 1, y: 8 },
+        { x: 2, y: 8 },
+        { x: 2, y: 9 }
+      ],
+      [
+        { x: 7, y: 2 },
+        { x: 6, y: 2 },
+        { x: 6, y: 1 },
+        { x: 5, y: 1 },
+        { x: 5, y: 0 }
+      ]
+    ]
+  },
+  SD13: {
+    name: "SD13",
+    bg: "assets/maps/summonerduels/Map_ZR013.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 2, y: 0, breakable: false },
+      { x: 3, y: 0, breakable: false },
+      { x: 4, y: 9, breakable: false },
+      { x: 5, y: 9, breakable: false }
+    ],
+    startingPositions: [
+      [
+        { x: 0, y: 7 },
+        { x: 1, y: 7 },
+        { x: 1, y: 8 },
+        { x: 2, y: 8 },
+        { x: 2, y: 9 }
+      ],
+      [
+        { x: 7, y: 2 },
+        { x: 6, y: 2 },
+        { x: 6, y: 1 },
+        { x: 5, y: 1 },
+        { x: 5, y: 0 }
+      ]
+    ]
+  },
+  SD14: {
+    name: "SD14",
+    bg: "assets/maps/summonerduels/Map_ZR014.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+    ],
     startingPositions: [
       [
         { x: 0, y: 7 },
@@ -320,6 +482,229 @@ const MAPS = {
         { x: 6, y: 2 },
         { x: 6, y: 1 },
         { x: 5, y: 1 },
+        { x: 5, y: 0 }
+      ]
+    ]
+  },
+  SD16: {
+    name: "SD16",
+    bg: "assets/maps/summonerduels/Map_ZR016.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.FOREST],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST],
+      [TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL],
+      [TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.FOREST, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 2, y: 0, breakable: false },
+      { x: 0, y: 2, breakable: false },
+      { x: 2, y: 3, breakable: true, hp: 1 },
+      { x: 3, y: 4, breakable: false },
+      { x: 4, y: 4, breakable: true, hp: 1 },
+      { x: 3, y: 5, breakable: true, hp: 1 },
+      { x: 4, y: 5, breakable: false },
+      { x: 5, y: 6, breakable: true, hp: 1 },
+      { x: 7, y: 7, breakable: false },
+      { x: 5, y: 9, breakable: false },
+    ],
+    startingPositions: [
+      [
+        { x: 0, y: 7 },
+        { x: 1, y: 7 },
+        { x: 1, y: 8 },
+        { x: 2, y: 8 },
+        { x: 2, y: 9 }
+      ],
+      [
+        { x: 7, y: 2 },
+        { x: 6, y: 2 },
+        { x: 6, y: 1 },
+        { x: 5, y: 1 },
+        { x: 5, y: 0 }
+      ]
+    ]
+  },
+  SD17: {
+    name: "SD17",
+    bg: "assets/maps/summonerduels/Map_ZR017.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.TRENCH, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.TRENCH, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.WALL],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 2, y: 0, breakable: false },
+      { x: 0, y: 2, breakable: false },
+      { x: 0, y: 3, breakable: false },
+      { x: 3, y: 3, breakable: false },
+      { x: 7, y: 3, breakable: false },
+      { x: 0, y: 4, breakable: false },
+      { x: 2, y: 4, breakable: false },
+      { x: 7, y: 4, breakable: false },
+      { x: 0, y: 5, breakable: false },
+      { x: 5, y: 5, breakable: false },
+      { x: 7, y: 5, breakable: false },
+      { x: 0, y: 6, breakable: false },
+      { x: 4, y: 6, breakable: false },
+      { x: 7, y: 6, breakable: false },
+      { x: 7, y: 7, breakable: false },
+      { x: 5, y: 9, breakable: false }
+    ],
+    startingPositions: [
+      [
+        { x: 0, y: 7 },
+        { x: 1, y: 7 },
+        { x: 1, y: 8 },
+        { x: 2, y: 8 },
+        { x: 2, y: 9 }
+      ],
+      [
+        { x: 7, y: 2 },
+        { x: 6, y: 2 },
+        { x: 6, y: 1 },
+        { x: 5, y: 1 },
+        { x: 5, y: 0 }
+      ]
+    ]
+  },
+  SD18: {
+    name: "SD18",
+    bg: "assets/maps/summonerduels/Map_ZR018.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.PLAINS],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 2, y: 0, breakable: false },
+      { x: 3, y: 0, breakable: false },
+      { x: 4, y: 9, breakable: false },
+      { x: 5, y: 9, breakable: false }
+    ],
+    startingPositions: [
+      [
+        { x: 0, y: 7 },
+        { x: 1, y: 7 },
+        { x: 1, y: 8 },
+        { x: 2, y: 8 },
+        { x: 2, y: 9 }
+      ],
+      [
+        { x: 7, y: 2 },
+        { x: 6, y: 2 },
+        { x: 6, y: 1 },
+        { x: 5, y: 1 },
+        { x: 5, y: 0 }
+      ]
+    ]
+  },
+  SD19: {
+    name: "SD19",
+    bg: "assets/maps/summonerduels/Map_ZR019.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL],
+      [TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.TRENCH],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER],
+      [TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.WALL, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 2, y: 0, breakable: false },
+      { x: 6, y: 0, breakable: false },
+      { x: 7, y: 0, breakable: false },
+      { x: 7, y: 1, breakable: false },
+      { x: 2, y: 4, breakable: true, hp: 1 },
+      { x: 4, y: 4, breakable: true, hp: 1 },
+      { x: 3, y: 5, breakable: true, hp: 1 },
+      { x: 5, y: 5, breakable: true, hp: 1 },
+      { x: 0, y: 8, breakable: false },
+      { x: 0, y: 9, breakable: false },
+      { x: 1, y: 9, breakable: false },
+      { x: 5, y: 9, breakable: false },
+    ],
+    startingPositions: [
+      [
+        { x: 0, y: 6 },
+        { x: 0, y: 7 },
+        { x: 1, y: 8 },
+        { x: 2, y: 9 },
+        { x: 3, y: 9 }
+      ],
+      [
+        { x: 7, y: 3 },
+        { x: 7, y: 2 },
+        { x: 6, y: 1 },
+        { x: 5, y: 0 },
+        { x: 4, y: 0 }
+      ]
+    ]
+  },
+  SD20: {
+    name: "SD20",
+    bg: "assets/maps/summonerduels/Map_ZR020.webp",
+    terrain: [
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.WALL, TERRAIN.WALL, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.FOREST, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS],
+      [TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FLIER],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.WALL, TERRAIN.WALL],
+      [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.FOREST, TERRAIN.FLIER, TERRAIN.FLIER, TERRAIN.WALL, TERRAIN.WALL]
+    ],
+    defensiveTerrain: [],
+    blocks: [
+      { x: 1, y: 3, breakable: true, hp: 1 },
+      { x: 3, y: 4, breakable: true, hp: 1 },
+      { x: 4, y: 4, breakable: true, hp: 1 },
+      { x: 3, y: 5, breakable: true, hp: 1 },
+      { x: 4, y: 5, breakable: true, hp: 1 },
+      { x: 6, y: 6, breakable: true, hp: 1 }
+    ],
+    startingPositions: [
+      [
+        { x: 1, y: 8 },
+        { x: 0, y: 9 },
+        { x: 2, y: 7 },
+        { x: 0, y: 7 },
+        { x: 2, y: 9 }
+      ],
+      [
+        { x: 6, y: 1 },
+        { x: 7, y: 0 },
+        { x: 5, y: 2 },
+        { x: 7, y: 2 },
         { x: 5, y: 0 }
       ]
     ]
