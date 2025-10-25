@@ -1873,6 +1873,52 @@ const EXCLUSIVE_WEAPONS = {
       unit: [UNIT.BARST.id]
     }
   },
+  DIGNIFIED_BOW: {
+    name: "Dignified Bow",
+    description: "Effective against flying foes. At start of turn, if any foe's HP ≤ unit's HP-1 and that foe is adjacent to another foe, inflicts【Panic】on that foe.",
+    type: SKILL_TYPE.WEAPON,
+    weaponType: WEAPON_TYPE.BOW.id,
+    might: 14,
+    range: 2,
+    effects: [
+      EFFECT.visibleStats({ atk: 14 }),
+      EFFECT.effectiveAgainstMoveType(MOVE_TYPE.FLIER.id),
+      {
+        phase: EFFECT_PHASE.START_OF_TURN,
+        actions: [
+          {
+            type: EFFECT_ACTION.APPLY_STATUS, status: STATUS.PANIC.id,
+            target: {
+              type: EFFECT_TARGET.FOES_ADJACENT_TO_ANOTHER_FOE,
+              with: EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE,
+              unitStat: STATS.HP,
+              foeStat: STATS.HP
+            }
+          }
+        ]
+      }
+    ],
+    canBeRefined: true,
+    effectRefine: {
+      description: "At start of combat, if unit's max HP ≥ foe's HP+1, grants Atk/Spd/Def/Res+4 to unit during combat.",
+      effects: [
+        {
+          phase: EFFECT_PHASE.START_OF_COMBAT,
+          condition: { type: EFFECT_CONDITION.UNIT_MAX_HP_GREATER_THAN_FOE_HP },
+          actions: [
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.DEF, value: 4, target: { type: EFFECT_TARGET.SELF } },
+            { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.RES, value: 4, target: { type: EFFECT_TARGET.SELF } }
+          ]
+        }
+      ]
+    },
+    refineImg: "assets/refines/Combat_Bonuses_Life_W.webp",
+    canUse: {
+      unit: [UNIT.VIRION.id]
+    }
+  },
   DURANDAL: {
     name: "Durandal",
     description: "If unit initiates combat, grants Atk+4 during combat.",

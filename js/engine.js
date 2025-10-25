@@ -1995,6 +1995,8 @@ function Engine() {
       case EFFECT_CONDITION.UNIT_HP_IS_MAX_HP:
         if (params.checkStartOfCombatHp) return unit.startOfCombatHp === unit.stats.maxHp;
         return unit.stats.hp === unit.stats.maxHp;
+      case EFFECT_CONDITION.UNIT_MAX_HP_GREATER_THAN_FOE_HP:
+        return unit.stats.maxHp > foe.stats.hp;
       case EFFECT_CONDITION.FOE_HP_GREATER_THAN:
         return foe.stats.hp > (foe.stats.maxHp * (params.percent / 100));
       case EFFECT_CONDITION.FOE_HP_GREATER_THAN_EQUAL_TO:
