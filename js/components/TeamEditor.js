@@ -38,6 +38,8 @@ const skillConfig = [
 const engine = Engine();
 
 const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
+  const [errorMessage, setErrorMessage] = useState("");
+  const [showError, setShowError] = useState(false);
   const [editingIndex, setEditingIndex] = useState(0);
   const dragIndexRef = useRef(null);
 
@@ -96,17 +98,50 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
     onChange(newTeamData);
   }
 
+  const showErrorPopup = message => {
+    setErrorMessage(message);
+    setShowError(true);
+    setTimeout(() => setShowError(false), 3000);
+  }
+
   const validateAndSave = () => {
     const result = engine.validateTeam(team.filter(unit => unit.unitId !== ""), teamData.mode);
     if (result.result) {
       onSave();
     } else {
-      console.log(result.reason);
+      showErrorPopup(result.reason);
     }
   }
 
+  const updateMode = e => {
+    const mode = e.target.value;
+    const newTeamData = deepClone(teamData);
+
+    if (mode === "sd" && teamData.mode !== "sd") {
+      // Going from standard -> SD (add 5th unit)
+      newTeamData.units.push({
+        unitId: "",
+        level: 40,
+        merges: 0,
+        skills: Array(8).fill("")
+      });
+    } else if (mode !== "sd" && teamData.mode === "sd") {
+      // Going from SD -> standard (remove 5th unit)
+      newTeamData.units = newTeamData.units.slice(0, 4);
+    }
+
+    newTeamData.mode = mode;
+    onChange(newTeamData);
+  };
+
   return html`
   <div class="screen">
+    ${showError && html`
+    <div class="position-fixed top-0 start-50 translate-middle-x mt-2 alert alert-danger alert-dismissible">
+      <div>${errorMessage}</div>
+      <button type="button" class="btn-close" onClick=${() => setShowError(false)}></button>
+    </div>
+    `}
     <div class="p-3">
       <div class="row g-3 align-items-center mb-4">
         <div class="col-md-9">
@@ -114,7 +149,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
           value=${teamData.name} onInput=${e => onChange({ ...teamData, name: e.target.value })} />
         </div>
         <div class="col-md-3">
-          <select class="form-select" value=${teamData.mode} onChange=${e => onChange({ ...teamData, mode: e.target.value })}>
+          <select class="form-select" value=${teamData.mode} onChange=${updateMode}>
             <option value="standard">Standard</option>
             <option value="sd">SD</option>
           </select>

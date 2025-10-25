@@ -1,4 +1,4 @@
-import { html, useState, useRef } from "https://esm.sh/htm/preact/standalone";
+import { html, useState, useRef, useMemo } from "https://esm.sh/htm/preact/standalone";
 import Unit from "./Unit.js";
 import Engine from "../engine.js";
 import useResizeListener from "../hooks/useResizeListener.js";
@@ -74,7 +74,14 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
     return highlightedTiles;
   }
 
-  const highlightedTiles = calculateHighlightedTiles();
+  const highlightedTiles = useMemo(() => calculateHighlightedTiles(), [
+    gameState,
+    activeUnit,
+    validActions,
+    lastClick,
+    showDangerArea,
+    playingAs
+  ]);
 
   const handleBoardClick = e => {
     if (!boardRef.current) return;
