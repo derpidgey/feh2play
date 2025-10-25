@@ -6,6 +6,8 @@ import { SKILL_TYPE } from "../data/definitions.js";
 import Engine from "../engine.js";
 import { deepClone } from "../utils.js";
 import WeaponSelector from "./WeaponSelector.js";
+import UnitInfo from "./UnitInfo.js";
+import useResizeListener from "../hooks/useResizeListener.js";
 
 const skillConfig = [
   {},
@@ -38,6 +40,7 @@ const skillConfig = [
 const engine = Engine();
 
 const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
+  const [fontSize, setFontSize] = useState("16px");
   const [errorMessage, setErrorMessage] = useState("");
   const [showError, setShowError] = useState(false);
   const [editingIndex, setEditingIndex] = useState(0);
@@ -76,7 +79,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
 
   const team = [...teamData.units];
   const currentUnit = team[editingIndex];
-  const currentUnitInfo = currentUnit?.unitId ? UNIT[currentUnit.unitId] : null;
+  const currentUnitInfo = UNIT[currentUnit?.unitId] ?? null;
 
   const removeInvalidSkills = unit => {
     unit.skills = unit.skills.map(skill => engine.canLearn(UNIT[unit.unitId], SKILLS[skill]) ? skill : "");
@@ -134,16 +137,30 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
     onChange(newTeamData);
   };
 
+  const getUnitForPreview = unit => {
+    const previewUnit = { ...unit };
+    previewUnit.skills = previewUnit.skills.filter(skill => skill !== "");
+    const gameUnit = engine.toGameUnit(previewUnit);
+    gameUnit.team = 0;
+    return gameUnit;
+  }
+
+  const getCaptainTooltipContent = skill => `<span class="tooltip-gold">${skill.name}</span><br>${skill.description}`;
+
+  useResizeListener(() => {
+    setFontSize(`${Math.min(window.innerWidth, window.innerHeight / 2) * 0.04}px`);
+  }, 10);
+
   return html`
   <div class="screen">
     ${showError && html`
-    <div class="position-fixed top-0 start-50 translate-middle-x mt-2 alert alert-danger alert-dismissible">
+    <div class="position-fixed top-0 start-50 translate-middle-x mt-2 alert alert-danger alert-dismissible" style="z-index: 69;">
       <div>${errorMessage}</div>
       <button type="button" class="btn-close" onClick=${() => setShowError(false)}></button>
     </div>
     `}
     <div class="p-3">
-      <div class="row g-3 align-items-center mb-4">
+      <div class="row g-3 align-items-center mb-3">
         <div class="col-md-9">
           <input type="text" class="form-control" placeholder="Team name"
           value=${teamData.name} onInput=${e => onChange({ ...teamData, name: e.target.value })} />
@@ -156,7 +173,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
         </div>
       </div>
 
-      <div class="d-flex flex-wrap gap-2 mb-4">
+      <div class="d-flex flex-wrap gap-2 mb-3">
         ${team.map((unit, i) => {
     const isActive = editingIndex === i;
     return html`
@@ -180,7 +197,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
   })}
       </div>
 
-      <div class="card p-3 mb-4">
+      <div class="card p-3 mb-3">
         <div class="input-row">
           <div style="width: 1.8rem;"></div>
           <${Dropdown}
@@ -211,9 +228,14 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
       </div>
 
       ${teamData.mode === "sd" && html`
-      <div class="card p-3 mb-4">
+      <div class="card p-3 mb-3">
         <div class="input-row">
-          <div style="width: 1.8rem;"></div>
+          <div class="captain-skill" style="width: 1.8rem;">${SKILLS[team[0].skills[7]] &&
+      html`<img src=${SKILLS[team[0].skills[7]].img}
+            data-bs-toggle="tooltip"
+            data-bs-html="true"
+            data-bs-placement="bottom"
+            data-bs-title=${getCaptainTooltipContent(SKILLS[team[0].skills[7]])} />`}</div>
           <${Dropdown}
             options=${[
         { label: "-", value: "" },
@@ -224,6 +246,9 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
             onSelect=${skillId => updateSkill(7, skillId)}
             defaultSelected=${team[0]?.skills?.[7] ? SKILLS[team[0].skills[7]].name : "-"}/>
         </div>
+      </div>`}
+      ${currentUnitInfo && html`<div class="mb-3" style="font-size: clamp(0.5rem, ${fontSize}, 1rem);">
+        <${UnitInfo} unit=${getUnitForPreview(currentUnit)} />
       </div>`}
 
       <div class="d-flex gap-2">

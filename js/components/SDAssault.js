@@ -45,7 +45,7 @@ const SD_LEVELS = [
     name: "Sky Attack",
     description: "Engage in a battle for air superiority",
     battles: [
-      { map: MAPS.SD15, enemyTeam: fliers }
+      { map: MAPS.SD15, enemyTeam: fliers, side: "red" }
     ]
   },
   {
@@ -53,7 +53,7 @@ const SD_LEVELS = [
     name: "Iron Wall",
     description: "Break through the phalanx.",
     battles: [
-      { map: MAPS.SD7, enemyTeam: armours }
+      { map: MAPS.SD7, enemyTeam: armours, side: "red" }
     ]
   },
   {
@@ -61,7 +61,7 @@ const SD_LEVELS = [
     name: "Cavalry Training",
     description: "Endure their relentless advance.",
     battles: [
-      { map: MAPS.SD9, enemyTeam: cavs }
+      { map: MAPS.SD9, enemyTeam: cavs, side: "blue" }
     ]
   },
   {
@@ -69,9 +69,9 @@ const SD_LEVELS = [
     name: "Trial of Emblems",
     description: "Face of against the triple threat.",
     battles: [
-      { map: MAPS.SD15, enemyTeam: fliers },
-      { map: MAPS.SD7, enemyTeam: armours },
-      { map: MAPS.SD9, enemyTeam: cavs },
+      { map: MAPS.SD15, enemyTeam: fliers, side: "red" },
+      { map: MAPS.SD7, enemyTeam: armours, side: "red" },
+      { map: MAPS.SD9, enemyTeam: cavs, side: "blue" },
     ]
   },
 ];
@@ -108,13 +108,16 @@ const SDAssault = ({ onExit }) => {
   };
 
   const createInitialGameState = () => {
+    const battle = level.battles[battleIndex];
+    const playerTeam = selectedTeam.units.map(unit => ({
+      ...unit,
+      skills: unit.skills.filter(skill => skill !== "")
+    }));
+    const enemyTeam = battle.enemyTeam;
     return engine.newGame(
-      level.battles[battleIndex].map,
-      selectedTeam.units.map(unit => ({
-        ...unit,
-        skills: unit.skills.filter(skill => skill !== "")
-      })),
-      level.battles[battleIndex].enemyTeam,
+      battle.map,
+      battle.side === "red" ? playerTeam : enemyTeam,
+      battle.side === "red" ? enemyTeam : playerTeam,
       "duel"
     )
   }
@@ -122,9 +125,8 @@ const SDAssault = ({ onExit }) => {
   if (screen === "battle" && level) {
     return html`
     <${Game}
-      key=${battleIndex} 
       initialGameState=${createInitialGameState}
-      playingAs=${0}
+      playingAs=${level.battles[battleIndex].side === "red" ? 0 : 1}
       onGameOver=${handleBattleEnd}
     />`;
   }

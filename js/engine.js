@@ -3077,6 +3077,7 @@ function Engine() {
     validateTeam,
     canLearn,
     newGame,
+    toGameUnit,
     debug,
     calculateMovementRange,
     calculateThreatRange,

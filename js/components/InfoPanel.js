@@ -12,9 +12,11 @@ const InfoPanel = ({ gameState, unitId, potentialAction, playingAs }) => {
     return html`<${ActionPreview} gameState=${gameState} potentialAction=${potentialAction} />`;
   }
   if (unitId) {
-    const backgroundType = gameState.mode === "duel" ? "absolute" : "relative";
     const unit = gameState.teams[0].concat(gameState.teams[1]).find(u => u.id === unitId);
-    return html`<${UnitInfo} unit=${unit} backgroundType=${backgroundType} playingAs=${playingAs} />`
+    if (unit) {
+      const backgroundType = gameState.mode === "duel" ? "absolute" : "relative";
+      return html`<${UnitInfo} unit=${unit} backgroundType=${backgroundType} playingAs=${playingAs} />`
+    }
   }
   return html`<div class="info-panel"></div>`;
 }
