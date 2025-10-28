@@ -2009,7 +2009,10 @@ const EXCLUSIVE_WEAPONS = {
         },
         {
           phase: EFFECT_PHASE.START_OF_ALLY_COMBAT,
-          condition: { type: EFFECT_CONDITION.ALLY_INITIATES_COMBAT },
+          condition: CONDITION.and(
+            { type: EFFECT_CONDITION.ALLY_INITIATES_COMBAT },
+            { type: EFFECT_CONDITION.ALLY_IN_COMBAT_WITHIN_X_SPACES_OF_UNIT, spaces: 2 }
+          ),
           actions: [
             { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, value: -4, target: { type: EFFECT_TARGET.FOE_IN_COMBAT } },
             { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.SPD, value: -4, target: { type: EFFECT_TARGET.FOE_IN_COMBAT } },
