@@ -2312,7 +2312,7 @@ function Engine() {
   function getFoesAdjacentToAnotherFoe(gameState, unit, target) {
     const foes = gameState.teams[unit.team ^ 1];
     return foes.filter(foe => {
-      const hasAdjacentUnit = getAlliesWithinXSpaces(gameState, foe, { spaces: 1 });
+      const hasAdjacentUnit = getAlliesWithinXSpaces(gameState, foe, { spaces: 1 }).length > 0;
       if (!hasAdjacentUnit) return false;
       if (target.with === EFFECT_CONDITION.UNIT_STAT_GREATER_THAN_FOE) {
         let unitStatValue = unit.stats[target.unitStat];

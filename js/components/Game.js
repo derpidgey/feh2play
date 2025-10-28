@@ -11,12 +11,13 @@ import { SKILL_TYPE } from "../data/definitions.js";
 import SKILLS from "../data/skills.js";
 import useBootstrapTooltips from "../hooks/useBootstrapTooltips.js";
 import useGameInput from "../hooks/useGameInput.js";
+import useGameFont from "../hooks/useGameFont.js";
 
 
 const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) => {
   useBootstrapTooltips();
+  const gameFont = useGameFont();
   const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState);
-  const [fontSize, setFontSize] = useState("16px");
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [showDangerArea, setShowDangerArea] = useState(true);
   const [animationSequence, setAnimationSequence] = useState([]);
@@ -50,7 +51,6 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
 
   useResizeListener(() => {
     setIsWideScreen(window.innerWidth >= window.innerHeight * 3 / 2);
-    setFontSize(`${Math.min(window.innerWidth, window.innerHeight / 2) * 0.04}px`);
   }, 10);
 
   if (gameState.mode === "duel") {
@@ -145,7 +145,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
 
   return html`
   ${isWideScreen && html`<${SidePanel} team=${gameState.teams[0].filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)} backgroundType=${backgroundType} playingAs=${playingAs} />`}
-  <div class="screen" style="font-size: clamp(0.5rem, ${fontSize}, 1rem);">
+  <div class="screen" style=${{ ...gameFont }}>
     <${InfoPanel} gameState=${gameState} unitId=${selectedUnit?.id} potentialAction=${potentialAction} playingAs=${playingAs} />
     ${gameState.mode === "duel" && html`
       <div class="score-bar">

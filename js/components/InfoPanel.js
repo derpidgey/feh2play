@@ -92,26 +92,35 @@ const ActionPreview = ({ gameState, potentialAction }) => {
   };
 
   return html`<div class="info-panel">
-    <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center; background: ${backgrounds[leftBackground]};">
-      <img src=${unitInfo.imgFace} alt=${unitInfo.name} style="width: 100%; max-width: 80px; object-fit: contain;" />
+    <div style="flex: 1 1 50%; display: flex; flex-direction: column; background: ${backgrounds[leftBackground]};">
+      <div style="flex: 1 1 auto; display: grid; grid-template-columns: 40% 60%;">
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <img src=${unitInfo.imgFace} alt=${unitInfo.name} style="width: 100%; max-width: 80px; object-fit: contain;" />
+        </div>
+        <div style="display: flex; align-items: center; flex-direction: column;">
+          <span class="fw-medium">${unitInfo.name}</span>
+          <span>${unitStartingHp} → ${unitRemainingHp}</span>
+          ${actionType === "assist" && html`<span>${assist}</span>`}
+          ${actionType === "attack" && html`<span>${formulas[0]}</span>`}
+        </div>
+      </div>
+      ${actionType === "attack" && html`<span style="flex: 0 0 auto; font-size: 0.85em; text-align: center;">${renderTempStats(result.units[0].tempStats)}</span>`}
     </div>
-    <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[leftBackground]};">
-      <span class="fw-medium">${unitInfo.name}</span>
-      <span>${unitStartingHp} → ${unitRemainingHp}</span>
-      ${actionType === "assist" && html`<span>${assist}</span>`}
-      ${actionType === "attack" && html`<span>${formulas[0]}</span>`}
-      ${actionType === "attack" && html`<span>${renderTempStats(result.units[0].tempStats)}</span>`}
-    </div>
-    <div style="flex: 1 1 30%; display: flex; align-items: center; flex-direction: column; background: ${backgrounds[rightBackground]};">
-      <span class="fw-medium">${targetName}</span>
-      <span>${targetStartingHp} → ${targetRemainingHp}</span>
-      ${actionType === "attack" && html`<span>${formulas[1]}</span>`}
-      ${actionType === "attack" && html`<span>${renderTempStats(result.units[1].tempStats)}</span>`}
-    </div>
-    <div style="flex: 1 1 20%; display: flex; align-items: center; justify-content: center; background: ${backgrounds[rightBackground]};">
-      ${targetUnit
-      ? html`<img src=${UNIT[targetUnit.unitId].imgFace} alt=${UNIT[targetUnit.unitId].name} style="width: 100%; max-width: 80px; object-fit: contain;" />`
-      : html`<div style="width: 100%; max-width: 80px;" />`}
+    <div style="flex: 1 1 50%; display: flex; flex-direction: column; background: ${backgrounds[rightBackground]};">
+      <div style="flex: 1 1 auto; display: grid; grid-template-columns: 60% 40%;">
+        <div style="display: flex; align-items: center; flex-direction: column;">
+          <span class="fw-medium">${targetName}</span>
+          <span>${targetStartingHp} → ${targetRemainingHp}</span>
+          ${actionType === "attack" && html`<span>${formulas[1]}</span>`}
+          
+        </div>
+        <div style="display: flex; align-items: center; justify-content: center;">
+          ${targetUnit
+          ? html`<img src=${UNIT[targetUnit.unitId].imgFace} alt=${UNIT[targetUnit.unitId].name} style="width: 100%; max-width: 80px; object-fit: contain;" />`
+          : html`<div style="width: 100%; max-width: 80px;" />`}
+        </div>
+      </div>
+      ${actionType === "attack" && html`<span style="flex: 0 0 auto; font-size: 0.85em; text-align: center;">${renderTempStats(result.units[1].tempStats)}</span>`}
     </div>
   </div>`;
 }

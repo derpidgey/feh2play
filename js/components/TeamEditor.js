@@ -7,7 +7,7 @@ import Engine from "../engine.js";
 import { deepClone } from "../utils.js";
 import WeaponSelector from "./WeaponSelector.js";
 import UnitInfo from "./UnitInfo.js";
-import useResizeListener from "../hooks/useResizeListener.js";
+import useGameFont from "../hooks/useGameFont.js";
 
 const skillConfig = [
   {},
@@ -40,7 +40,7 @@ const skillConfig = [
 const engine = Engine();
 
 const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
-  const [fontSize, setFontSize] = useState("16px");
+  const gameFont = useGameFont();
   const [errorMessage, setErrorMessage] = useState("");
   const [showError, setShowError] = useState(false);
   const [editingIndex, setEditingIndex] = useState(0);
@@ -154,10 +154,6 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
 
   const getCaptainTooltipContent = skill => `<span class="tooltip-gold">${skill.name}</span><br>${skill.description}`;
 
-  useResizeListener(() => {
-    setFontSize(`${Math.min(window.innerWidth, window.innerHeight / 2) * 0.04}px`);
-  }, 10);
-
   return html`
   <div class="screen">
     ${showError && html`
@@ -254,7 +250,7 @@ const TeamEditor = ({ teamData, onChange, onCancel, onSave }) => {
             defaultSelected=${team[0]?.skills?.[7] ? SKILLS[team[0].skills[7]].name : "-"}/>
         </div>
       </div>`}
-      ${currentUnitInfo && html`<div class="mb-3" style="font-size: clamp(0.5rem, ${fontSize}, 1rem);">
+      ${currentUnitInfo && html`<div class="mb-3" style=${{ ...gameFont }}>
         <${UnitInfo} unit=${getUnitForPreview(currentUnit)} />
       </div>`}
 
