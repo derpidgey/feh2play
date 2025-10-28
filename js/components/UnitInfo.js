@@ -39,7 +39,7 @@ const UnitInfo = ({ unit, backgroundType, playingAs }) => {
 
   const weaponTooltipContent = weaponInfo ?
     `<span class="tooltip-gold">Mt</span> ${weaponInfo.might} <span class="tooltip-gold">Rng</span> ${weaponInfo.range}<br>
-  ${weaponInfo.description}${weaponInfo.refineDescription && `<br><span class="tooltip-green">${weaponInfo.refineDescription}</span>`}` : "None";
+  ${weaponInfo.description}${weaponInfo.refineDescription ? `<br><span class="tooltip-green">${weaponInfo.refineDescription}</span>` : ""}` : "None";
   const assistTooltipContent = assistInfo ?
     `<span class="tooltip-gold">Rng</span> ${assistInfo.range}<br>
   ${assistInfo.description}` : "None";
