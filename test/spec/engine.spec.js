@@ -1215,6 +1215,37 @@ describe("Engine", function () {
       });
     });
 
+    describe("Debuffs as Stats", function () {
+      beforeEach(function () {
+        map = {
+          name: "test map",
+          terrain: [
+            [TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS, TERRAIN.PLAINS]
+          ],
+          defensiveTerrain: [],
+          blocks: [],
+          startingPositions: [[{ x: 0, y: 0 }], [{ x: 3, y: 0 }]]
+        }
+        team1 = [createBuild(UNIT.SAIZO.id, [SKILLS.SAIZOS_STAR.id + "_REFINE_EFF"])];
+        team2 = [createBuild(UNIT.ALFONSE.id)];
+      });
+
+      it("should do blade things", function () {
+        const gameState = engine.newGame(map, team1, team2);
+        const unit = gameState.teams[0][0];
+        const foe = gameState.teams[1][0];
+        foe.debuffs.atk = 3;
+        foe.debuffs.spd = 4;
+        foe.debuffs.def = 5;
+        foe.debuffs.res = 6;
+        const results = engine.calculateCombatResult(gameState, unit, foe);
+        expect(results.units[0].tempStats.atk).toBe(3);
+        expect(results.units[0].tempStats.spd).toBe(4);
+        expect(results.units[0].tempStats.def).toBe(5);
+        expect(results.units[0].tempStats.res).toBe(6);
+      });
+    });
+
     describe("Stats", function () {
       it("Death Blow should stats on player phase", function () {
         const gameState = engine.newGame(map, team1, team2);

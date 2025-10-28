@@ -2540,7 +2540,7 @@ const EXCLUSIVE_WEAPONS = {
     canBeRefined: true,
     effectRefine: {
       description: "Grants bonus to Atk/Spd/Def/Res during combat = current penalty on each of target's stats. Calculates each stat bonus independently.",
-      effects: [EFFECT.foesDebuffsAsBuffs()]
+      effects: [EFFECT.foesDebuffsAsStats()]
     },
     refineImg: "assets/refines/Combat_Bonuses_Enemy_Weakening_W.webp",
     canUse: {
@@ -3332,7 +3332,7 @@ const EXCLUSIVE_WEAPONS = {
     canBeRefined: true,
     effectRefine: {
       description: "Grants bonus to Atk/Spd/Def/Res during combat = current penalty on each of target's stats. Calculates each stat bonus independently.",
-      effects: [EFFECT.foesDebuffsAsBuffs()]
+      effects: [EFFECT.foesDebuffsAsStats()]
     },
     refineImg: "assets/refines/Combat_Bonuses_Enemy_Weakening_W.webp",
     canUse: {

@@ -21,7 +21,6 @@ export const EFFECT = {
 
     return {
       phase: EFFECT_PHASE.START_OF_COMBAT,
-      condition: { type: EFFECT_CONDITION.UNIT_INITIATES_COMBAT },
       actions: Object.entries(stats)
         .filter(([, value]) => value !== 0)
         .map(([stat, value]) => ({ type: EFFECT_ACTION.COMBAT_STAT_MOD, stat, value, target: { type: EFFECT_TARGET.SELF } }))
@@ -200,7 +199,7 @@ export const EFFECT = {
       }
     ]
   },
-  foesDebuffsAsBuffs: () => ({
+  foesDebuffsAsStats: () => ({
     phase: EFFECT_PHASE.START_OF_COMBAT,
     actions: [
       { type: EFFECT_ACTION.COMBAT_STAT_MOD, stat: STATS.ATK, calculation: { type: EFFECT_CALCULATION.FOE_STAT_DEBUFF, stat: STATS.ATK }, target: { type: EFFECT_TARGET.SELF } },
