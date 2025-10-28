@@ -916,6 +916,9 @@ function Engine() {
             if (unitSpecialTriggered) {
               unit.hasAction = true;
               hashHasAction(gameState, unit);
+              hashSpecial(gameState, unit);
+              unit.special.current = unit.special.max;
+              hashSpecial(gameState, unit);
             }
           }
         }
