@@ -11,6 +11,23 @@ function createBuild(unitId, skills = []) {
   }
 }
 
+export const DEMO_TEAMS = [
+  [
+    createBuild(UNIT.SAIZO.id, [SKILLS.MIGHT_OF_MIRIADS.id, SKILLS.SAIZOS_STAR.id + "_REFINE_SPD", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.FURY_3.id, SKILLS.VANTAGE_3.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.FURY_3.id + "_SEAL"]),
+    createBuild(UNIT.ELIWOOD.id, [SKILLS.DURANDAL.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.ESCUTCHEON.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.GUARD_3.id, SKILLS.ATK_SMOKE_3.id, SKILLS.SWIFT_SPARROW_2.id + "_SEAL"]),
+    createBuild(UNIT.FAE.id, [SKILLS.ETERNAL_BREATH.id + "_REFINE_EFF", SKILLS.SWAP.id, SKILLS.GLACIES.id, SKILLS.CLOSE_DEF_3.id, SKILLS.GUARD_3.id, SKILLS.INFANTRY_PULSE_3.id, SKILLS.QUICK_RIPOSTE_3.id + "_SEAL"]),
+    createBuild(UNIT.ELISE.id, [SKILLS.ELISES_STAFF.id + "_REFINE_EFF", SKILLS.RECOVER_PLUS.id, SKILLS.MIRACLE.id, SKILLS.ATK_SPD_BOND_3.id, SKILLS.DAZZLING_STAFF.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.SAVAGE_BLOW_3.id + "_SEAL"]),
+    createBuild(UNIT.CAEDA.id, [SKILLS.WING_SWORD.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.ICEBERG.id, SKILLS.FURY_3.id, SKILLS.DRAG_BACK.id, SKILLS.GUIDANCE_3.id, SKILLS.DRIVE_ATK_2.id + "_SEAL"])
+  ],
+  [
+    createBuild(UNIT.CATRIA.id, [SKILLS.EARTH_RENDERING.id, SKILLS.WHITEWING_LANCE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.MOONBOW.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.GOAD_FLIERS.id, SKILLS.HARDY_BEARING_3.id]),
+    createBuild(UNIT.OLIVIA.id, [SKILLS.SLAYING_EDGE_PLUS.id + "_REFINE_DEF", SKILLS.DANCE.id, SKILLS.MOONBOW.id, SKILLS.FURY_3.id, SKILLS.WINGS_OF_MERCY_3.id, SKILLS.DRIVE_SPD_2.id, SKILLS.DRIVE_SPD_2.id + "_SEAL"]),
+    createBuild(UNIT.EST.id, [SKILLS.WHITEWING_SPEAR.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.LUNA.id, SKILLS.ATK_DEF_BOND_3.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.GOAD_FLIERS.id, SKILLS.ATK_DEF_BOND_3.id + "_SEAL"]),
+    createBuild(UNIT.CAMILLA.id, [SKILLS.CAMILLAS_AXE.id + "_REFINE_EFF", SKILLS.SWAP.id, SKILLS.LUNA.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.WARD_FLIERS.id, SKILLS.SWIFT_SPARROW_2.id + "_SEAL"]),
+    createBuild(UNIT.PALLA.id, [SKILLS.WHITEWING_BLADE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.LUNA.id, SKILLS.FURY_3.id, SKILLS.FLIER_FORMATION_3.id, SKILLS.WARD_FLIERS.id, SKILLS.ATK_SPD_BOND_3.id + "_SEAL"])
+  ]
+];
+
 const cavs = [
   createBuild(UNIT.CECILIA.id, [SKILLS.TURMOIL.id, SKILLS.TOME_OF_ORDER.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.GLIMMER.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.GUARD_3.id, SKILLS.GOAD_CAVALRY.id, SKILLS.DRIVE_ATK_2.id + "_SEAL"]),
   createBuild(UNIT.ELIWOOD.id, [SKILLS.BLAZING_DURANDAL.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.GALEFORCE.id, SKILLS.SWIFT_SPARROW_2.id, SKILLS.DRAG_BACK.id, SKILLS.WARD_CAVALRY.id, SKILLS.SWIFT_SPARROW_2.id + "_SEAL"]),
@@ -40,7 +57,7 @@ export const SD_ASSAULT_LEVELS = [
     name: "Sky Attack",
     description: "Engage in a battle for air superiority",
     battles: [
-      { map: MAPS.SD8, enemyTeam: fliers, side: "red" }
+      { map: MAPS.SD8, team: fliers, side: "red" }
     ]
   },
   {
@@ -48,7 +65,7 @@ export const SD_ASSAULT_LEVELS = [
     name: "Iron Wall",
     description: "Break through the phalanx.",
     battles: [
-      { map: MAPS.SD7, enemyTeam: armours, side: "red" }
+      { map: MAPS.SD7, team: armours, side: "red" }
     ]
   },
   {
@@ -56,7 +73,7 @@ export const SD_ASSAULT_LEVELS = [
     name: "Cavalry Training",
     description: "Endure their relentless advance.",
     battles: [
-      { map: MAPS.SD9, enemyTeam: cavs, side: "blue" }
+      { map: MAPS.SD9, team: cavs, side: "blue" }
     ]
   },
   {
@@ -64,9 +81,27 @@ export const SD_ASSAULT_LEVELS = [
     name: "Trial of Emblems",
     description: "Face of against the triple threat.",
     battles: [
-      { map: MAPS.SD8, enemyTeam: fliers, side: "red" },
-      { map: MAPS.SD7, enemyTeam: armours, side: "red" },
-      { map: MAPS.SD9, enemyTeam: cavs, side: "blue" },
+      { map: MAPS.SD8, team: fliers, side: "red" },
+      { map: MAPS.SD7, team: armours, side: "red" },
+      { map: MAPS.SD9, team: cavs, side: "blue" },
     ]
   },
+  {
+    id: "5",
+    name: "Test",
+    description: "For experimental purposes",
+    battles: [
+      {
+        map: MAPS.SD17,
+        team: [
+          createBuild(UNIT.MATTHEW.id, [SKILLS.MIGHT_OF_MIRIADS.id, SKILLS.SPYS_DAGGER.id + "_REFINE_EFF", SKILLS.DRAW_BACK.id, SKILLS.MOONBOW.id, SKILLS.FURY_3.id, SKILLS.VANTAGE_3.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.FURY_3.id + "_SEAL"]),
+          createBuild(UNIT.JAGEN.id, [SKILLS.VETERAN_LANCE.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.ICEBERG.id, SKILLS.FURY_3.id, SKILLS.WINGS_OF_MERCY_3.id, SKILLS.DRIVE_ATK_2.id, SKILLS.ATK_RES_2.id + "_SEAL"]),
+          createBuild(UNIT.VIRION.id, [SKILLS.DIGNIFIED_BOW.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.GLIMMER.id, SKILLS.HP_ATK_2.id, SKILLS.GUARD_3.id, SKILLS.INFANTRY_PULSE_3.id, SKILLS.HP_ATK_2.id + "_SEAL"]),
+          createBuild(UNIT.MERRIC.id, [SKILLS.DARK_EXCALIBUR.id + "_REFINE_EFF", SKILLS.RECIPROCAL_AID.id, SKILLS.GROWING_WIND.id, SKILLS.LIFE_AND_DEATH_3.id, SKILLS.GUARD_3.id, SKILLS.SAVAGE_BLOW_3.id, SKILLS.QUICKENED_PULSE.id]),
+          createBuild(UNIT.CAEDA.id, [SKILLS.WING_SWORD.id + "_REFINE_EFF", SKILLS.REPOSITION.id, SKILLS.ICEBERG.id, SKILLS.FURY_3.id, SKILLS.DRAG_BACK.id, SKILLS.GUIDANCE_3.id, SKILLS.DRIVE_ATK_2.id + "_SEAL"]),
+        ],
+        side: "blue"
+      }
+    ]
+  }
 ];

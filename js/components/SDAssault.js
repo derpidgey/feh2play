@@ -42,7 +42,7 @@ const SDAssault = ({ onExit }) => {
       ...unit,
       skills: unit.skills.filter(skill => skill !== "")
     }));
-    const enemyTeam = battle.enemyTeam;
+    const enemyTeam = battle.team;
     return engine.newGame(
       battle.map,
       battle.side === "red" ? playerTeam : enemyTeam,
