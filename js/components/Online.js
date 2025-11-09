@@ -71,6 +71,7 @@ const Online = ({ onExit }) => {
       setStatus("gameOver");
       setGameResult(result);
       setGameState(null);
+      setUpdate(null);
       playingAsRef.current = null;
     }, delay);
   };

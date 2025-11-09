@@ -15,7 +15,7 @@ const engine = Engine();
 
 // Helper: broadcast to all players in a room
 function broadcast(room, message) {
-  room.sockets.forEach((s,) => {
+  room.sockets.forEach((s) => {
     if (s.readyState === 1) s.send(JSON.stringify(message));
   });
 }
