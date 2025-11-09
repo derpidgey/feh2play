@@ -126,7 +126,7 @@ function handleAction(socket, action) {
 // Handle surrender
 function handleSurrender(socket) {
   const room = rooms.get(socket.roomId);
-  if (!room || !room.sockets.has(socket)) return;
+  if (!room || !room.sockets.has(socket) || !room.gameState) return;
 
   engine.surrender(room.gameState, socket.team);
   broadcast(room, { type: "surrender", team: socket.team });

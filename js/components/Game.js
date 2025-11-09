@@ -83,7 +83,9 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false, sock
   }
 
   const onEndTurn = () => {
-    const { sequence, updateGameState } = executeAction({ type: "end turn" });
+    const action = { type: "end turn" };
+    const { sequence, updateGameState } = executeAction(action);
+    setLastPlayedAction(action);
     clearActiveUnit();
     handleAnimations(sequence, updateGameState);
   }
