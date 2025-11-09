@@ -34,7 +34,7 @@ const Online = ({ onExit }) => {
       }));
     };
 
-    ws.onmessage = (e) => {
+    ws.onmessage = e => {
       const msg = JSON.parse(e.data);
       if (msg.type === "players") setStatus("waiting");
       if (msg.type === "ready") {
@@ -50,6 +50,10 @@ const Online = ({ onExit }) => {
           handleBattleEnd("Opponent has surrendered", 0);
         }
       }
+    };
+
+    ws.onclose = () => {
+      handleBattleEnd("Connection lost", 0);
     };
   };
 
@@ -119,7 +123,7 @@ const Online = ({ onExit }) => {
       </div>
     `}
 
-    ${status === "gameOver" && html`<${GameOver} gameResult=${gameResult} btnClick=${() => setStatus("idle")} btnText="Back to Levels" />`}
+    ${status === "gameOver" && html`<${GameOver} gameResult=${gameResult} btnClick=${() => setStatus("idle")} btnText="Back" />`}
   </div>
   `;
 }
