@@ -6,6 +6,7 @@ import TeamBuilder from "./TeamBuilder.js";
 import SDAssault from "./SDAssault.js";
 import GameOver from "./GameOver.js";
 import { DEMO_TEAMS } from "../config.js";
+import Online from "./Online.js";
 
 const engine = Engine();
 
@@ -33,6 +34,7 @@ const App = () => {
               <button type="button" class="btn btn-secondary btn-lg" onClick=${() => setScreen("demo")}>SD Demo</button>
               <button type="button" class="btn btn-info btn-lg" onClick=${() => setScreen("teamBuilder")}>Team Builder</button>
               <button type="button" class="btn btn-primary btn-lg" onClick=${() => setScreen("sdAssault")}>SD Assault</button>
+              <button type="button" class="btn btn-danger btn-lg" onClick=${() => setScreen("online")}>Online</button>
             </div>
           </div>
         </div>
@@ -70,6 +72,10 @@ const App = () => {
 
       ${screen === "sdAssault" && html`
         <${SDAssault} onExit=${() => setScreen("menu")} />
+      `}
+
+      ${screen === "online" && html`
+        <${Online} onExit=${() => setScreen("menu")} />
       `}
     </div>
   `;

@@ -5,7 +5,7 @@ import UNIT from "../data/units.js";
 const engine = Engine();
 const DOUBLE_CLICK_THRESHOLD_MS = 200;
 
-const useGameInput = ({ gameState, playingAs, isAnimating, handleAction, swapStartingPositions, debug = false }) => {
+const useGameInput = ({ gameState, playingAs, isAnimating, handleAction, swapStartingPositions, swapDone, debug = false }) => {
   const [activeUnit, setActiveUnit] = useState(null);
   const [selectedUnit, setSelectedUnit] = useState(null);
   const [potentialAction, setPotentialAction] = useState({});
@@ -102,6 +102,11 @@ const useGameInput = ({ gameState, playingAs, isAnimating, handleAction, swapSta
     if (gameState.isSwapPhase) {
       const clickedAlly = gameState.teams[playingAs].find(unit => unit.pos.x === x && unit.pos.y === y);
       if (clickedAlly) {
+        if (swapDone) {
+          setSelectedUnit(clickedAlly);
+          setActiveUnit(clickedAlly);
+          return;
+        }
         swapStartingPositions(activeUnit.pos, clickedAlly.pos);
         deselectUnit();
       }

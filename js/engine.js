@@ -796,9 +796,9 @@ function Engine() {
     return validActions.some(validAction => actionEquals(validAction, action));
   }
 
-  function actionEquals(a, b, compareUnit = false) {
+  function actionEquals(a, b) {
     if (!a || !b) return false;
-    if (compareUnit && a.unitId !== b.unitId) return false;
+    if (a.unitId !== b.unitId) return false;
     return a.from?.x === b.from?.x && a.from?.y === b.from?.y
       && a.to?.x === b.to?.x && a.to?.y === b.to?.y
       && a.target?.x === b.target?.x && a.target?.y === b.target?.y
@@ -2946,13 +2946,13 @@ function Engine() {
   function orderMoves(gameState, moves, searchInfo) {
     const pvMove = getPvMove(searchInfo.hashTable, gameState.hash);
     for (const move of moves) {
-      if (actionEquals(move, pvMove, true)) {
+      if (actionEquals(move, pvMove)) {
         move.score = 2000;
       } else if (move.type === "attack") {
         move.score = 1000;
-      } else if (actionEquals(move, searchInfo.killerMoves[0][searchInfo.ply], true)) {
+      } else if (actionEquals(move, searchInfo.killerMoves[0][searchInfo.ply])) {
         move.score = 900;
-      } else if (actionEquals(move, searchInfo.killerMoves[1][searchInfo.ply], true)) {
+      } else if (actionEquals(move, searchInfo.killerMoves[1][searchInfo.ply])) {
         move.score = 800;
       } else if (move.type === "block") {
         move.score = 700;

@@ -4,9 +4,10 @@ import { deepClone } from "../utils.js";
 
 const engine = Engine();
 
-const useGameLogic = (initialGameState) => {
+const useGameLogic = (initialGameState, socket) => {
   const workerRef = useRef(null);
   const [gameState, setGameState] = useState(initialGameState);
+  const [swaps, setSwaps] = useState([]);
 
   useEffect(() => {
     workerRef.current = new Worker("js/aiWorker.js", { type: "module" });
@@ -16,6 +17,9 @@ const useGameLogic = (initialGameState) => {
   }, []);
 
   const executeAction = action => {
+    if (socket) {
+      socket.send(JSON.stringify({ type: "action", action }));
+    }
     if (!engine.isValidAction(gameState, action)) {
       console.warn("Invalid Action:", action);
       return { sequence: [], updateGameState: () => { } };
@@ -28,16 +32,11 @@ const useGameLogic = (initialGameState) => {
     return { sequence, updateGameState };
   }
 
-  const endTurn = () => {
-    const newGameState = deepClone(gameState);
-    const sequence = engine.endTurn(newGameState);
-    const updateGameState = () => {
-      setGameState(newGameState);
-    }
-    return { sequence, updateGameState };
-  }
-
   const endSwapPhase = () => {
+    if (socket) {
+      socket.send(JSON.stringify({ type: "endSwapPhase", swaps }));
+      return { sequence: [], updateGameState: () => { } };
+    }
     const newGameState = deepClone(gameState);
     const sequence = engine.endSwapPhase(newGameState);
     const updateGameState = () => {
@@ -47,6 +46,10 @@ const useGameLogic = (initialGameState) => {
   }
 
   const swapStartingPositions = (posA, posB) => {
+    if (socket) {
+      setSwaps([...swaps, { posA, posB }]);
+    }
+    // still apply swaps locally
     const newGameState = deepClone(gameState);
     engine.swapStartingPositions(newGameState, posA, posB);
     setGameState(newGameState);
@@ -62,13 +65,34 @@ const useGameLogic = (initialGameState) => {
     });
   }
 
+  const handleUpdate = update => {
+    if (update.updateType === "action") {
+    const newGameState = deepClone(gameState);
+      const sequence = engine.executeAction(newGameState, update.action);
+      const updateGameState = () => {
+        setGameState(newGameState);
+      }
+      return { sequence, updateGameState };
+    } else if (update.updateType === "endSwapPhase") {
+      const newGameState = deepClone(update.gameState);
+      setGameState(update.gameState);
+      const sequence = engine.endSwapPhase(newGameState);
+      const updateGameState = () => {
+        setGameState(newGameState);
+      }
+      return { sequence, updateGameState };
+    } else {
+      return { sequence: [], updateGameState: () => { } };
+    }
+  }
+
   return {
     gameState,
     executeAction,
-    endTurn,
     endSwapPhase,
     swapStartingPositions,
-    getAiMove
+    getAiMove,
+    handleUpdate
   }
 }
 

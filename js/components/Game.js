@@ -12,16 +12,20 @@ import SKILLS from "../data/skills.js";
 import useBootstrapTooltips from "../hooks/useBootstrapTooltips.js";
 import useGameInput from "../hooks/useGameInput.js";
 import useGameFont from "../hooks/useGameFont.js";
+import Engine from "../engine.js";
 
+const engine = Engine();
 
-const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) => {
+const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false, socket, incomingUpdate }) => {
   useBootstrapTooltips();
   const gameFont = useGameFont();
-  const { gameState, executeAction, endTurn, endSwapPhase, swapStartingPositions, getAiMove } = useGameLogic(initialGameState);
+  const { gameState, executeAction, endSwapPhase, swapStartingPositions, getAiMove, handleUpdate } = useGameLogic(initialGameState, socket);
+  const [swapDone, setSwapDone] = useState(false);
   const [isWideScreen, setIsWideScreen] = useState(false);
   const [showDangerArea, setShowDangerArea] = useState(true);
   const [animationSequence, setAnimationSequence] = useState([]);
   const [onAnimationComplete, setOnAnimationComplete] = useState(() => () => { });
+  const [lastPlayedAction, setLastPlayedAction] = useState(null);
 
   const isAnimating = animationSequence.length > 0;
   const isDuel = gameState.mode === "duel";
@@ -32,6 +36,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     if (sequence.length > 0 && gameState.currentTurn === playingAs && Object.keys(potentialAction).length > 0) {
       sequence[0][0].type = "tp";
     }
+    setLastPlayedAction(action);
     handleAnimations(sequence, updateGameState);
   }
 
@@ -42,6 +47,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
       isAnimating,
       handleAction,
       swapStartingPositions,
+      swapDone,
       debug,
     });
 
@@ -53,7 +59,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
     setIsWideScreen(window.innerWidth >= window.innerHeight * 3 / 2);
   }, 10);
 
-  if (gameState.mode === "duel") {
+  if (gameState.mode === "duel" && !socket) {
     useEffect(() => {
       const runAiTurn = async () => {
         if (gameState.currentTurn === playingAs || gameState.isSwapPhase || gameState.gameOver || isAnimating) return;
@@ -77,26 +83,30 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
   }
 
   const onEndTurn = () => {
-    const { sequence, updateGameState } = endTurn();
-    if (sequence.length > 0 && gameState.currentTurn === playingAs && Object.keys(potentialAction).length > 0) {
-      sequence[0][0].type = "tp";
-    }
+    const { sequence, updateGameState } = executeAction({ type: "end turn" });
     clearActiveUnit();
     handleAnimations(sequence, updateGameState);
   }
 
   const onEndSwapPhase = () => {
+    setSwapDone(true);
     // swap phase book moves here
     // if (playingAs === 1) {
     //   engine.swapStartingPositions(gameState, gameState.teams[0][0].pos, gameState.teams[0][2].pos);
     // }
     const { sequence, updateGameState } = endSwapPhase();
-    if (sequence.length > 0 && gameState.currentTurn === playingAs && Object.keys(potentialAction).length > 0) {
-      sequence[0][0].type = "tp";
-    }
     deselectUnit();
     handleAnimations(sequence, updateGameState);
   }
+
+  useEffect(() => {
+    if (!incomingUpdate) return;
+    if (engine.actionEquals(lastPlayedAction, incomingUpdate.action)) {
+      return;
+    }
+    const { sequence, updateGameState } = handleUpdate(incomingUpdate);
+    handleAnimations(sequence, updateGameState);
+  }, [incomingUpdate]);
 
   const handleAnimations = (sequence, updateGameState) => {
     const mainSequence = [];
@@ -178,7 +188,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false }) =>
       `}
     <${Board} gameState=${gameState} activeUnit=${activeUnit} validActions=${validActions} potentialAction=${potentialAction}
       animationSequence=${animationSequence} onAnimationComplete=${onAnimationComplete}
-      handleTileClick=${handleTileClick} lastClick=${lastClick} showDangerArea=${showDangerArea} playingAs=${playingAs} />
+      handleTileClick=${handleTileClick} lastClick=${lastClick} showDangerArea=${showDangerArea} playingAs=${playingAs} swapDone=${swapDone} />
     <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} surrender=${() => onGameOver("lose", 0)} />
     <${StatusBar} turn=${gameState.turnCount} currentTurn=${gameState.currentTurn} playingAs=${playingAs} />
   </div>

@@ -12,7 +12,7 @@ import BoardLayerSpecial from "./BoardLayerSpecial.js";
 
 const engine = Engine();
 
-const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs }) => {
+const Board = ({ gameState, activeUnit, validActions, potentialAction, animationSequence, onAnimationComplete, handleTileClick, lastClick, showDangerArea, playingAs, swapDone }) => {
   const { unitPositions, isAnimating, phaseOverlay, turnOverlay } = useBoardAnimations(gameState, animationSequence, onAnimationComplete);
   const [tileSize, setTileSize] = useState(50);
 
@@ -165,7 +165,7 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
         <span class="text-white">${gameState.currentTurn === playingAs ? "Noob Player" : "Big Brain"} moves first.</span>
       </div>
     `}
-    ${!isAnimating && gameState.currentTurn !== playingAs && !gameState.isSwapPhase && html`
+    ${((gameState.isSwapPhase && swapDone) || (!isAnimating && gameState.currentTurn !== playingAs && !gameState.isSwapPhase)) && html`
       <div class="board-overlay text-center py-1" style="background: rgba(0, 0, 0, 0.4);top:${tileSize * 4.5}px; height:${tileSize}px">
         <span class="text-white">Waiting for opponent${false ? "<br/>Time: 26 plus 10" : ""}</span>
       </div>
