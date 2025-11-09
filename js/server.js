@@ -82,7 +82,7 @@ function endGame(room) {
 // Handle end of swap phase (client sends all swaps at once)
 function handleEndSwapPhase(socket, swaps) {
   const room = rooms.get(socket.roomId);
-  if (!room || room.phase !== "swap") return;
+  if (!room || room.phase !== "swap" || room.swapDone.has(socket.team)) return;
 
   swaps.forEach((s) => {
     // todo verify team

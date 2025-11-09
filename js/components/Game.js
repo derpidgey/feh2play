@@ -199,7 +199,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false, sock
     <${Board} gameState=${gameState} activeUnit=${activeUnit} validActions=${validActions} potentialAction=${potentialAction}
       animationSequence=${animationSequence} onAnimationComplete=${onAnimationComplete}
       handleTileClick=${handleTileClick} lastClick=${lastClick} showDangerArea=${showDangerArea} playingAs=${playingAs} swapDone=${swapDone} />
-    <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} surrender=${surrender} />
+    <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} surrender=${surrender} swapDone=${swapDone} />
     <${StatusBar} turn=${gameState.turnCount} currentTurn=${gameState.currentTurn} playingAs=${playingAs} />
   </div>
   ${isWideScreen && html`<${SidePanel} team=${gameState.teams[1].filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)} backgroundType=${backgroundType} playingAs=${playingAs} />`}
