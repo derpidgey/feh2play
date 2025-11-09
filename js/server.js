@@ -62,7 +62,7 @@ function joinRoom(socket, roomId, team) {
     Array.from(room.sockets).forEach((s, i) => s.team = i);
     room.phase = "swap";
     room.swapDone = new Set();
-    room.gameState = engine.newGame(MAPS.SD1, room.teams[0], room.teams[1], "duel");
+    room.gameState = engine.newGame(MAPS.SD18, room.teams[0], room.teams[1], "duel");
     room.sockets.forEach((s,) => {
       if (s.readyState === 1) s.send(JSON.stringify({ type: "ready", playingAs: s.team, gameState: room.gameState }));
     });
