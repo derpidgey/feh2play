@@ -5,8 +5,9 @@ const useResizeListener = (callback, delay = 0) => {
   const debouncedCallback = debounce(callback, delay);
   useLayoutEffect(() => {
     callback();
-    window.addEventListener('resize', debouncedCallback);
-    return () => window.removeEventListener('resize', debouncedCallback);
+    const observer = new ResizeObserver(debouncedCallback);
+    observer.observe(document.body);
+    return () => observer.disconnect();
   }, []);
 }
 
