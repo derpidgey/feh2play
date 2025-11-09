@@ -4,6 +4,8 @@ import { useTeamDraft } from "../hooks/useTeamDraft.js";
 
 const LOCAL_STORAGE_KEY = "teams";
 
+const teamModes = ["SD"];
+
 const TeamBuilder = ({ onExit }) => {
   const [teams, setTeams] = useState(() => {
     const saved = localStorage.getItem(LOCAL_STORAGE_KEY);
@@ -25,7 +27,7 @@ const TeamBuilder = ({ onExit }) => {
   } = useTeamDraft(teams, saveTeams);
 
   const [newTeamName, setNewTeamName] = useState("");
-  const [newTeamMode, setNewTeamMode] = useState("sd");
+  const [newTeamMode, setNewTeamMode] = useState(teamModes[0].toLowerCase());
 
   const createTeam = () => {
     if (!newTeamName) return;
@@ -62,8 +64,7 @@ const TeamBuilder = ({ onExit }) => {
           </div>
           <div class="col-md-3">
             <select class="form-select" value=${newTeamMode} onChange=${e => setNewTeamMode(e.target.value)}>
-              <option value="standard">Standard</option>
-              <option value="sd">SD</option>
+              ${teamModes.map(mode => html`<option value=${mode.toLowerCase()}>${mode}</option>`)}
             </select>
           </div>
           <div class="col-md-4 text-end">
