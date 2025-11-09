@@ -52,7 +52,8 @@ const Online = ({ onExit }) => {
       }
     };
 
-    ws.onclose = () => {
+    ws.onclose = e => {
+      if (e.wasClean) return;
       handleBattleEnd("Connection lost", 0);
     };
   };
