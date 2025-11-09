@@ -65,6 +65,8 @@ const Online = ({ onExit }) => {
       if (socket) socket.close();
       setStatus("gameOver");
       setGameResult(result);
+      setGameState(null);
+      playingAsRef.current = null;
     }, delay);
   };
 

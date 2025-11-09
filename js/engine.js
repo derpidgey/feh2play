@@ -797,6 +797,7 @@ function Engine() {
 
   function actionEquals(a, b) {
     if (!a || !b) return false;
+    if (a.type === "end turn" && b.type === "end turn") return true;
     if (a.unitId !== b.unitId) return false;
     return a.from?.x === b.from?.x && a.from?.y === b.from?.y
       && a.to?.x === b.to?.x && a.to?.y === b.to?.y

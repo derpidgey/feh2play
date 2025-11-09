@@ -102,6 +102,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false, sock
   useEffect(() => {
     if (!incomingUpdate) return;
     if (engine.actionEquals(lastPlayedAction, incomingUpdate.action)) {
+      setLastPlayedAction(null);
       return;
     }
     const { sequence, updateGameState } = handleUpdate(incomingUpdate);

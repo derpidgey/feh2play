@@ -67,7 +67,7 @@ const useGameLogic = (initialGameState, socket) => {
 
   const handleUpdate = update => {
     if (update.updateType === "action") {
-    const newGameState = deepClone(gameState);
+      const newGameState = deepClone(gameState);
       const sequence = engine.executeAction(newGameState, update.action);
       const updateGameState = () => {
         setGameState(newGameState);
