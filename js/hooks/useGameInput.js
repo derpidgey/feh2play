@@ -153,7 +153,7 @@ const useGameInput = ({ gameState, playingAs, isAnimating, handleAction, swapSta
       const doubleTapActiveUnit = activeUnit && activeUnit.hasAction && activeUnit.pos.x === x && activeUnit.pos.y === y;
       const doubleTapAllyUnit = !activeUnit && gameState.teams[playingAs].some(unit => unit.hasAction && unit.pos.x === x && unit.pos.y === y);
       if (doubleTapActiveUnit || doubleTapAllyUnit) {
-        handleAction({ from: { x, y }, to: { x, y } });
+        handleAction(validActions.find(action => action.type === "move" && action.to.x === action.from.x && action.to.y === action.from.y));
         deselectUnit();
         return;
       }
