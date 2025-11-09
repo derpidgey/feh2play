@@ -1,4 +1,4 @@
-import { html, useState } from "https://esm.sh/htm/preact/standalone";
+import { html, useState, useRef } from "https://esm.sh/htm/preact/standalone";
 import Game from "./Game.js";
 import GameOver from "./GameOver.js";
 
@@ -10,8 +10,9 @@ const Online = ({ onExit }) => {
   const [roomId, setRoomId] = useState("");
   const [socket, setSocket] = useState(null);
   const [gameState, setGameState] = useState(null);
-  const [playingAs, setPlayingAs] = useState(null);
+  const playingAsRef = useRef(null);
   const [update, setUpdate] = useState(null);
+  const [gameResult, setGameResult] = useState("suck");
 
   const savedTeams = JSON.parse(localStorage.getItem("teams") || "[]")
     .filter(team => team.mode === "sd");
@@ -37,12 +38,17 @@ const Online = ({ onExit }) => {
       const msg = JSON.parse(e.data);
       if (msg.type === "players") setStatus("waiting");
       if (msg.type === "ready") {
-        setPlayingAs(msg.playingAs);
+        playingAsRef.current = msg.playingAs;
         setGameState(msg.gameState);
         setStatus("battle");
       }
       if (msg.type === "update") {
         setUpdate(msg);
+      }
+      if (msg.type === "surrender") {
+        if (msg.team !== playingAsRef.current) {
+          handleBattleEnd("Opponent has surrendered", 0);
+        }
       }
     };
   };
@@ -55,22 +61,18 @@ const Online = ({ onExit }) => {
   }
 
   const handleBattleEnd = (result, delay = 1000) => {
-    const isLastBattle = battleIndex >= level.battles.length - 1;
-    if (result === "lose" || isLastBattle) {
-      setTimeout(() => {
-        setScreen("gameOver");
-        setGameResult(result);
-      }, delay);
-    } else {
-      setBattleIndex(battleIndex + 1);
-    }
+    setTimeout(() => {
+      if (socket) socket.close();
+      setStatus("gameOver");
+      setGameResult(result);
+    }, delay);
   };
 
   if (status === "battle") {
     return html`
     <${Game}
       initialGameState=${gameState}
-      playingAs=${playingAs}
+      playingAs=${playingAsRef.current}
       onGameOver=${handleBattleEnd}
       socket=${socket}
       incomingUpdate=${update}
@@ -115,7 +117,7 @@ const Online = ({ onExit }) => {
       </div>
     `}
 
-    ${status === "gameOver" && html`<${GameOver} gameResult=${gameResult} btnClick=${() => setScreen("levelSelect")} btnText="Back to Levels" />`}
+    ${status === "gameOver" && html`<${GameOver} gameResult=${gameResult} btnClick=${() => setStatus("idle")} btnText="Back to Levels" />`}
   </div>
   `;
 }

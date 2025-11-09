@@ -145,6 +145,13 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false, sock
     }
   }
 
+  const surrender = () => {
+    if (socket) {
+      socket.send(JSON.stringify({ type: "surrender" }));
+    }
+    onGameOver("lose", 0);
+  }
+
   const getCaptainInfo = unit => {
     if (!unit) return null;
     return CAPTAIN_SKILLS[unit.skills.find(skill => SKILLS[skill].type === SKILL_TYPE.CAPTAIN)];
@@ -189,7 +196,7 @@ const Game = ({ initialGameState, playingAs = 0, onGameOver, debug = false, sock
     <${Board} gameState=${gameState} activeUnit=${activeUnit} validActions=${validActions} potentialAction=${potentialAction}
       animationSequence=${animationSequence} onAnimationComplete=${onAnimationComplete}
       handleTileClick=${handleTileClick} lastClick=${lastClick} showDangerArea=${showDangerArea} playingAs=${playingAs} swapDone=${swapDone} />
-    <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} surrender=${() => onGameOver("lose", 0)} />
+    <${ActionPanel} gameState=${gameState} onEndTurn=${onEndTurn} setShowDangerArea=${setShowDangerArea} onEndSwapPhase=${onEndSwapPhase} playingAs=${playingAs} surrender=${surrender} />
     <${StatusBar} turn=${gameState.turnCount} currentTurn=${gameState.currentTurn} playingAs=${playingAs} />
   </div>
   ${isWideScreen && html`<${SidePanel} team=${gameState.teams[1].filter(unit => !gameState.isSwapPhase || !isDuel || unit.team === playingAs)} backgroundType=${backgroundType} playingAs=${playingAs} />`}

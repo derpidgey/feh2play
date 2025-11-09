@@ -30,6 +30,7 @@ function joinRoom(socket, roomId, team) {
 
   if (!rooms.has(roomId)) {
     rooms.set(roomId, {
+      id: roomId,
       sockets: new Set(),
       gameState: null,
       teams: {},
@@ -67,6 +68,16 @@ function joinRoom(socket, roomId, team) {
     });
   }
 }
+
+function endGame(room) {
+  rooms.delete(room.id);
+
+  room.sockets.forEach(ws => {
+    ws.send(JSON.stringify({ type: "room_closed" }));
+    ws.close();
+  });
+}
+
 
 // Handle end of swap phase (client sends all swaps at once)
 function handleEndSwapPhase(socket, swaps) {
@@ -107,6 +118,9 @@ function handleAction(socket, action) {
     updateType: "action",
     action
   });
+  if (room.gameState.gameOver) {
+    endGame(room);
+  }
 }
 
 // Handle surrender
@@ -115,7 +129,8 @@ function handleSurrender(socket) {
   if (!room || !room.sockets.has(socket)) return;
 
   engine.surrender(room.gameState, socket.team);
-  broadcast(room, { type: "surrender", playerId: socket.team });
+  broadcast(room, { type: "surrender", team: socket.team });
+  endGame(room);
 }
 
 wss.on("connection", (socket) => {
@@ -145,6 +160,8 @@ wss.on("connection", (socket) => {
   socket.on("close", () => {
     const room = rooms.get(socket.roomId);
     if (!room) return;
+
+    handleSurrender(socket);
 
     room.sockets.delete(socket);
 

@@ -237,7 +237,6 @@ function Engine() {
       captain: team[0].id,
       actionsRemaining: 6,
       endedTurn: false,
-      surrendered: false,
       koScore: 0,
       captureScore: 0,
       captainSkillRevealed: false
