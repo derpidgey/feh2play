@@ -156,13 +156,13 @@ const Board = ({ gameState, activeUnit, validActions, potentialAction, animation
     ${phaseOverlay && html`
       <div class="board-overlay text-center py-5" style="background: rgba(0, 0, 0, 0.6);top:${tileSize * 2.5}px; height:${tileSize * 3.5}px">
         <span class="h1 text-white">${gameState.currentTurn === 0 ? "BLUE" : "RED"} PHASE</span><br/>
-        <span class="text-white">${gameState.currentTurn === playingAs ? "Noob Player" : "Big Brain"}'s move</span>
+        <span class="text-white">${gameState.currentTurn === playingAs ? "Your" : "Opponent's"} move</span>
       </div>
     `}
     ${turnOverlay && html`
       <div class="board-overlay text-center py-5" style="background: rgba(0, 0, 0, 0.6);top:${tileSize * 2.5}px; height:${tileSize * 3}px">
         <span class="h1 text-white">Turn ${gameState.turnCount} / 5</span><br/>
-        <span class="text-white">${gameState.currentTurn === playingAs ? "Noob Player" : "Big Brain"} moves first.</span>
+        <span class="text-white">${gameState.currentTurn === playingAs ? "You move" : "Opponent moves"} first.</span>
       </div>
     `}
     ${((gameState.isSwapPhase && swapDone) || (!isAnimating && gameState.currentTurn !== playingAs && !gameState.isSwapPhase)) && html`
